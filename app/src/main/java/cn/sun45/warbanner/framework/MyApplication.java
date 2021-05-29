@@ -20,7 +20,7 @@ import cn.sun45.warbanner.util.Utils;
 public class MyApplication extends Application implements Thread.UncaughtExceptionHandler {
     private static final String TAG = "MyApplication";
 
-    public static final boolean testing = true;
+    public static final boolean testing = false;
 
     public static MyApplication application;
 
