@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/app_navigation"
+    app:startDestination="@id/nav_main">
+    <fragment
+        android:id="@+id/nav_main"
+        android:name="cn.sun45.warbanner.ui.fragments.MainFragment" />
+    <fragment
+        android:id="@+id/nav_collection"
+        android:name="cn.sun45.warbanner.ui.fragments.CollectionFragment" />
+    <fragment
+        android:id="@+id/nav_teamlist"
+        android:name="cn.sun45.warbanner.ui.fragments.TeamListFragment" />
+    <fragment
+        android:id="@+id/nav_munu"
+        android:name="cn.sun45.warbanner.ui.fragments.MenuFragment" />
+</navigation>

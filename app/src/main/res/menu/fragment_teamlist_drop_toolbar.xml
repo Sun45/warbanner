@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_all"
+            android:title="@string/teamlist_menu_all"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menu_one"
+            android:title="@string/teamlist_menu_one"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menu_two"
+            android:title="@string/teamlist_menu_two"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menu_three"
+            android:title="@string/teamlist_menu_three"
+            app:showAsAction="never" />
+    </group>
+</menu>

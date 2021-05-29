@@ -1,0 +1,51 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!--    <style name="Theme.TestForAnalysisOnlineDocuments" parent="Theme.MaterialComponents.DayNight.DarkActionBar">-->
+    <!--        &lt;!&ndash; Primary brand color. &ndash;&gt;-->
+    <!--        <item name="colorPrimary">@color/purple_500</item>-->
+    <!--        <item name="colorPrimaryVariant">@color/purple_700</item>-->
+    <!--        <item name="colorOnPrimary">@color/white</item>-->
+    <!--        &lt;!&ndash; Secondary brand color. &ndash;&gt;-->
+    <!--        <item name="colorSecondary">@color/teal_200</item>-->
+    <!--        <item name="colorSecondaryVariant">@color/teal_700</item>-->
+    <!--        <item name="colorOnSecondary">@color/black</item>-->
+    <!--        &lt;!&ndash; Status bar color. &ndash;&gt;-->
+    <!--        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>-->
+    <!--        &lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+    <!--    </style>-->
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/purple_light</item>
+        <item name="colorPrimaryDark">@color/purple_dark</item>
+        <item name="colorSurface">@color/theme</item>
+        <item name="android:colorBackground">@color/theme</item>
+
+        <item name="android:statusBarColor" tools:ignore="NewApi">?attr/theme</item>
+
+        <item name="toolbarStyle">@style/AppToolbarStyle</item>
+
+        <item name="bottomNavigationStyle">@style/AppBottomNavigation</item>
+    </style>
+
+    <style name="AppToolbarStyle" parent="Widget.MaterialComponents.Toolbar.PrimarySurface">
+        <item name="android:background">@color/theme</item>
+        <item name="titleTextColor">@color/white</item>
+    </style>
+
+    <style name="AppBottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="android:background">@color/theme</item>
+    </style>
+
+    <style name="TransparentTheme">
+        <item name="android:windowFrame">@null</item><!-- 边框 -->
+        <item name="android:windowIsFloating">true</item><!-- 是否悬浮在activity上 -->
+        <item name="android:windowIsTranslucent">true</item><!-- 半透明 -->
+        <item name="android:windowNoTitle">true</item><!-- 无标题 -->
+        <item name="android:windowBackground">@android:color/transparent</item><!-- 背景透明 -->
+        <item name="android:backgroundDimEnabled">false</item><!-- 模糊 -->
+        <item name="android:backgroundDimAmount">0.6</item><!-- 灰度 -->
+        <item name="android:windowContentOverlay">@null</item><!-- 窗口是否有遮盖 -->
+        <item name="android:windowAnimationStyle">@android:style/Animation.Translucent
+        </item><!-- Activity切换动画效果，也可以自定义 -->
+        <item name="android:colorBackgroundCacheHint">@null</item><!-- 背景缓存颜色 -->
+    </style>
+
+</resources>

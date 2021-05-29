@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="theme">#2B283D</color>
+    <color name="theme_dark">#221F30</color>
+
+    <color name="white">#ffffff</color>
+    <color name="gray">#717171</color>
+    <color name="black">#2B2B2B</color>
+    <color name="blue_light">#33B5E5</color>
+    <color name="blue_dark">#0099CC</color>
+    <color name="purple_light">#AA66CC</color>
+    <color name="purple_dark">#9933CC</color>
+    <color name="green_light">#99CC00</color>
+    <color name="green_dark">#669900</color>
+    <color name="orange_light">#75FFBB33</color>
+    <color name="orange_dark">#FF8800</color>
+    <color name="red_light">#FF4444</color>
+    <color name="red_dark">#CC0000</color>
+
+    <color name="purple_200">#bb86fc</color>
+    <color name="purple_200_alpha">#b4bb86fc</color>
+    <color name="purple_300">#9c4dcc</color> <!--Color primary (dark)-->
+    <color name="purple_300_alpha">#b49c4dcc</color>
+    <color name="purple_500">#6200ee</color> <!--Color primary (light)-->
+    <color name="purple_600">#4b01d0</color> <!--Color primary variant (dark)-->
+    <color name="purple_700">#3700b3</color> <!--Color primary variant (light)-->
+    <color name="green_200">#03dac6</color> <!--Color secondary-->
+    <color name="green_350">#66bb6a</color>
+    <color name="green_500">#018786</color> <!--Color secondary variant-->
+    <color name="red_200">#cf6679</color> <!--Color error (dark)-->
+    <color name="red_200_alpha">#a4cf6679</color> <!--Color error (light)-->
+    <color name="red_200_beta">#68cf6679</color>
+    <color name="red_500">#cf6679</color>
+    <color name="blue_100">#90caf9</color>
+    <color name="yellow_100">#FFF9C4</color>
+    <color name="yellow_200">#FFF59D</color>
+    <color name="yellow_300">#FFF176</color>
+    <color name="yellow_400">#FFEE58</color>
+    <color name="yellow_500">#FFEB3B</color>
+    <color name="yellow_700">#FBC02D</color>
+    <color name="yellow_800">#F9A825</color>
+    <color name="yellow_900">#F57F17</color>
+    <!--Color surface (light), color on error (light), -->
+    <!--color on surface (dark), color on surface (dark)-->
+    <color name="white_50">#ffffff</color>
+    <color name="black_500">#484848</color>
+    <color name="black_700">#282828</color>
+    <color name="black_750">#202020</color>
+    <color name="black_800">#121212</color> <!--Color surface (dark)-->
+    <!--Color on secondary (light), color on background (light),-->
+    <!--color on surface (light)-->
+    <color name="black_900">#000000</color>
+    <color name="textPrimary">#B8B8B8</color>
+    <color name="textSecondary">#9CB8B8B8</color>
+    <color name="toolbarPrimary">#313131</color>
+    <color name="toolbarPrimaryAlpha">#B4313131</color>
+
+    <color name="colorCustom">#b4686868</color>
+    <color name="colorOnCustom">#d4ffffff</color>
+
+    <color name="ic_launcher_background">#FFFFFF</color>
+</resources>

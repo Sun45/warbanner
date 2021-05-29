@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/collection"
+        android:icon="@drawable/ic_baseline_collections_24"
+        android:title="@string/title_collection" />
+    <item
+        android:id="@+id/teamlist"
+        android:icon="@drawable/ic_baseline_format_align_justify_24"
+        android:title="@string/title_teamlist" />
+    <item
+        android:id="@+id/menu"
+        android:icon="@drawable/ic_baseline_menu_24"
+        android:title="@string/title_menu" />
+</menu>
