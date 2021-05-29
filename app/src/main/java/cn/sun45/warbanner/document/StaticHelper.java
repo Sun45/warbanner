@@ -7,9 +7,9 @@ package cn.sun45.warbanner.document;
 public class StaticHelper {
     //  App URL
     public static final String APP_RAW_BASE = "https://raw.githubusercontent.com";
-    public static final String APP_RAW = "https://raw.githubusercontent.com/MalitsPlus/ShizuruNotes/master";
+    public static final String APP_RAW = "https://raw.githubusercontent.com/Sun45/warbanner/master";
     public static final String APP_UPDATE_LOG = APP_RAW + "/update_log.json";
-    public static final String APP_PACKAGE = "https://github.com/MalitsPlus/ShizuruNotes/releases/latest/download/shizurunotes-release.apk";
+    public static final String APP_PACKAGE = "https://github.com/Sun45/warbanner/releases/latest/download/shizurunotes-release.apk";
     public static final String APK_NAME = "update.apk";
 
     //  API URL
