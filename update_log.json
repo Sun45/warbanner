@@ -1,6 +1,6 @@
 {
-  "versionCode": "3",
-  "versionName": "0.5.1",
+  "versionCode": "4",
+  "versionName": "0.6.0",
   "fource": "false",
-  "content": "修改release安装包路径"
+  "content": "添加角色筛选设置"
 }

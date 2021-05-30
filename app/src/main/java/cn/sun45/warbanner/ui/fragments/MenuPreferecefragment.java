@@ -3,14 +3,18 @@ package cn.sun45.warbanner.ui.fragments;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.SwitchPreferenceCompat;
 
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.datamanager.clanwar.ClanWarManager;
 import cn.sun45.warbanner.datamanager.source.SourceManager;
 import cn.sun45.warbanner.datamanager.update.UpdateManager;
 import cn.sun45.warbanner.document.preference.ClanwarPreference;
+import cn.sun45.warbanner.document.preference.SetupPreference;
 import cn.sun45.warbanner.document.preference.SourcePreference;
 import cn.sun45.warbanner.util.Utils;
 
@@ -24,6 +28,9 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
     private Preference clanware;
     private Preference db;
     private Preference app;
+
+    private Preference characterScreen;
+    private SwitchPreferenceCompat characterScreenEnable;
 
     private SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
@@ -123,6 +130,26 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
             }
         });
 
+        characterScreen = findPreference("character_screen");
+        characterScreen.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                NavController controller = Navigation.findNavController(getView());
+                controller.setGraph(R.navigation.app_navigation);
+                controller.navigate(R.id.action_nav_main_to_nav_characterscreen);
+                return true;
+            }
+        });
+
+        characterScreenEnable = findPreference("character_screen_enable");
+        characterScreenEnable.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                new SetupPreference().setCharacterscreenenable((boolean) newValue);
+                return true;
+            }
+        });
+
         new ClanwarPreference().registListener(listener);
         new SourcePreference().registListener(listener);
     }
@@ -134,5 +161,12 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
         clanware.setSummary(ClanWarManager.getInstance().getUpdateInfo());
         db.setSummary(SourceManager.getInstance().getDbVersion() + "");
         app.setSummary(Utils.getVersionName());
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        new ClanwarPreference().unregistListener(listener);
+        new SourcePreference().unregistListener(listener);
     }
 }

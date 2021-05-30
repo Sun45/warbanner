@@ -110,6 +110,16 @@ public class PreferenceManager {
     }
 
     /**
+     * 移除SharedPreference监听
+     *
+     * @param listener listener
+     */
+    public static void unregistListener(SharedPreferences.OnSharedPreferenceChangeListener listener, String name) {
+        SharedPreferences sharedPreferences = getSharedPreferences(name);
+        sharedPreferences.unregisterOnSharedPreferenceChangeListener(listener);
+    }
+
+    /**
      * 保存string到SharedPreferences
      *
      * @param key

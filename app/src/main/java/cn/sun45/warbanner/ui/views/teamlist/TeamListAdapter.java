@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -20,12 +21,14 @@ import java.util.List;
 
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
+import cn.sun45.warbanner.document.db.setup.ScreenCharacterModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
 import cn.sun45.warbanner.framework.image.ImageRequester;
 import cn.sun45.warbanner.util.Utils;
 
 /**
  * Created by Sun45 on 2021/5/20
+ * 阵容列表Adapter
  */
 public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder> {
     private static final String TAG = "TeamListAdapter";
@@ -42,6 +45,9 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
     private List<TeamModel> twolist;
     private List<TeamModel> threelist;
     private List<CharacterModel> characterModels;
+
+    private boolean screenfunction;
+    private List<ScreenCharacterModel> screenCharacterModels;
 
     public TeamListAdapter(Context context) {
         this.context = context;
@@ -74,6 +80,14 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
 
     public void setCharacterModels(List<CharacterModel> characterModels) {
         this.characterModels = characterModels;
+    }
+
+    public void setScreenfunction(boolean screenfunction) {
+        this.screenfunction = screenfunction;
+    }
+
+    public void setScreenCharacterModels(List<ScreenCharacterModel> screenCharacterModels) {
+        this.screenCharacterModels = screenCharacterModels;
     }
 
     @NonNull
@@ -158,104 +172,84 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
     public class Holder extends RecyclerView.ViewHolder {
         private TextView mBoss;
         private TextView mTitle;
-        private View mCharacteroneLay;
-        private ImageView mCharacteroneImage;
-        private TextView mCharacteroneText;
-        private View mCharactertwoLay;
-        private ImageView mCharactertwoImage;
-        private TextView mCharactertwoText;
-        private View mCharacterthreeLay;
-        private ImageView mCharacterthreeImage;
-        private TextView mCharacterthreeText;
-        private View mCharacterfourLay;
-        private ImageView mCharacterfourImage;
-        private TextView mCharacterfourText;
-        private View mCharacterfiveLay;
-        private ImageView mCharacterfiveImage;
-        private TextView mCharacterfiveText;
+        private CharacterHolder mCharacterone;
+        private CharacterHolder mCharactertwo;
+        private CharacterHolder mCharacterthree;
+        private CharacterHolder mCharacterfour;
+        private CharacterHolder mCharacterfive;
 
         public Holder(@NonNull View itemView) {
             super(itemView);
             mBoss = itemView.findViewById(R.id.boss);
             mTitle = itemView.findViewById(R.id.title);
-            mCharacteroneLay = itemView.findViewById(R.id.characterone_lay);
-            mCharacteroneImage = itemView.findViewById(R.id.characterone_image);
-            mCharacteroneText = itemView.findViewById(R.id.characterone_text);
-            mCharactertwoLay = itemView.findViewById(R.id.charactertwo_lay);
-            mCharactertwoImage = itemView.findViewById(R.id.charactertwo_image);
-            mCharactertwoText = itemView.findViewById(R.id.charactertwo_text);
-            mCharacterthreeLay = itemView.findViewById(R.id.characterthree_lay);
-            mCharacterthreeImage = itemView.findViewById(R.id.characterthree_image);
-            mCharacterthreeText = itemView.findViewById(R.id.characterthree_text);
-            mCharacterfourLay = itemView.findViewById(R.id.characterfour_lay);
-            mCharacterfourImage = itemView.findViewById(R.id.characterfour_image);
-            mCharacterfourText = itemView.findViewById(R.id.characterfour_text);
-            mCharacterfiveLay = itemView.findViewById(R.id.characterfive_lay);
-            mCharacterfiveImage = itemView.findViewById(R.id.characterfive_image);
-            mCharacterfiveText = itemView.findViewById(R.id.characterfive_text);
+            mCharacterone = new CharacterHolder(itemView.findViewById(R.id.characterone_lay), R.id.characterone_icon, R.id.characterone_name);
+            mCharactertwo = new CharacterHolder(itemView.findViewById(R.id.charactertwo_lay), R.id.charactertwo_icon, R.id.charactertwo_name);
+            mCharacterthree = new CharacterHolder(itemView.findViewById(R.id.characterthree_lay), R.id.characterthree_icon, R.id.characterthree_name);
+            mCharacterfour = new CharacterHolder(itemView.findViewById(R.id.characterfour_lay), R.id.characterfour_icon, R.id.characterfour_name);
+            mCharacterfive = new CharacterHolder(itemView.findViewById(R.id.characterfive_lay), R.id.characterfive_icon, R.id.characterfive_name);
         }
 
         public void setData(TeamModel teamModel) {
             mBoss.setText(teamModel.getBoss());
             String title = teamModel.getNumber() + " " + teamModel.getDamage();
-            String remarkstr = teamModel.getRemarks();
-            if (!TextUtils.isEmpty(remarkstr)) {
-                try {
-                    JSONArray remarks = new JSONArray(remarkstr);
-                    for (int i = 0; i < remarks.length(); i++) {
-                        title += " " + remarks.getJSONObject(i).get("content");
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
             mTitle.setText(title);
-            if (buildCharacterIcon(teamModel.getCharacterone(), mCharacteroneImage)) {
-                mCharacteroneText.setVisibility(View.VISIBLE);
-                mCharacteroneText.setText(teamModel.getCharacterone());
+            mCharacterone.setData(teamModel.getCharacterone());
+            mCharactertwo.setData(teamModel.getCharactertwo());
+            mCharacterthree.setData(teamModel.getCharacterthree());
+            mCharacterfour.setData(teamModel.getCharacterfour());
+            mCharacterfive.setData(teamModel.getCharacterfive());
+        }
+    }
+
+    private class CharacterHolder {
+        private CardView lay;
+        private ImageView icon;
+        private TextView name;
+
+        public CharacterHolder(CardView lay, int iconid, int nameid) {
+            this.lay = lay;
+            icon = lay.findViewById(iconid);
+            name = lay.findViewById(nameid);
+        }
+
+        public void setData(String nickname) {
+            CharacterModel characterModel = findCharacter(nickname);
+            if (screenfunction) {
+                boolean screen = false;
+                if (screenCharacterModels != null && characterModel != null) {
+                    for (ScreenCharacterModel screenCharacterModel : screenCharacterModels) {
+                        if (screenCharacterModel.getId() == characterModel.getId()) {
+                            screen = true;
+                            break;
+                        }
+                    }
+                }
+                if (screen) {
+                    lay.setCardBackgroundColor(Utils.getColor(R.color.red_dark));
+                } else {
+                    lay.setCardBackgroundColor(Utils.getColor(R.color.gray));
+                }
             } else {
-                mCharacteroneText.setVisibility(View.INVISIBLE);
-                mCharacteroneText.setText("");
+                lay.setCardBackgroundColor(Utils.getColor(R.color.gray));
             }
-            if (buildCharacterIcon(teamModel.getCharactertwo(), mCharactertwoImage)) {
-                mCharactertwoText.setVisibility(View.VISIBLE);
-                mCharactertwoText.setText(teamModel.getCharactertwo());
+            if (characterModel == null) {
+                icon.setImageBitmap(null);
+                name.setVisibility(View.VISIBLE);
+                name.setText(nickname);
             } else {
-                mCharactertwoText.setVisibility(View.INVISIBLE);
-                mCharactertwoText.setText("");
-            }
-            if (buildCharacterIcon(teamModel.getCharacterthree(), mCharacterthreeImage)) {
-                mCharacterthreeText.setVisibility(View.VISIBLE);
-                mCharacterthreeText.setText(teamModel.getCharacterthree());
-            } else {
-                mCharacterthreeText.setVisibility(View.INVISIBLE);
-                mCharacterthreeText.setText("");
-            }
-            if (buildCharacterIcon(teamModel.getCharacterfour(), mCharacterfourImage)) {
-                mCharacterfourText.setVisibility(View.VISIBLE);
-                mCharacterfourText.setText(teamModel.getCharacterfour());
-            } else {
-                mCharacterfourText.setVisibility(View.INVISIBLE);
-                mCharacterfourText.setText("");
-            }
-            if (buildCharacterIcon(teamModel.getCharacterfive(), mCharacterfiveImage)) {
-                mCharacterfiveText.setVisibility(View.VISIBLE);
-                mCharacterfiveText.setText(teamModel.getCharacterfive());
-            } else {
-                mCharacterfiveText.setVisibility(View.INVISIBLE);
-                mCharacterfiveText.setText("");
+                ImageRequester.request(characterModel.getIconUrl(), R.drawable.ic_character_default).loadImage(icon);
+                name.setVisibility(View.INVISIBLE);
+                name.setText("");
             }
         }
     }
 
     /**
-     * 根据昵称记载角色头像
+     * 根据昵称获取角色信息
      *
-     * @param nickname  角色昵称
-     * @param imageView imageview
-     * @return {@code true} 记载不到头像数据
+     * @param nickname 角色昵称
      */
-    private boolean buildCharacterIcon(String nickname, ImageView imageView) {
+    private CharacterModel findCharacter(String nickname) {
         CharacterModel characterModel = null;
         if (characterModels != null && !characterModels.isEmpty()) {
             boolean find = false;
@@ -272,12 +266,6 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
                 }
             }
         }
-        if (characterModel != null) {
-            ImageRequester.request(characterModel.getIconUrl()).loadImage(imageView);
-            return false;
-        } else {
-            imageView.setImageBitmap(null);
-            return true;
-        }
+        return characterModel;
     }
 }

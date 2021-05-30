@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="slide">200</integer>
+    <integer name="anim_duration_trans">300</integer>
+
+
+    <integer name="anim_duration_small">200</integer>
+    <integer name="anim_duration_medium">400</integer>
+    <integer name="anim_duration_large">600</integer>
+</resources>

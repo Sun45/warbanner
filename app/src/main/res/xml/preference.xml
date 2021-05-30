@@ -2,16 +2,35 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <Preference
-        app:icon="@drawable/ic_baseline_format_align_justify_24"
-        app:key="clanwar_update"
-        app:title="@string/menu_clanwar_update" />
-    <Preference
-        app:icon="@drawable/ic_baseline_source_24"
-        app:key="db_version"
-        app:title="@string/menu_db_version" />
-    <Preference
-        app:icon="@drawable/ic_baseline_adb_24"
-        app:key="app_version"
-        app:title="@string/menu_app_version" />
+    <PreferenceCategory
+        android:theme="@style/AppTheme"
+        app:key="system_category"
+        app:title="@string/menu_system">
+        <Preference
+            app:icon="@drawable/ic_baseline_format_align_justify_24"
+            app:key="clanwar_update"
+            app:title="@string/menu_clanwar_update" />
+        <Preference
+            app:icon="@drawable/ic_baseline_source_24"
+            app:key="db_version"
+            app:title="@string/menu_db_version" />
+        <Preference
+            app:icon="@drawable/ic_baseline_adb_24"
+            app:key="app_version"
+            app:title="@string/menu_app_version" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:theme="@style/AppTheme"
+        app:key="system_category"
+        app:title="@string/menu_screen">
+        <Preference
+            app:icon="@drawable/ic_baseline_view_comfy_24"
+            app:key="character_screen"
+            app:title="@string/menu_character_screen" />
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:icon="@drawable/ic_baseline_view_comfy_24"
+            app:key="character_screen_enable"
+            app:title="@string/menu_character_screen_enable" />
+    </PreferenceCategory>
 </PreferenceScreen>

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
+import cn.sun45.warbanner.document.db.setup.ScreenCharacterModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
 
 /**
@@ -48,6 +49,17 @@ public class TeamList extends RecyclerView {
 
     public void notifyCharacter(List<CharacterModel> characterModels) {
         adapter.setCharacterModels(characterModels);
+        adapter.notifyDataSetChanged();
+    }
+
+    public void setScreenFunction(boolean screenFunction) {
+        adapter.setScreenfunction(screenFunction);
+        adapter.notifyDataSetChanged();
+    }
+
+    public void notifyScreenCharacter(boolean screenFunction, List<ScreenCharacterModel> screenCharacterModels) {
+        adapter.setScreenfunction(screenFunction);
+        adapter.setScreenCharacterModels(screenCharacterModels);
         adapter.notifyDataSetChanged();
     }
 }

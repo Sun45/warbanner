@@ -17,15 +17,16 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:title="@string/title_menu" />
+            app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
+            app:title="@string/character_screen_title" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <FrameLayout
-        android:id="@+id/continer"
+    <cn.sun45.warbanner.ui.views.characterlist.CharacterList
+        android:id="@+id/characterlist"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appbar"></FrameLayout>
+        app:layout_constraintTop_toBottomOf="@id/appbar" />
 </androidx.constraintlayout.widget.ConstraintLayout>

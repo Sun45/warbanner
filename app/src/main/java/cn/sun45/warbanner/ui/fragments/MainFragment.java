@@ -32,6 +32,7 @@ public class MainFragment extends BaseFragment {
 
     @Override
     protected void initView() {
+        logD("initView");
         mBottomNavigationView = mRoot.findViewById(R.id.bottom_nav);
         mBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -54,7 +55,7 @@ public class MainFragment extends BaseFragment {
                 return true;
             }
         });
-        switchShow(0);
+        switchShow(currentIndex);
     }
 
     @Override
@@ -68,6 +69,7 @@ public class MainFragment extends BaseFragment {
      * @param index 0~2
      */
     private void switchShow(int index) {
+        logD("switchShow index:" + index);
         currentIndex = index;
         FragmentManager fragmentManager = getChildFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -99,11 +101,11 @@ public class MainFragment extends BaseFragment {
 
     @Override
     protected void onShow() {
-
+        logD("onShow");
     }
 
     @Override
     protected void onHide() {
-
+        logD("onHide");
     }
 }

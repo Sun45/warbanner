@@ -40,11 +40,14 @@
         </provider>
 
         <provider
+            android:name="cn.sun45.warbanner.document.db.source.SourceProvider"
+            android:authorities="cn.sun45.warbanner.document.db.source.SourceProvider"></provider>
+        <provider
             android:name="cn.sun45.warbanner.document.db.clanwar.ClanWarProvider"
             android:authorities="cn.sun45.warbanner.document.db.clanwar.ClanWarProvider"></provider>
         <provider
-            android:name="cn.sun45.warbanner.document.db.source.SourceProvider"
-            android:authorities="cn.sun45.warbanner.document.db.source.SourceProvider"></provider>
+            android:name="cn.sun45.warbanner.document.db.setup.SetupProvider"
+            android:authorities="cn.sun45.warbanner.document.db.setup.SetupProvider"></provider>
 
         <!--该Service仅在TBS内核首次Dex加载时触发并执行dex2oat任务，任务完成后自动结束。-->
         <service

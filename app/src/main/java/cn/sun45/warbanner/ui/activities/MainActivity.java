@@ -2,12 +2,16 @@ package cn.sun45.warbanner.ui.activities;
 
 import android.Manifest;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDestination;
+import androidx.navigation.Navigation;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -28,6 +32,7 @@ import cn.sun45.warbanner.framework.permission.PermissionRequestListener;
 import cn.sun45.warbanner.framework.permission.PermissionRequester;
 import cn.sun45.warbanner.framework.ui.BaseActivity;
 import cn.sun45.warbanner.ui.shared.SharedViewModelCharacterModelList;
+import cn.sun45.warbanner.ui.shared.SharedViewModelSetup;
 import cn.sun45.warbanner.ui.shared.SharedViewModelTeamList;
 import cn.sun45.warbanner.util.Utils;
 
@@ -40,6 +45,7 @@ public class MainActivity extends BaseActivity implements PermissionRequestListe
 
     private SharedViewModelCharacterModelList sharedCharacterModelList;
     private SharedViewModelTeamList sharedTeamModelList;
+    private SharedViewModelSetup sharedSetup;
 
     private UpdateManager updateManager;
     private SourceManager sourceManager;
@@ -70,6 +76,7 @@ public class MainActivity extends BaseActivity implements PermissionRequestListe
         });
         sharedCharacterModelList.setCallBack(this);
         sharedTeamModelList = new ViewModelProvider(this).get(SharedViewModelTeamList.class);
+        sharedSetup = new ViewModelProvider(this).get(SharedViewModelSetup.class);
         UpdateManager.init(this);
         updateManager = UpdateManager.getInstance();
         updateManager.setiActivityCallBack(this);
@@ -89,6 +96,13 @@ public class MainActivity extends BaseActivity implements PermissionRequestListe
             Utils.tip(mRoot, R.string.abnormal_exit_message);
             new AppPreference().setAbnormal_exit(false);
         }
+//        NavController controller = Navigation.findNavController(this, R.id.nav_host_fragment);
+//        controller.setGraph(R.navigation.app_navigation);
+//        controller.addOnDestinationChangedListener(new NavController.OnDestinationChangedListener() {
+//            @Override
+//            public void onDestinationChanged(@NonNull @NotNull NavController controller, @NonNull @NotNull NavDestination destination, @Nullable @org.jetbrains.annotations.Nullable Bundle arguments) {
+//            }
+//        });
     }
 
     @Override
@@ -99,11 +113,12 @@ public class MainActivity extends BaseActivity implements PermissionRequestListe
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull @NotNull String[] permissions, @NonNull @NotNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        permissionRequester.onRequestPermissionsResult(requestCode,permissions,grantResults);
+        permissionRequester.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
     public void permissionGained() {
+        sharedSetup.loadData();
         updateManager.checkAppVersion(true);
     }
 

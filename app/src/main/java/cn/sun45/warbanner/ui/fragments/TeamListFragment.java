@@ -1,5 +1,6 @@
 package cn.sun45.warbanner.ui.fragments;
 
+import android.content.SharedPreferences;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -7,6 +8,8 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.google.android.material.appbar.MaterialToolbar;
 
@@ -15,12 +18,17 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import cn.sun45.warbanner.R;
+import cn.sun45.warbanner.datamanager.clanwar.ClanWarManager;
+import cn.sun45.warbanner.datamanager.source.SourceManager;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
+import cn.sun45.warbanner.document.db.setup.ScreenCharacterModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
 import cn.sun45.warbanner.document.preference.ClanwarPreference;
+import cn.sun45.warbanner.document.preference.SetupPreference;
 import cn.sun45.warbanner.framework.ui.BaseActivity;
 import cn.sun45.warbanner.framework.ui.BaseFragment;
 import cn.sun45.warbanner.ui.shared.SharedViewModelCharacterModelList;
+import cn.sun45.warbanner.ui.shared.SharedViewModelSetup;
 import cn.sun45.warbanner.ui.shared.SharedViewModelTeamList;
 import cn.sun45.warbanner.ui.views.teamlist.TeamList;
 import cn.sun45.warbanner.ui.views.teamlist.TeamListAdapter;
@@ -32,8 +40,18 @@ import cn.sun45.warbanner.ui.views.teamlist.TeamListAdapter;
 public class TeamListFragment extends BaseFragment {
     private SharedViewModelCharacterModelList sharedCharacterModelList;
     private SharedViewModelTeamList sharedTeamList;
+    private SharedViewModelSetup sharedSetup;
 
     private TeamList mTeamList;
+
+    private SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+            if (key.equals("characterscreenenable")) {
+                mTeamList.setScreenFunction(new SetupPreference().isCharacterscreenenable());
+            }
+        }
+    };
 
     @Override
     protected int getContentViewId() {
@@ -47,7 +65,7 @@ public class TeamListFragment extends BaseFragment {
 
     @Override
     protected void initView() {
-        MaterialToolbar toolbar = (MaterialToolbar) mRoot.findViewById(R.id.drop_toolbar);
+        MaterialToolbar toolbar = mRoot.findViewById(R.id.drop_toolbar);
         ((BaseActivity) getActivity()).setSupportActionBar(toolbar);
         mTeamList = mRoot.findViewById(R.id.teamlist);
     }
@@ -57,6 +75,7 @@ public class TeamListFragment extends BaseFragment {
         logD("dataRequest");
         sharedCharacterModelList = new ViewModelProvider(requireActivity()).get(SharedViewModelCharacterModelList.class);
         sharedTeamList = new ViewModelProvider(requireActivity()).get(SharedViewModelTeamList.class);
+        sharedSetup = new ViewModelProvider(requireActivity()).get(SharedViewModelSetup.class);
 
         sharedTeamList.teamList.observe(requireActivity(), new Observer<List<TeamModel>>() {
             @Override
@@ -72,8 +91,15 @@ public class TeamListFragment extends BaseFragment {
                         mTeamList.notifyCharacter(characterModels);
                     }
                 });
+                sharedSetup.screencharacterlist.observe(requireActivity(), new Observer<List<ScreenCharacterModel>>() {
+                    @Override
+                    public void onChanged(List<ScreenCharacterModel> screenCharacterModels) {
+                        mTeamList.notifyScreenCharacter(new SetupPreference().isCharacterscreenenable(), screenCharacterModels);
+                    }
+                });
             }
         });
+        new SetupPreference().registListener(listener);
     }
 
     @Override
@@ -132,5 +158,11 @@ public class TeamListFragment extends BaseFragment {
         new ClanwarPreference().setTeamlistshowtype(showtype);
         mTeamList.notifyShowtype(showtype);
         return true;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        new SetupPreference().unregistListener(listener);
     }
 }

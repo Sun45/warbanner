@@ -5,14 +5,34 @@
     app:startDestination="@id/nav_main">
     <fragment
         android:id="@+id/nav_main"
-        android:name="cn.sun45.warbanner.ui.fragments.MainFragment" />
+        android:name="cn.sun45.warbanner.ui.fragments.MainFragment"
+        android:label="fragment_main">
+        <action
+            android:id="@+id/action_nav_main_to_nav_characterscreen"
+            app:destination="@id/nav_characterscreen"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
     <fragment
         android:id="@+id/nav_collection"
-        android:name="cn.sun45.warbanner.ui.fragments.CollectionFragment" />
+        android:name="cn.sun45.warbanner.ui.fragments.CollectionFragment"
+        android:label="fragment_collection" />
     <fragment
         android:id="@+id/nav_teamlist"
-        android:name="cn.sun45.warbanner.ui.fragments.TeamListFragment" />
+        android:name="cn.sun45.warbanner.ui.fragments.TeamListFragment"
+        android:label="fragment_teamlist" />
     <fragment
-        android:id="@+id/nav_munu"
-        android:name="cn.sun45.warbanner.ui.fragments.MenuFragment" />
+        android:id="@+id/nav_menu"
+        android:name="cn.sun45.warbanner.ui.fragments.MenuFragment"
+        android:label="fragment_menu" />
+    <fragment
+        android:id="@+id/nav_menupreferece"
+        android:name="cn.sun45.warbanner.ui.fragments.MenuPreferecefragment"
+        android:label="fragment_menupreferece" />
+    <fragment
+        android:id="@+id/nav_characterscreen"
+        android:name="cn.sun45.warbanner.ui.fragments.CharacterScreenFragment"
+        android:label="fragment_characterscreen" />
 </navigation>

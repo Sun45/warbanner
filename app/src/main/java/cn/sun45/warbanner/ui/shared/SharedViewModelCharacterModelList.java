@@ -51,8 +51,8 @@ public class SharedViewModelCharacterModelList extends ViewModel {
                 e.printStackTrace();
             }
             succeeded = true;
-            characterlist.postValue(characterModelList);
         }
+        characterlist.postValue(characterModelList);
         if (callBack != null) {
             callBack.charaLoadFinished(succeeded);
         }

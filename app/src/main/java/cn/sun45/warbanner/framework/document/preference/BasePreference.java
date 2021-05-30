@@ -39,6 +39,15 @@ public abstract class BasePreference {
     }
 
     /**
+     * 移除监听
+     *
+     * @param listener
+     */
+    public void unregistListener(SharedPreferences.OnSharedPreferenceChangeListener listener) {
+        PreferenceManager.unregistListener(listener, getName());
+    }
+
+    /**
      * 数据读取
      *
      * @param key

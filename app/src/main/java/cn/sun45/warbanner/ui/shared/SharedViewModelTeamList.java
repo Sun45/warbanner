@@ -25,8 +25,8 @@ public class SharedViewModelTeamList extends ViewModel {
             succeeded = false;
         } else {
             succeeded = true;
-            teamList.postValue(teamModelList);
         }
+        teamList.postValue(teamModelList);
     }
 
     public void clearData() {
