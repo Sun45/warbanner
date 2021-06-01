@@ -1,5 +1,7 @@
 package cn.sun45.warbanner.ui.fragments;
 
+import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -9,6 +11,13 @@ import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.list.DialogMultiChoiceExtKt;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.datamanager.clanwar.ClanWarManager;
 import cn.sun45.warbanner.datamanager.source.SourceManager;
@@ -17,6 +26,9 @@ import cn.sun45.warbanner.document.preference.ClanwarPreference;
 import cn.sun45.warbanner.document.preference.SetupPreference;
 import cn.sun45.warbanner.document.preference.SourcePreference;
 import cn.sun45.warbanner.util.Utils;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
+import kotlin.jvm.functions.Function3;
 
 /**
  * Created by Sun45 on 2021/5/29
@@ -29,6 +41,7 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
     private Preference db;
     private Preference app;
 
+    private Preference stageScreen;
     private Preference characterScreen;
     private SwitchPreferenceCompat characterScreenEnable;
 
@@ -54,24 +67,7 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 ClanWarManager.getInstance().showConfirmDialog(false);
-                preference.setEnabled(false);
-                new Thread() {
-                    @Override
-                    public void run() {
-                        super.run();
-                        try {
-                            Thread.sleep(5000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                preference.setEnabled(true);
-                            }
-                        });
-                    }
-                }.start();
+                btnRestore(preference);
                 return true;
             }
         });
@@ -81,24 +77,7 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 SourceManager.getInstance().checkDatabaseVersion(false);
-                preference.setEnabled(false);
-                new Thread() {
-                    @Override
-                    public void run() {
-                        super.run();
-                        try {
-                            Thread.sleep(5000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                preference.setEnabled(true);
-                            }
-                        });
-                    }
-                }.start();
+                btnRestore(preference);
                 return true;
             }
         });
@@ -108,25 +87,58 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 UpdateManager.getInstance().checkAppVersion(false);
-                preference.setEnabled(false);
-                new Thread() {
-                    @Override
-                    public void run() {
-                        super.run();
-                        try {
-                            Thread.sleep(5000);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                preference.setEnabled(true);
-                            }
-                        });
-                    }
-                }.start();
+                btnRestore(preference);
                 return true;
+            }
+        });
+
+        stageScreen = findPreference("stage_screen");
+        stageScreen.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                MaterialDialog dialog = new MaterialDialog(getContext(), MaterialDialog.getDEFAULT_BEHAVIOR());
+                dialog.title(R.string.menu_stage_screen, null);
+                List<Integer> selection = new ArrayList<>();
+                if (new SetupPreference().isStageonescreen()) {
+                    selection.add(0);
+                }
+                if (new SetupPreference().isStagetwoscreen()) {
+                    selection.add(1);
+                }
+                if (new SetupPreference().isStagethreescreen()) {
+                    selection.add(2);
+                }
+                int[] selectionlist = new int[selection.size()];
+                for (int i = 0; i < selection.size(); i++) {
+                    selectionlist[i] = selection.get(i);
+                }
+                DialogMultiChoiceExtKt.listItemsMultiChoice(dialog, R.array.menu_stage_screen_dialog_options, null, null, selectionlist, true, false, new Function3<MaterialDialog, int[], List<? extends CharSequence>, Unit>() {
+                    @Override
+                    public Unit invoke(MaterialDialog materialDialog, int[] ints, List<? extends CharSequence> charSequences) {
+                        new SetupPreference().setStageonescreen(false);
+                        new SetupPreference().setStagetwoscreen(false);
+                        new SetupPreference().setStagethreescreen(false);
+                        for (int which : ints) {
+                            switch (which) {
+                                case 0:
+                                    new SetupPreference().setStageonescreen(true);
+                                    break;
+                                case 1:
+                                    new SetupPreference().setStagetwoscreen(true);
+                                    break;
+                                case 2:
+                                    new SetupPreference().setStagethreescreen(true);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        return null;
+                    }
+                });
+                dialog.positiveButton(R.string.menu_stage_screen_dialog_confirm, null, null);
+                dialog.show();
+                return false;
             }
         });
 
@@ -137,6 +149,7 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
                 NavController controller = Navigation.findNavController(getView());
                 controller.setGraph(R.navigation.app_navigation);
                 controller.navigate(R.id.action_nav_main_to_nav_characterscreen);
+                btnRestore(preference);
                 return true;
             }
         });
@@ -152,6 +165,30 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
 
         new ClanwarPreference().registListener(listener);
         new SourcePreference().registListener(listener);
+    }
+
+    private void btnRestore(Preference preference) {
+        preference.setEnabled(false);
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Activity activity = getActivity();
+                if (activity != null) {
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            preference.setEnabled(true);
+                        }
+                    });
+                }
+            }
+        }.start();
     }
 
     @Override

@@ -8,8 +8,8 @@ android {
         applicationId "cn.sun45.warbanner"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 4
-        versionName "0.6.0"
+        versionCode 5
+        versionName "0.8.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

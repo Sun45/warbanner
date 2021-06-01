@@ -8,6 +8,13 @@
         android:name="cn.sun45.warbanner.ui.fragments.MainFragment"
         android:label="fragment_main">
         <action
+            android:id="@+id/action_nav_main_to_nav_teamgroup"
+            app:destination="@id/nav_teamgroup"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
             android:id="@+id/action_nav_main_to_nav_characterscreen"
             app:destination="@id/nav_characterscreen"
             app:enterAnim="@anim/slide_in_right"
@@ -31,6 +38,10 @@
         android:id="@+id/nav_menupreferece"
         android:name="cn.sun45.warbanner.ui.fragments.MenuPreferecefragment"
         android:label="fragment_menupreferece" />
+    <fragment
+        android:id="@+id/nav_teamgroup"
+        android:name="cn.sun45.warbanner.ui.fragments.TeamGroupFragment"
+        android:label="fragment_teamgroup" />
     <fragment
         android:id="@+id/nav_characterscreen"
         android:name="cn.sun45.warbanner.ui.fragments.CharacterScreenFragment"

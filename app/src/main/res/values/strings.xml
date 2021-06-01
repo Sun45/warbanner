@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">炽旗</string>
 
+    <string name="auto">AUTO</string>
+
     <string name="abnormal_exit_message">程序上次运行时出现致命异常，错误详情请参照日志</string>
 
     <string name="app_update_check_noneed">应用为最新版本，无需更新</string>
@@ -50,9 +52,40 @@
     <string name="menu_clanwar_update">作业更新</string>
     <string name="menu_db_version">数据库版本</string>
     <string name="menu_app_version">应用版本</string>
-    <string name="menu_screen">筛选</string>
+    <string name="menu_screen">分刀筛选 添加筛选条件会加快分刀生成</string>
+    <string name="menu_stage_screen">阶段筛选</string>
+    <string-array name="menu_stage_screen_dialog_options">
+        <item>一阶段</item>
+        <item>二阶段</item>
+        <item>三阶段</item>
+    </string-array>
+    <string name="menu_stage_screen_dialog_confirm">确定</string>
     <string name="menu_character_screen">角色筛选</string>
     <string name="menu_character_screen_enable">角色筛选生效</string>
 
     <string name="character_screen_title">角色筛选</string>
+    <string name="character_screen_state_start">点击生成分刀</string>
+    <string name="character_screen_state_progressing">分刀生成中。。。</string>
+    <string name="character_screen_state_interrupt_finish">生成%1$d个分刀,分刀结果太多提前中断生成，请添加分刀筛选条件</string>
+    <string name="character_screen_state_finish">生成%1$d个分刀</string>
+
+    <string name="teamgroup_title">分刀</string>
+    <string name="teamgroup_menu_boss">BOSS</string>
+    <string name="menu_boss_screen">BOSS筛选</string>
+    <string-array name="menu_boss_screen_dialog_options">
+        <item>一王</item>
+        <item>二王</item>
+        <item>三王</item>
+        <item>四王</item>
+        <item>五王</item>
+    </string-array>
+    <string name="menu_boss_screen_dialog_confirm">确定</string>
+    <string name="menu_auto_screen">AUTO筛选</string>
+    <string-array name="menu_auto_screen_dialog_options">
+        <item>非AUTO</item>
+        <item>AUTO</item>
+    </string-array>
+    <string name="menu_auto_screen_dialog_confirm">确定</string>
+    <string name="teamgroup_menu_auto">AUTO</string>
+
 </resources>

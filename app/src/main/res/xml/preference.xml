@@ -24,6 +24,10 @@
         app:key="system_category"
         app:title="@string/menu_screen">
         <Preference
+            app:icon="@drawable/ic_baseline_insert_chart_outlined_24"
+            app:key="stage_screen"
+            app:title="@string/menu_stage_screen" />
+        <Preference
             app:icon="@drawable/ic_baseline_view_comfy_24"
             app:key="character_screen"
             app:title="@string/menu_character_screen" />

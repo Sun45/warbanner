@@ -1,19 +1,12 @@
 package cn.sun45.warbanner.ui.fragments;
 
-import android.os.Bundle;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.appbar.MaterialToolbar;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,28 +51,30 @@ public class CharacterScreenFragment extends BaseFragment implements CharacterLi
             }
         });
         mCharacterList = mRoot.findViewById(R.id.characterlist);
+        mCharacterList.setListener(this);
     }
 
     @Override
     protected void dataRequest() {
         sharedCharacterModelList = new ViewModelProvider(requireActivity()).get(SharedViewModelCharacterModelList.class);
         sharedSetup = new ViewModelProvider(requireActivity()).get(SharedViewModelSetup.class);
-
-        List<CharacterModel> characterModelList = sharedCharacterModelList.characterlist.getValue();
-        List<ScreenCharacterModel> screenCharacterModelList = sharedSetup.screencharacterlist.getValue();
-        List<CharacterListModel> list = new ArrayList<>();
-        for (CharacterModel characterModel : characterModelList) {
-            boolean find = false;
-            for (ScreenCharacterModel screenCharacterModel : screenCharacterModelList) {
-                if (characterModel.getId() == screenCharacterModel.getId()) {
-                    find = true;
-                    break;
+        sharedCharacterModelList.characterlist.observe(requireActivity(), new Observer<List<CharacterModel>>() {
+            @Override
+            public void onChanged(List<CharacterModel> characterModels) {
+                List<CharacterListModel> list = new ArrayList<>();
+                for (CharacterModel characterModel : characterModels) {
+                    boolean find = false;
+                    for (ScreenCharacterModel screenCharacterModel : sharedSetup.screencharacterlist.getValue()) {
+                        if (characterModel.getId() == screenCharacterModel.getId()) {
+                            find = true;
+                            break;
+                        }
+                    }
+                    list.add(new CharacterListModel(characterModel, find));
                 }
+                mCharacterList.setData(list);
             }
-            list.add(new CharacterListModel(characterModel, find));
-        }
-        mCharacterList.setListener(this);
-        mCharacterList.setData(list);
+        });
     }
 
     @Override

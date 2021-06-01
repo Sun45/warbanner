@@ -31,6 +31,7 @@ import androidx.annotation.ArrayRes;
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DimenRes;
+import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -115,6 +116,13 @@ public class Utils {
      */
     public static void tip(View view, @StringRes int resId) {
         Snackbar.make(view, resId, Snackbar.LENGTH_LONG).show();
+    }
+
+    /**
+     * 展示提示信息
+     */
+    public static void tip(View view, @NonNull CharSequence text) {
+        Snackbar.make(view, text, Snackbar.LENGTH_LONG).show();
     }
 
     //system

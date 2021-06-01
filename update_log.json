@@ -1,6 +1,6 @@
 {
-  "versionCode": "4",
-  "versionName": "0.6.0",
+  "versionCode": "5",
+  "versionName": "0.8.0",
   "fource": "false",
-  "content": "添加角色筛选设置"
+  "content": "1.添加分刀功能2.添加自动刀区分显示3.添加分刀筛选功能4.添加分刀收藏功能"
 }

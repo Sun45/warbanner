@@ -23,6 +23,11 @@ public class TeamModel extends BaseDbTableModel {
 
     @DbTableParamConfigure
     private String damage;
+    @DbTableParamConfigure
+    private int damagenumber;
+
+    @DbTableParamConfigure
+    private boolean auto;
 
     @DbTableParamConfigure
     private String characterone;
@@ -37,6 +42,9 @@ public class TeamModel extends BaseDbTableModel {
 
     @DbTableParamConfigure
     private String remarks;
+
+    @DbTableParamConfigure
+    private boolean collect;
 
     public String getNumber() {
         return number;
@@ -68,6 +76,22 @@ public class TeamModel extends BaseDbTableModel {
 
     public void setDamage(String damage) {
         this.damage = damage;
+    }
+
+    public int getDamagenumber() {
+        return damagenumber;
+    }
+
+    public void setDamagenumber(int damagenumber) {
+        this.damagenumber = damagenumber;
+    }
+
+    public boolean isAuto() {
+        return auto;
+    }
+
+    public void setAuto(boolean auto) {
+        this.auto = auto;
     }
 
     public String getCharacterone() {
@@ -116,6 +140,14 @@ public class TeamModel extends BaseDbTableModel {
 
     public void setRemarks(String remarks) {
         this.remarks = remarks;
+    }
+
+    public boolean isCollect() {
+        return collect;
+    }
+
+    public void setCollect(boolean collect) {
+        this.collect = collect;
     }
 
     @Override

@@ -172,6 +172,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
     public class Holder extends RecyclerView.ViewHolder {
         private TextView mBoss;
         private TextView mTitle;
+        private View mAuto;
         private CharacterHolder mCharacterone;
         private CharacterHolder mCharactertwo;
         private CharacterHolder mCharacterthree;
@@ -182,6 +183,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
             super(itemView);
             mBoss = itemView.findViewById(R.id.boss);
             mTitle = itemView.findViewById(R.id.title);
+            mAuto = itemView.findViewById(R.id.auto);
             mCharacterone = new CharacterHolder(itemView.findViewById(R.id.characterone_lay), R.id.characterone_icon, R.id.characterone_name);
             mCharactertwo = new CharacterHolder(itemView.findViewById(R.id.charactertwo_lay), R.id.charactertwo_icon, R.id.charactertwo_name);
             mCharacterthree = new CharacterHolder(itemView.findViewById(R.id.characterthree_lay), R.id.characterthree_icon, R.id.characterthree_name);
@@ -193,6 +195,11 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
             mBoss.setText(teamModel.getBoss());
             String title = teamModel.getNumber() + " " + teamModel.getDamage();
             mTitle.setText(title);
+            if (teamModel.isAuto()) {
+                mAuto.setVisibility(View.VISIBLE);
+            } else {
+                mAuto.setVisibility(View.INVISIBLE);
+            }
             mCharacterone.setData(teamModel.getCharacterone());
             mCharactertwo.setData(teamModel.getCharactertwo());
             mCharacterthree.setData(teamModel.getCharacterthree());

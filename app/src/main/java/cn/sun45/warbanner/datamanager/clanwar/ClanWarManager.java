@@ -17,8 +17,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import cn.sun45.warbanner.R;
@@ -26,12 +24,7 @@ import cn.sun45.warbanner.document.StaticHelper;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.document.preference.ClanwarPreference;
 import cn.sun45.warbanner.framework.document.db.DbHelper;
-import cn.sun45.warbanner.framework.logic.RequestListener;
-import cn.sun45.warbanner.logic.clanwar.ClanwarLogic;
 import cn.sun45.warbanner.logic.clanwar.HtmlDocCellModel;
-import cn.sun45.warbanner.ui.activities.MainActivity;
-import cn.sun45.warbanner.ui.views.web.MyWeb;
-import cn.sun45.warbanner.ui.views.web.MyWebListenerImp;
 import cn.sun45.warbanner.util.Utils;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
@@ -304,6 +297,11 @@ public class ClanWarManager {
                                 teamModel.setCharacterfour(characterfour);
                                 teamModel.setCharacterfive(characterfive);
                                 teamModel.setDamage(damage);
+                                damage = damage.replace("w", "");
+                                damage = damage.replace("W", "");
+                                int damagenumber = Integer.valueOf(damage);
+                                teamModel.setDamagenumber(damagenumber);
+                                teamModel.setAuto(Pattern.matches("^" + stageregex + "t" + bossregex + "[0-9]{2}$", number));
                                 i += 7;
                             }
                         }

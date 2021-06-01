@@ -65,6 +65,18 @@
                     android:singleLine="true"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/auto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@color/green_350"
+                    android:ems="1"
+                    android:gravity="center"
+                    android:text="@string/auto"
+                    android:textColor="@color/white"
+                    android:textSize="8sp"
+                    android:textStyle="bold" />
             </com.google.android.material.card.MaterialCardView>
 
 
