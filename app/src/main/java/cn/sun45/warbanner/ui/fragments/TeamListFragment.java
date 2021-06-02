@@ -145,7 +145,11 @@ public class TeamListFragment extends BaseFragment {
 
     @Override
     public void onDestroy() {
+        logD("onDestroy");
         super.onDestroy();
         new SetupPreference().unregistListener(listener);
+        sharedCharacterModelList.characterlist.removeObservers(requireActivity());
+        sharedTeamList.teamList.removeObservers(requireActivity());
+        sharedSetup.screencharacterlist.removeObservers(requireActivity());
     }
 }

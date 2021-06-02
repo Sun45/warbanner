@@ -1,12 +1,21 @@
 package cn.sun45.warbanner.ui.views.teamlist;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -15,9 +24,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
@@ -41,9 +53,9 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
     private Context context;
 
     private int showtype;
-    private List<TeamModel> onelist;
-    private List<TeamModel> twolist;
-    private List<TeamModel> threelist;
+    private List<TeamListModel> onelist;
+    private List<TeamListModel> twolist;
+    private List<TeamListModel> threelist;
     private List<CharacterModel> characterModels;
 
     private boolean screenfunction;
@@ -64,13 +76,13 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
         for (TeamModel teamModel : list) {
             switch (teamModel.getStage()) {
                 case 1:
-                    onelist.add(teamModel);
+                    onelist.add(new TeamListModel(teamModel));
                     break;
                 case 2:
-                    twolist.add(teamModel);
+                    twolist.add(new TeamListModel(teamModel));
                     break;
                 case 3:
-                    threelist.add(teamModel);
+                    threelist.add(new TeamListModel(teamModel));
                     break;
                 default:
                     break;
@@ -133,40 +145,40 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
         return count;
     }
 
-    private TeamModel getItem(int position) {
-        TeamModel teamModel = null;
+    private TeamListModel getItem(int position) {
+        TeamListModel teamListModel = null;
         switch (showtype) {
             case SHOW_TYPE_ALL:
                 int p = position;
                 if (onelist != null && onelist.size() > p) {
-                    teamModel = onelist.get(p);
+                    teamListModel = onelist.get(p);
                 } else {
                     if (onelist != null) {
                         p -= onelist.size();
                     }
                     if (twolist != null && twolist.size() > p) {
-                        teamModel = twolist.get(p);
+                        teamListModel = twolist.get(p);
                     } else {
                         if (twolist != null) {
                             p -= twolist.size();
                         }
-                        teamModel = threelist.get(p);
+                        teamListModel = threelist.get(p);
                     }
                 }
                 break;
             case SHOW_TYPE_ONE:
-                teamModel = onelist.get(position);
+                teamListModel = onelist.get(position);
                 break;
             case SHOW_TYPE_TWO:
-                teamModel = twolist.get(position);
+                teamListModel = twolist.get(position);
                 break;
             case SHOW_TYPE_THREE:
-                teamModel = threelist.get(position);
+                teamListModel = threelist.get(position);
                 break;
             default:
                 break;
         }
-        return teamModel;
+        return teamListModel;
     }
 
     public class Holder extends RecyclerView.ViewHolder {
@@ -178,6 +190,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
         private CharacterHolder mCharacterthree;
         private CharacterHolder mCharacterfour;
         private CharacterHolder mCharacterfive;
+        private TextView mRemarks;
 
         public Holder(@NonNull View itemView) {
             super(itemView);
@@ -189,9 +202,12 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
             mCharacterthree = new CharacterHolder(itemView.findViewById(R.id.characterthree_lay), R.id.characterthree_icon, R.id.characterthree_name);
             mCharacterfour = new CharacterHolder(itemView.findViewById(R.id.characterfour_lay), R.id.characterfour_icon, R.id.characterfour_name);
             mCharacterfive = new CharacterHolder(itemView.findViewById(R.id.characterfive_lay), R.id.characterfive_icon, R.id.characterfive_name);
+            mRemarks = itemView.findViewById(R.id.remarks);
         }
 
-        public void setData(TeamModel teamModel) {
+        public void setData(TeamListModel teamListModel) {
+            TeamModel teamModel = teamListModel.getTeamModel();
+            List<TeamListRemarkModel> remarkModels = teamListModel.getRemarkModels();
             mBoss.setText(teamModel.getBoss());
             String title = teamModel.getNumber() + " " + teamModel.getDamage();
             mTitle.setText(title);
@@ -205,6 +221,34 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
             mCharacterthree.setData(teamModel.getCharacterthree());
             mCharacterfour.setData(teamModel.getCharacterfour());
             mCharacterfive.setData(teamModel.getCharacterfive());
+            if (remarkModels.isEmpty()) {
+                mRemarks.setVisibility(View.GONE);
+            } else {
+                SpannableString spanStr = new SpannableString("");
+                SpannableStringBuilder ssb = new SpannableStringBuilder(spanStr);
+                for (int i = 0; i < remarkModels.size(); i++) {
+                    TeamListRemarkModel remarkModel = remarkModels.get(i);
+                    String content = remarkModel.getContent();
+                    if (i != remarkModels.size() - 1) {
+                        content += "\n";
+                    }
+                    String link = remarkModel.getLink();
+                    ssb.append(content);
+                    ssb.setSpan(new ClickableSpan() {
+                        @Override
+                        public void onClick(@NonNull View widget) {
+                            Uri uri = Uri.parse(link);
+                            Intent intent = new Intent();
+                            intent.setAction("android.intent.action.VIEW");
+                            intent.setData(uri);
+                            context.startActivity(intent);
+                        }
+                    }, ssb.length() - content.length(), ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                mRemarks.setVisibility(View.VISIBLE);
+                mRemarks.setMovementMethod(LinkMovementMethod.getInstance());
+                mRemarks.setText(ssb, TextView.BufferType.SPANNABLE);
+            }
         }
     }
 
@@ -249,6 +293,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
                 name.setText("");
             }
         }
+
     }
 
     /**

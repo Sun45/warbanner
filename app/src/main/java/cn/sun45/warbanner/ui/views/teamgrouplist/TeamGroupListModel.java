@@ -1,5 +1,6 @@
 package cn.sun45.warbanner.ui.views.teamgrouplist;
 
+import java.io.Serializable;
 import java.util.List;
 
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
@@ -8,7 +9,7 @@ import cn.sun45.warbanner.document.db.clanwar.TeamModel;
  * Created by Sun45 on 2021/5/30
  * 分刀列表数据模型
  */
-public class TeamGroupListModel {
+public class TeamGroupListModel implements Serializable {
     private TeamModel teamone;
     private List<Integer> idlistone;
     private int borrowindexone;

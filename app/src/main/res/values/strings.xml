@@ -61,6 +61,7 @@
     </string-array>
     <string name="menu_stage_screen_dialog_confirm">确定</string>
     <string name="menu_character_screen">角色筛选</string>
+    <string name="menu_character_screen_summary">红色的勾选角色代表缺失</string>
     <string name="menu_character_screen_enable">角色筛选生效</string>
 
     <string name="character_screen_title">角色筛选</string>
@@ -88,4 +89,5 @@
     <string name="menu_auto_screen_dialog_confirm">确定</string>
     <string name="teamgroup_menu_auto">AUTO</string>
 
+    <string name="teamgroup_detail_title">分刀详情</string>
 </resources>

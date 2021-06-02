@@ -786,6 +786,22 @@ public class Utils {
     }
 
     /**
+     * 去除制表符回车空格
+     *
+     * @param src
+     * @return
+     */
+    public static String replaceBlank(String src) {
+        String dest = "";
+        if (src != null) {
+            Pattern pattern = Pattern.compile("\t|\r|\n|\\s*");
+            Matcher matcher = pattern.matcher(src);
+            dest = matcher.replaceAll("");
+        }
+        return dest;
+    }
+
+    /**
      * 检查url地址合法
      *
      * @param url

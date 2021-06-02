@@ -61,18 +61,23 @@ public class CharacterScreenFragment extends BaseFragment implements CharacterLi
         sharedCharacterModelList.characterlist.observe(requireActivity(), new Observer<List<CharacterModel>>() {
             @Override
             public void onChanged(List<CharacterModel> characterModels) {
-                List<CharacterListModel> list = new ArrayList<>();
-                for (CharacterModel characterModel : characterModels) {
-                    boolean find = false;
-                    for (ScreenCharacterModel screenCharacterModel : sharedSetup.screencharacterlist.getValue()) {
-                        if (characterModel.getId() == screenCharacterModel.getId()) {
-                            find = true;
-                            break;
+                sharedSetup.screencharacterlist.observe(requireActivity(), new Observer<List<ScreenCharacterModel>>() {
+                    @Override
+                    public void onChanged(List<ScreenCharacterModel> screenCharacterModelList) {
+                        List<CharacterListModel> list = new ArrayList<>();
+                        for (CharacterModel characterModel : characterModels) {
+                            boolean find = false;
+                            for (ScreenCharacterModel screenCharacterModel : screenCharacterModelList) {
+                                if (characterModel.getId() == screenCharacterModel.getId()) {
+                                    find = true;
+                                    break;
+                                }
+                            }
+                            list.add(new CharacterListModel(characterModel, find));
                         }
+                        mCharacterList.setData(list);
                     }
-                    list.add(new CharacterListModel(characterModel, find));
-                }
-                mCharacterList.setData(list);
+                });
             }
         });
     }
@@ -102,6 +107,8 @@ public class CharacterScreenFragment extends BaseFragment implements CharacterLi
     @Override
     public void onDestroy() {
         super.onDestroy();
+        sharedCharacterModelList.characterlist.removeObservers(requireActivity());
+        sharedSetup.screencharacterlist.removeObservers(requireActivity());
         sharedSetup.loadData();
     }
 }

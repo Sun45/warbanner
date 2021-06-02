@@ -147,9 +147,7 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 NavController controller = Navigation.findNavController(getView());
-                controller.setGraph(R.navigation.app_navigation);
                 controller.navigate(R.id.action_nav_main_to_nav_characterscreen);
-                btnRestore(preference);
                 return true;
             }
         });

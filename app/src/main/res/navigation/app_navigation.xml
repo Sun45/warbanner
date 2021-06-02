@@ -15,6 +15,13 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
         <action
+            android:id="@+id/action_nav_main_to_nav_teamgroupdetail"
+            app:destination="@id/nav_teamgroupdetail"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
             android:id="@+id/action_nav_main_to_nav_characterscreen"
             app:destination="@id/nav_characterscreen"
             app:enterAnim="@anim/slide_in_right"
@@ -41,7 +48,19 @@
     <fragment
         android:id="@+id/nav_teamgroup"
         android:name="cn.sun45.warbanner.ui.fragments.TeamGroupFragment"
-        android:label="fragment_teamgroup" />
+        android:label="fragment_teamgroup">
+        <action
+            android:id="@+id/action_nav_teamgroup_to_nav_teamgroupdetail"
+            app:destination="@id/nav_teamgroupdetail"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_teamgroupdetail"
+        android:name="cn.sun45.warbanner.ui.fragments.TeamGroupDetailFragment"
+        android:label="fragment_teamgroupdetail" />
     <fragment
         android:id="@+id/nav_characterscreen"
         android:name="cn.sun45.warbanner.ui.fragments.CharacterScreenFragment"

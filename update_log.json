@@ -1,6 +1,6 @@
 {
-  "versionCode": "5",
-  "versionName": "0.8.0",
+  "versionCode": "6",
+  "versionName": "0.8.5",
   "fource": "false",
-  "content": "1.添加分刀功能2.添加自动刀区分显示3.添加分刀筛选功能4.添加分刀收藏功能"
+  "content": "1.添加角色筛选功能提示2.解决一个崩溃点3.解决跳转问题4.添加分刀详情页和作业链接展示及跳转"
 }

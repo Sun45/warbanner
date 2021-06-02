@@ -30,6 +30,7 @@
         <Preference
             app:icon="@drawable/ic_baseline_view_comfy_24"
             app:key="character_screen"
+            app:summary="@string/menu_character_screen_summary"
             app:title="@string/menu_character_screen" />
         <SwitchPreferenceCompat
             app:defaultValue="false"

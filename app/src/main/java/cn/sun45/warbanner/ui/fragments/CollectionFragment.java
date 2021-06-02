@@ -1,5 +1,6 @@
 package cn.sun45.warbanner.ui.fragments;
 
+import android.os.Bundle;
 import android.view.View;
 
 import androidx.lifecycle.Observer;
@@ -54,6 +55,7 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
 
     @Override
     protected void dataRequest() {
+        logD("dataRequest");
         sharedCharacterModelList = new ViewModelProvider(requireActivity()).get(SharedViewModelCharacterModelList.class);
         sharedCharacterModelList.characterlist.observe(requireActivity(), new Observer<List<CharacterModel>>() {
             @Override
@@ -62,7 +64,6 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
                     @Override
                     public void onClick(View v) {
                         NavController controller = Navigation.findNavController(getView());
-                        controller.setGraph(R.navigation.app_navigation);
                         controller.navigate(R.id.action_nav_main_to_nav_teamgroup);
                     }
                 });
@@ -160,5 +161,19 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
                             teamGroupListModel.getTeamthree().getNumber()
                     });
         }
+    }
+
+    @Override
+    public void open(TeamGroupListModel teamGroupListModel) {
+        NavController controller = Navigation.findNavController(getView());
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("teamGroupListModel", teamGroupListModel);
+        controller.navigate(R.id.action_nav_main_to_nav_teamgroupdetail, bundle);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        sharedCharacterModelList.characterlist.removeObservers(requireActivity());
     }
 }

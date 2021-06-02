@@ -86,13 +86,21 @@ public class TeamGroupListAdapter extends RecyclerView.Adapter<TeamGroupListAdap
             mTeamOne = new TeamHolder(itemView.findViewById(R.id.teamone));
             mTeamTwo = new TeamHolder(itemView.findViewById(R.id.teamtwo));
             mTeamThree = new TeamHolder(itemView.findViewById(R.id.teamthree));
-            itemView.setOnClickListener(new View.OnClickListener() {
+            mCollection.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     model.setCollected(!model.isCollected());
                     showCollection();
                     if (listener != null) {
                         listener.collect(model);
+                    }
+                }
+            });
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.open(model);
                     }
                 }
             });

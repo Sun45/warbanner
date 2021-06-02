@@ -6,4 +6,6 @@ package cn.sun45.warbanner.ui.views.teamgrouplist;
  */
 public interface TeamGroupListListener {
     void collect(TeamGroupListModel teamGroupListModel);
+
+    void open(TeamGroupListModel teamGroupListModel);
 }

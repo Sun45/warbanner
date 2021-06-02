@@ -1,9 +1,7 @@
 package cn.sun45.warbanner.ui.fragments;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.os.Handler;
-import android.os.Message;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -13,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -29,7 +28,6 @@ import cn.sun45.warbanner.document.db.clanwar.TeamGroupModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.document.db.setup.ScreenCharacterModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
-import cn.sun45.warbanner.document.preference.ClanwarPreference;
 import cn.sun45.warbanner.document.preference.SetupPreference;
 import cn.sun45.warbanner.framework.MyApplication;
 import cn.sun45.warbanner.framework.document.db.DbHelper;
@@ -44,7 +42,6 @@ import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListListener;
 import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListModel;
 import cn.sun45.warbanner.util.Utils;
 import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function3;
 
 /**
@@ -103,24 +100,37 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
         sharedTeamList = new ViewModelProvider(requireActivity()).get(SharedViewModelTeamList.class);
         sharedSetup = new ViewModelProvider(requireActivity()).get(SharedViewModelSetup.class);
 
-        sharedCharacterModelList.characterlist.observe(requireActivity(), new Observer<List<CharacterModel>>() {
+        if (list != null) {
+            showresult();
+        }
+        sharedSetup.screencharacterlist.observe(requireActivity(), new Observer<List<ScreenCharacterModel>>() {
             @Override
-            public void onChanged(List<CharacterModel> characterModels) {
-                mTeamGroupList.setCharacterModels(characterModels);
-                mState.setOnClickListener(new View.OnClickListener() {
+            public void onChanged(List<ScreenCharacterModel> screenCharacterModelList) {
+                sharedTeamList.teamList.observe(requireActivity(), new Observer<List<TeamModel>>() {
                     @Override
-                    public void onClick(View v) {
-                        mState.setClickable(false);
-                        mState.setText(R.string.character_screen_state_progressing);
-                        new Thread() {
+                    public void onChanged(List<TeamModel> teamModels) {
+                        sharedCharacterModelList.characterlist.observe(requireActivity(), new Observer<List<CharacterModel>>() {
                             @Override
-                            public void run() {
-                                super.run();
-                                collectionlist = DbHelper.query(getContext(), TeamGroupModel.class);
-                                progressinterrupt = false;
-                                buildElementList(sharedTeamList.teamList.getValue());
+                            public void onChanged(List<CharacterModel> characterModels) {
+                                mTeamGroupList.setCharacterModels(characterModels);
+                                mState.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        mState.setClickable(false);
+                                        mState.setText(R.string.character_screen_state_progressing);
+                                        new Thread() {
+                                            @Override
+                                            public void run() {
+                                                super.run();
+                                                collectionlist = DbHelper.query(getContext(), TeamGroupModel.class);
+                                                progressinterrupt = false;
+                                                buildElementList(teamModels);
+                                            }
+                                        }.start();
+                                    }
+                                });
                             }
-                        }.start();
+                        });
                     }
                 });
             }
@@ -315,16 +325,20 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
             activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (progressinterrupt) {
-                        mState.setText(Utils.getStringWithPlaceHolder(R.string.character_screen_state_interrupt_finish, list.size()));
-                    } else {
-                        mState.setText(Utils.getStringWithPlaceHolder(R.string.character_screen_state_finish, list.size()));
-                    }
-                    mState.setClickable(true);
-                    mTeamGroupList.setData(list);
+                    showresult();
                 }
             });
         }
+    }
+
+    private void showresult() {
+        if (progressinterrupt) {
+            mState.setText(Utils.getStringWithPlaceHolder(R.string.character_screen_state_interrupt_finish, list.size()));
+        } else {
+            mState.setText(Utils.getStringWithPlaceHolder(R.string.character_screen_state_finish, list.size()));
+        }
+        mState.setClickable(true);
+        mTeamGroupList.setData(list);
     }
 
     /**
@@ -758,5 +772,21 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
                             teamGroupListModel.getTeamthree().getNumber()
                     });
         }
+    }
+
+    @Override
+    public void open(TeamGroupListModel teamGroupListModel) {
+        NavController controller = Navigation.findNavController(getView());
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("teamGroupListModel", teamGroupListModel);
+        controller.navigate(R.id.action_nav_teamgroup_to_nav_teamgroupdetail, bundle);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        sharedCharacterModelList.characterlist.removeObservers(requireActivity());
+        sharedTeamList.teamList.removeObservers(requireActivity());
+        sharedSetup.screencharacterlist.removeObservers(requireActivity());
     }
 }

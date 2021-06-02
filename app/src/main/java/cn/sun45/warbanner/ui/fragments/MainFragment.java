@@ -60,7 +60,7 @@ public class MainFragment extends BaseFragment {
 
     @Override
     protected void dataRequest() {
-
+        logD("dataRequest");
     }
 
     /**
