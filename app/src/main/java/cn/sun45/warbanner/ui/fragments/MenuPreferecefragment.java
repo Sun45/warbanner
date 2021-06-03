@@ -13,6 +13,7 @@ import androidx.preference.SwitchPreferenceCompat;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.list.DialogMultiChoiceExtKt;
+import com.afollestad.materialdialogs.list.DialogSingleChoiceExtKt;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
@@ -44,6 +45,8 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
     private Preference stageScreen;
     private Preference characterScreen;
     private SwitchPreferenceCompat characterScreenEnable;
+
+    private Preference link;
 
     private SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
@@ -158,6 +161,40 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
             public boolean onPreferenceChange(Preference preference, Object newValue) {
                 new SetupPreference().setCharacterscreenenable((boolean) newValue);
                 return true;
+            }
+        });
+
+        link = findPreference("link_open_type");
+        link.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                MaterialDialog dialog = new MaterialDialog(getContext(), MaterialDialog.getDEFAULT_BEHAVIOR());
+                dialog.title(R.string.menu_link_open_type, null);
+                List<Integer> selection = new ArrayList<>();
+                if (new SetupPreference().isStageonescreen()) {
+                    selection.add(0);
+                }
+                if (new SetupPreference().isStagetwoscreen()) {
+                    selection.add(1);
+                }
+                if (new SetupPreference().isStagethreescreen()) {
+                    selection.add(2);
+                }
+                int[] selectionlist = new int[selection.size()];
+                for (int i = 0; i < selection.size(); i++) {
+                    selectionlist[i] = selection.get(i);
+                }
+                DialogSingleChoiceExtKt.listItemsSingleChoice(dialog, R.array.menu_link_open_type_dialog_options, null, null, new SetupPreference().getLinkopentype(), true, 0, 0, new Function3<MaterialDialog, Integer, CharSequence, Unit>() {
+                    @Override
+                    public Unit invoke(MaterialDialog materialDialog, Integer integer, CharSequence charSequence) {
+                        new SetupPreference().setLinkopentype(integer);
+                        return null;
+                    }
+                });
+                dialog.cancelOnTouchOutside(false);
+                dialog.positiveButton(R.string.menu_link_open_type_dialog_confirm, null, null);
+                dialog.show();
+                return false;
             }
         });
 

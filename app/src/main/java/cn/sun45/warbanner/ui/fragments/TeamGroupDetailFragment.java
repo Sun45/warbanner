@@ -61,11 +61,11 @@ public class TeamGroupDetailFragment extends BaseFragment {
     protected void dataRequest() {
         sharedCharacterModelList = new ViewModelProvider(requireActivity()).get(SharedViewModelCharacterModelList.class);
 
-        List<TeamModel> teamModels=new ArrayList<>();
+        List<TeamModel> teamModels = new ArrayList<>();
         teamModels.add(teamGroupListModel.getTeamone());
         teamModels.add(teamGroupListModel.getTeamtwo());
         teamModels.add(teamGroupListModel.getTeamthree());
-        mTeamList.setData(teamModels, new ClanwarPreference().getTeamlistshowtype());
+        mTeamList.setData(teamModels);
         sharedCharacterModelList.characterlist.observe(requireActivity(), new Observer<List<CharacterModel>>() {
             @Override
             public void onChanged(List<CharacterModel> characterModels) {

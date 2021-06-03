@@ -26,6 +26,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -35,6 +36,7 @@ import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.document.db.setup.ScreenCharacterModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
+import cn.sun45.warbanner.document.preference.SetupPreference;
 import cn.sun45.warbanner.framework.image.ImageRequester;
 import cn.sun45.warbanner.util.Utils;
 
@@ -52,6 +54,8 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
 
     private Context context;
 
+    private boolean showlink = true;
+
     private int showtype;
     private List<TeamListModel> onelist;
     private List<TeamListModel> twolist;
@@ -63,6 +67,10 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
 
     public TeamListAdapter(Context context) {
         this.context = context;
+    }
+
+    public void setShowlink(boolean showlink) {
+        this.showlink = showlink;
     }
 
     public void setShowtype(int showtype) {
@@ -221,33 +229,47 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
             mCharacterthree.setData(teamModel.getCharacterthree());
             mCharacterfour.setData(teamModel.getCharacterfour());
             mCharacterfive.setData(teamModel.getCharacterfive());
-            if (remarkModels.isEmpty()) {
-                mRemarks.setVisibility(View.GONE);
-            } else {
-                SpannableString spanStr = new SpannableString("");
-                SpannableStringBuilder ssb = new SpannableStringBuilder(spanStr);
-                for (int i = 0; i < remarkModels.size(); i++) {
-                    TeamListRemarkModel remarkModel = remarkModels.get(i);
-                    String content = remarkModel.getContent();
-                    if (i != remarkModels.size() - 1) {
-                        content += "\n";
-                    }
-                    String link = remarkModel.getLink();
-                    ssb.append(content);
-                    ssb.setSpan(new ClickableSpan() {
-                        @Override
-                        public void onClick(@NonNull View widget) {
-                            Uri uri = Uri.parse(link);
-                            Intent intent = new Intent();
-                            intent.setAction("android.intent.action.VIEW");
-                            intent.setData(uri);
-                            context.startActivity(intent);
+            if (showlink) {
+                if (remarkModels.isEmpty()) {
+                    mRemarks.setVisibility(View.GONE);
+                } else {
+                    SpannableString spanStr = new SpannableString("");
+                    SpannableStringBuilder ssb = new SpannableStringBuilder(spanStr);
+                    for (int i = 0; i < remarkModels.size(); i++) {
+                        TeamListRemarkModel remarkModel = remarkModels.get(i);
+                        String content = remarkModel.getContent();
+                        if (i != remarkModels.size() - 1) {
+                            content += "\n";
                         }
-                    }, ssb.length() - content.length(), ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        String link = remarkModel.getLink();
+                        ssb.append(content);
+                        ssb.setSpan(new ClickableSpan() {
+                            @Override
+                            public void onClick(@NonNull View widget) {
+                                if (new SetupPreference().getLinkopentype() == 0) {
+                                    Uri uri = Uri.parse(link);
+                                    Intent intent = new Intent();
+                                    intent.setAction("android.intent.action.VIEW");
+                                    intent.setData(uri);
+                                    context.startActivity(intent);
+                                } else {
+                                    Intent intent = new Intent();
+                                    intent.setAction(Intent.ACTION_SEND);
+                                    intent.putExtra(Intent.EXTRA_TEXT, link);
+                                    intent.putExtra(Intent.EXTRA_SUBJECT, "share");
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.setType("text/plain");
+                                    context.startActivity(Intent.createChooser(intent, Utils.getString(R.string.app_name)));
+                                }
+                            }
+                        }, ssb.length() - content.length(), ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }
+                    mRemarks.setVisibility(View.VISIBLE);
+                    mRemarks.setMovementMethod(LinkMovementMethod.getInstance());
+                    mRemarks.setText(ssb, TextView.BufferType.SPANNABLE);
                 }
-                mRemarks.setVisibility(View.VISIBLE);
-                mRemarks.setMovementMethod(LinkMovementMethod.getInstance());
-                mRemarks.setText(ssb, TextView.BufferType.SPANNABLE);
+            } else {
+                mRemarks.setVisibility(View.GONE);
             }
         }
     }

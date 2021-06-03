@@ -35,9 +35,20 @@ public class TeamList extends RecyclerView {
         setAdapter(adapter);
     }
 
-    public void setData(List<TeamModel> list, int showtype) {
+    public void setData(List<TeamModel> list) {
         adapter.setList(list);
+        adapter.notifyDataSetChanged();
+    }
+
+    public void setData(List<TeamModel> list, boolean showlink, int showtype) {
+        adapter.setList(list);
+        adapter.setShowlink(showlink);
         adapter.setShowtype(showtype);
+        adapter.notifyDataSetChanged();
+    }
+
+    public void notifyShowLink(boolean showlink) {
+        adapter.setShowlink(showlink);
         adapter.notifyDataSetChanged();
     }
 

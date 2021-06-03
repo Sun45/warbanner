@@ -43,6 +43,18 @@
     <string name="title_teamlist">作业</string>
     <string name="title_menu">菜单</string>
 
+    <string name="teamlist_menu_link">链接</string>
+    <string name="teamlist_menu_link_screen">链接</string>
+    <string name="teamlist_menu_link_show">展示作业链接</string>
+    <string name="teamlist_menu_link_screen_dialog_confirm">确定</string>
+    <string name="teamlist_menu_auto">AUTO</string>
+    <string name="teamlist_menu_auto_screen">AUTO筛选</string>
+    <string-array name="teamlist_menu_auto_screen_dialog_options">
+        <item>全部</item>
+        <item>AUTO</item>
+        <item>非AUTO</item>
+    </string-array>
+    <string name="teamlist_menu_auto_screen_dialog_confirm">确定</string>
     <string name="teamlist_menu_all">全部</string>
     <string name="teamlist_menu_one">一阶段</string>
     <string name="teamlist_menu_two">二阶段</string>
@@ -63,6 +75,13 @@
     <string name="menu_character_screen">角色筛选</string>
     <string name="menu_character_screen_summary">红色的勾选角色代表缺失</string>
     <string name="menu_character_screen_enable">角色筛选生效</string>
+    <string name="menu_others">其它</string>
+    <string name="menu_link_open_type">链接打开方式</string>
+    <string-array name="menu_link_open_type_dialog_options">
+        <item>用浏览器打开</item>
+        <item>通过文本分享</item>
+    </string-array>
+    <string name="menu_link_open_type_dialog_confirm">确定</string>
 
     <string name="character_screen_title">角色筛选</string>
     <string name="character_screen_state_start">点击生成分刀</string>
@@ -72,22 +91,20 @@
 
     <string name="teamgroup_title">分刀</string>
     <string name="teamgroup_menu_boss">BOSS</string>
-    <string name="menu_boss_screen">BOSS筛选</string>
-    <string-array name="menu_boss_screen_dialog_options">
+    <string name="teamgroup_menu_boss_screen">BOSS筛选</string>
+    <string-array name="teamgroup_menu_boss_screen_dialog_options">
         <item>一王</item>
         <item>二王</item>
         <item>三王</item>
         <item>四王</item>
         <item>五王</item>
     </string-array>
-    <string name="menu_boss_screen_dialog_confirm">确定</string>
-    <string name="menu_auto_screen">AUTO筛选</string>
-    <string-array name="menu_auto_screen_dialog_options">
-        <item>非AUTO</item>
-        <item>AUTO</item>
-    </string-array>
-    <string name="menu_auto_screen_dialog_confirm">确定</string>
+    <string name="teamgroup_menu_boss_screen_dialog_confirm">确定</string>
     <string name="teamgroup_menu_auto">AUTO</string>
+    <string name="teamgroup_menu_auto_screen">AUTO筛选</string>
+    <string name="teamgroup_menu_auto_screen_autocount">AUTO刀%1$d</string>
+    <string name="teamgroup_menu_auto_screen_notautocount">非AUTO刀%1$d</string>
+    <string name="teamgroup_menu_auto_screen_use">启用auto筛选</string>
 
     <string name="teamgroup_detail_title">分刀详情</string>
 </resources>

@@ -21,7 +21,7 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:theme="@style/AppTheme"
-        app:key="system_category"
+        app:key="screen_category"
         app:title="@string/menu_screen">
         <Preference
             app:icon="@drawable/ic_baseline_insert_chart_outlined_24"
@@ -37,5 +37,14 @@
             app:icon="@drawable/ic_baseline_view_comfy_24"
             app:key="character_screen_enable"
             app:title="@string/menu_character_screen_enable" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:theme="@style/AppTheme"
+        app:key="others_category"
+        app:title="@string/menu_others">
+        <Preference
+            app:icon="@drawable/ic_baseline_link_24"
+            app:key="link_open_type"
+            app:title="@string/menu_link_open_type" />
     </PreferenceCategory>
 </PreferenceScreen>

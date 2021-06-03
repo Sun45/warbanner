@@ -25,8 +25,11 @@ public class SetupPreference extends BasePreference {
     private boolean bossfivescreen = false;
 
     //auto筛选
-    private boolean notautoscreen = true;
-    private boolean autoscreen = true;
+    private boolean useautoscreen = true;
+    private int autocount = 0;
+
+    //链接打开方式
+    private int linkopentype;
 
     public boolean isStageonescreen() {
         return load("stageonescreen");
@@ -100,20 +103,28 @@ public class SetupPreference extends BasePreference {
         save("bossfivescreen", bossfivescreen);
     }
 
-    public boolean isNotautoscreen() {
-        return load("notautoscreen");
+    public boolean isUseautoscreen() {
+        return load("useautoscreen");
     }
 
-    public void setNotautoscreen(boolean notautoscreen) {
-        save("notautoscreen", notautoscreen);
+    public void setUseautoscreen(boolean useautoscreen) {
+        save("useautoscreen", useautoscreen);
     }
 
-    public boolean isAutoscreen() {
-        return load("autoscreen");
+    public int getAutocount() {
+        return load("autocount");
     }
 
-    public void setAutoscreen(boolean autoscreen) {
-        save("autoscreen", autoscreen);
+    public void setAutocount(int autocount) {
+        save("autocount", autocount);
+    }
+
+    public int getLinkopentype() {
+        return load("linkopentype");
+    }
+
+    public void setLinkopentype(int linkopentype) {
+        save("linkopentype", linkopentype);
     }
 
     @Override

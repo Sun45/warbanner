@@ -1,6 +1,7 @@
 package cn.sun45.warbanner.ui.fragments;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -11,10 +12,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.checkbox.DialogCheckboxExtKt;
+import com.afollestad.materialdialogs.list.DialogSingleChoiceExtKt;
 import com.google.android.material.appbar.MaterialToolbar;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.sun45.warbanner.R;
@@ -32,6 +37,9 @@ import cn.sun45.warbanner.ui.shared.SharedViewModelSetup;
 import cn.sun45.warbanner.ui.shared.SharedViewModelTeamList;
 import cn.sun45.warbanner.ui.views.teamlist.TeamList;
 import cn.sun45.warbanner.ui.views.teamlist.TeamListAdapter;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
+import kotlin.jvm.functions.Function3;
 
 /**
  * Created by Sun45 on 2021/5/22
@@ -84,7 +92,7 @@ public class TeamListFragment extends BaseFragment {
 //                for (TeamModel teamModel : teamModels) {
 //                    logD(teamModel.toString());
 //                }
-                mTeamList.setData(teamModels, new ClanwarPreference().getTeamlistshowtype());
+                listShow(teamModels);
                 sharedCharacterModelList.characterlist.observe(requireActivity(), new Observer<List<CharacterModel>>() {
                     @Override
                     public void onChanged(List<CharacterModel> characterModels) {
@@ -100,6 +108,23 @@ public class TeamListFragment extends BaseFragment {
             }
         });
         new SetupPreference().registListener(listener);
+    }
+
+    private void listShow(List<TeamModel> teamModels) {
+        int teamlistautoscreen = new ClanwarPreference().getTeamlistautoscreen();
+        List<TeamModel> data = new ArrayList<>();
+        for (TeamModel teamModel : teamModels) {
+            if (teamModel.isAuto()) {
+                if (teamlistautoscreen == 0 || teamlistautoscreen == 1) {
+                    data.add(teamModel);
+                }
+            } else {
+                if (teamlistautoscreen == 0 || teamlistautoscreen == 2) {
+                    data.add(teamModel);
+                }
+            }
+        }
+        mTeamList.setData(data, new ClanwarPreference().isLinkshow(), new ClanwarPreference().getTeamlistshowtype());
     }
 
     @Override
@@ -119,28 +144,90 @@ public class TeamListFragment extends BaseFragment {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
-        int showtype = 0;
-        switch (item.getItemId()) {
-            case R.id.menu_all:
-                item.setChecked(true);
-                showtype = TeamListAdapter.SHOW_TYPE_ALL;
-                break;
-            case R.id.menu_one:
-                item.setChecked(true);
-                showtype = TeamListAdapter.SHOW_TYPE_ONE;
-                break;
-            case R.id.menu_two:
-                item.setChecked(true);
-                showtype = TeamListAdapter.SHOW_TYPE_TWO;
-                break;
-            case R.id.menu_three:
-                item.setChecked(true);
-                showtype = TeamListAdapter.SHOW_TYPE_THREE;
-                break;
+        if (item.getGroupId() == R.id.stage) {
+            int showtype = 0;
+            switch (item.getItemId()) {
+                case R.id.menu_all:
+                    item.setChecked(true);
+                    showtype = TeamListAdapter.SHOW_TYPE_ALL;
+                    break;
+                case R.id.menu_one:
+                    item.setChecked(true);
+                    showtype = TeamListAdapter.SHOW_TYPE_ONE;
+                    break;
+                case R.id.menu_two:
+                    item.setChecked(true);
+                    showtype = TeamListAdapter.SHOW_TYPE_TWO;
+                    break;
+                case R.id.menu_three:
+                    item.setChecked(true);
+                    showtype = TeamListAdapter.SHOW_TYPE_THREE;
+                    break;
+            }
+            new ClanwarPreference().setTeamlistshowtype(showtype);
+            mTeamList.notifyShowtype(showtype);
+        } else {
+            switch (item.getItemId()) {
+                case R.id.menu_link:
+                    showlinkdialog();
+                    break;
+                case R.id.menu_auto:
+                    showautoscreendialog();
+                    break;
+            }
         }
-        new ClanwarPreference().setTeamlistshowtype(showtype);
-        mTeamList.notifyShowtype(showtype);
         return true;
+    }
+
+    private void showlinkdialog() {
+        MaterialDialog dialog = new MaterialDialog(getContext(), MaterialDialog.getDEFAULT_BEHAVIOR());
+        dialog.title(R.string.teamlist_menu_link_screen, null);
+        DialogCheckboxExtKt.checkBoxPrompt(dialog, R.string.teamlist_menu_link_show, null, new ClanwarPreference().isLinkshow(), new Function1<Boolean, Unit>() {
+            @Override
+            public Unit invoke(Boolean aBoolean) {
+                new ClanwarPreference().setLinkshow(aBoolean);
+                mTeamList.notifyShowLink(aBoolean);
+                return null;
+            }
+        });
+        dialog.positiveButton(R.string.teamlist_menu_link_screen_dialog_confirm, null, null);
+        dialog.show();
+    }
+
+    private void showautoscreendialog() {
+        MaterialDialog dialog = new MaterialDialog(getContext(), MaterialDialog.getDEFAULT_BEHAVIOR());
+        dialog.title(R.string.teamlist_menu_auto_screen, null);
+        List<Integer> selection = new ArrayList<>();
+        if (new SetupPreference().isBossonescreen()) {
+            selection.add(0);
+        }
+        if (new SetupPreference().isBosstwoscreen()) {
+            selection.add(1);
+        }
+        if (new SetupPreference().isBossthreescreen()) {
+            selection.add(2);
+        }
+        if (new SetupPreference().isBossfourscreen()) {
+            selection.add(3);
+        }
+        if (new SetupPreference().isBossfivescreen()) {
+            selection.add(4);
+        }
+        int[] selectionlist = new int[selection.size()];
+        for (int i = 0; i < selection.size(); i++) {
+            selectionlist[i] = selection.get(i);
+        }
+        DialogSingleChoiceExtKt.listItemsSingleChoice(dialog, R.array.teamlist_menu_auto_screen_dialog_options, null, null, new ClanwarPreference().getTeamlistautoscreen(), true, 0, 0, new Function3<MaterialDialog, Integer, CharSequence, Unit>() {
+            @Override
+            public Unit invoke(MaterialDialog materialDialog, Integer integer, CharSequence charSequence) {
+                new ClanwarPreference().setTeamlistautoscreen(integer);
+                listShow(sharedTeamList.teamList.getValue());
+                return null;
+            }
+        });
+        dialog.cancelOnTouchOutside(false);
+        dialog.positiveButton(R.string.teamlist_menu_auto_screen_dialog_confirm, null, null);
+        dialog.show();
     }
 
     @Override

@@ -47,9 +47,9 @@ public class MainActivity extends BaseActivity implements PermissionRequestListe
     private SharedViewModelTeamList sharedTeamModelList;
     private SharedViewModelSetup sharedSetup;
 
-    private UpdateManager updateManager;
     private SourceManager sourceManager;
     private ClanWarManager clanWarManager;
+    private UpdateManager updateManager;
 
     private View mRoot;
 
@@ -77,16 +77,17 @@ public class MainActivity extends BaseActivity implements PermissionRequestListe
         sharedCharacterModelList.setCallBack(this);
         sharedTeamModelList = new ViewModelProvider(this).get(SharedViewModelTeamList.class);
         sharedSetup = new ViewModelProvider(this).get(SharedViewModelSetup.class);
-        UpdateManager.init(this);
-        updateManager = UpdateManager.getInstance();
-        updateManager.setiActivityCallBack(this);
         SourceManager.init(this);
         sourceManager = SourceManager.getInstance();
         sourceManager.setiActivityCallBack(this);
         ClanWarManager.init(this);
         clanWarManager = ClanWarManager.getInstance();
         clanWarManager.setiActivityCallBack(this);
-        NickNameManager.init(this);
+        UpdateManager.init(this);
+        updateManager = UpdateManager.getInstance();
+        updateManager.setiActivityCallBack(this);
+
+//        NickNameManager.init(this);
     }
 
     @Override
@@ -119,7 +120,7 @@ public class MainActivity extends BaseActivity implements PermissionRequestListe
     @Override
     public void permissionGained() {
         sharedSetup.loadData();
-        updateManager.checkAppVersion(true);
+        sourceLoad();
     }
 
     private void sourceLoad() {
@@ -144,9 +145,14 @@ public class MainActivity extends BaseActivity implements PermissionRequestListe
                     clanWarManager.showConfirmDialog(true);
                 } else {
                     sharedTeamModelList.loadData();
+                    checkAppVersion();
                 }
             }
         });
+    }
+
+    private void checkAppVersion() {
+        updateManager.checkAppVersion(true);
     }
 
     @Override
@@ -159,13 +165,6 @@ public class MainActivity extends BaseActivity implements PermissionRequestListe
     @Override
     public void showSnackBar(int messageRes) {
         Utils.tip(mRoot, messageRes);
-    }
-
-    @Override
-    public void updateInterrupt(boolean autocheck) {
-        if (autocheck) {
-            sourceLoad();
-        }
     }
 
     @Override
@@ -188,5 +187,12 @@ public class MainActivity extends BaseActivity implements PermissionRequestListe
     @Override
     public void ClanWarReady(boolean autocheck) {
         sharedTeamModelList.loadData();
+        if (autocheck) {
+            checkAppVersion();
+        }
+    }
+
+    @Override
+    public void updateInterrupt(boolean autocheck) {
     }
 }

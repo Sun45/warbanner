@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="none">
+        <item
+            android:id="@+id/menu_link"
+            android:title="@string/teamlist_menu_link"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/menu_auto"
+            android:title="@string/teamlist_menu_auto"
+            app:showAsAction="always" />
+    </group>
+    <group
+        android:id="@+id/stage"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/menu_all"
             android:title="@string/teamlist_menu_all"

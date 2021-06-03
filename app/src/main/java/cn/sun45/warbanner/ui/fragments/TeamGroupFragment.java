@@ -6,15 +6,21 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.afollestad.materialdialogs.checkbox.DialogCheckboxExtKt;
+import com.afollestad.materialdialogs.customview.DialogCustomViewExtKt;
 import com.afollestad.materialdialogs.list.DialogMultiChoiceExtKt;
 import com.google.android.material.appbar.MaterialToolbar;
 
@@ -42,6 +48,7 @@ import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListListener;
 import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListModel;
 import cn.sun45.warbanner.util.Utils;
 import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function3;
 
 /**
@@ -63,7 +70,7 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
 
     private List<TeamGroupListModel> list;
 
-    private static final int interruptsize = 1000;
+    private static final int interruptsize = 6000;
 
     private boolean progressinterrupt;
 
@@ -257,19 +264,39 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
         if (new SetupPreference().isBossfivescreen()) {
             bossscreentask.add("5");
         }
-        boolean usenotauto = new SetupPreference().isNotautoscreen();
-        boolean useauto = new SetupPreference().isAutoscreen();
+        boolean useautoscreen = new SetupPreference().isUseautoscreen();
+        int targetautocount = new SetupPreference().getAutocount();
+        int currentautocount = 0;
         for (int i = 0; i < size; i++) {
             logD("i：" + i);
             TeamGroupListElementModel one = elementModelList.get(i);
-            if (!autoscreencompatible(usenotauto, useauto, one)) {
-                continue;
+            if (useautoscreen) {
+                currentautocount = 0;
+                if (one.getTeamModel().isAuto()) {
+                    currentautocount++;
+                }
+                if (!autoscreencompatible(targetautocount, currentautocount, 1)) {
+                    continue;
+                }
             }
             List<String> provide = new ArrayList<>();
+            provide.add(one.getTeamModel().getBoss().substring(1, 2));
+            if (!bossscreencompatible(bossscreentask, provide)) {
+                continue;
+            }
             for (int j = i + 1; j < elementModelList.size(); j++) {
                 TeamGroupListElementModel two = elementModelList.get(j);
-                if (!autoscreencompatible(usenotauto, useauto, two)) {
-                    continue;
+                if (useautoscreen) {
+                    currentautocount = 0;
+                    if (one.getTeamModel().isAuto()) {
+                        currentautocount++;
+                    }
+                    if (two.getTeamModel().isAuto()) {
+                        currentautocount++;
+                    }
+                    if (!autoscreencompatible(targetautocount, currentautocount, 2)) {
+                        continue;
+                    }
                 }
                 provide.clear();
                 provide.add(one.getTeamModel().getBoss().substring(1, 2));
@@ -280,8 +307,20 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
                 if (compatible(one, two)) {
                     for (int k = j + 1; k < elementModelList.size(); k++) {
                         TeamGroupListElementModel three = elementModelList.get(k);
-                        if (!autoscreencompatible(usenotauto, useauto, three)) {
-                            continue;
+                        if (useautoscreen) {
+                            currentautocount = 0;
+                            if (one.getTeamModel().isAuto()) {
+                                currentautocount++;
+                            }
+                            if (two.getTeamModel().isAuto()) {
+                                currentautocount++;
+                            }
+                            if (three.getTeamModel().isAuto()) {
+                                currentautocount++;
+                            }
+                            if (!autoscreencompatible(targetautocount, currentautocount, 3)) {
+                                continue;
+                            }
                         }
                         provide.clear();
                         provide.add(one.getTeamModel().getBoss().substring(1, 2));
@@ -376,11 +415,11 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
     /**
      * 满足auto筛选
      */
-    private boolean autoscreencompatible(boolean usenotauto, boolean useauto, TeamGroupListElementModel model) {
-        if (!usenotauto && !model.getTeamModel().isAuto()) {
+    private boolean autoscreencompatible(int targetautocount, int currentautocount, int layer) {
+        if (currentautocount > targetautocount) {
             return false;
         }
-        if (!useauto && model.getTeamModel().isAuto()) {
+        if (layer - currentautocount > (3 - targetautocount)) {
             return false;
         }
         return true;
@@ -632,7 +671,7 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
 
     private void showbossdialog() {
         MaterialDialog dialog = new MaterialDialog(getContext(), MaterialDialog.getDEFAULT_BEHAVIOR());
-        dialog.title(R.string.menu_boss_screen, null);
+        dialog.title(R.string.teamgroup_menu_boss_screen, null);
         List<Integer> selection = new ArrayList<>();
         if (new SetupPreference().isBossonescreen()) {
             selection.add(0);
@@ -653,7 +692,7 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
         for (int i = 0; i < selection.size(); i++) {
             selectionlist[i] = selection.get(i);
         }
-        DialogMultiChoiceExtKt.listItemsMultiChoice(dialog, R.array.menu_boss_screen_dialog_options, null, getBossdialogDisabledIndices(selectionlist), selectionlist, false, false, new Function3<MaterialDialog, int[], List<? extends CharSequence>, Unit>() {
+        DialogMultiChoiceExtKt.listItemsMultiChoice(dialog, R.array.teamgroup_menu_boss_screen_dialog_options, null, getBossdialogDisabledIndices(selectionlist), selectionlist, false, false, new Function3<MaterialDialog, int[], List<? extends CharSequence>, Unit>() {
             @Override
             public Unit invoke(MaterialDialog materialDialog, int[] ints, List<? extends CharSequence> charSequences) {
                 new SetupPreference().setBossonescreen(false);
@@ -682,11 +721,11 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
                             break;
                     }
                 }
-                DialogMultiChoiceExtKt.updateListItemsMultiChoice(materialDialog, R.array.menu_boss_screen_dialog_options, null, getBossdialogDisabledIndices(ints), null);
+                DialogMultiChoiceExtKt.updateListItemsMultiChoice(materialDialog, R.array.teamgroup_menu_boss_screen_dialog_options, null, getBossdialogDisabledIndices(ints), null);
                 return null;
             }
         });
-        dialog.positiveButton(R.string.menu_boss_screen_dialog_confirm, null, null);
+        dialog.positiveButton(R.string.teamgroup_menu_boss_screen_dialog_confirm, null, null);
         dialog.show();
     }
 
@@ -716,39 +755,48 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
 
     private void showautodialog() {
         MaterialDialog dialog = new MaterialDialog(getContext(), MaterialDialog.getDEFAULT_BEHAVIOR());
-        dialog.title(R.string.menu_auto_screen, null);
-        List<Integer> selection = new ArrayList<>();
-        if (new SetupPreference().isNotautoscreen()) {
-            selection.add(0);
-        }
-        if (new SetupPreference().isAutoscreen()) {
-            selection.add(1);
-        }
-        int[] selectionlist = new int[selection.size()];
-        for (int i = 0; i < selection.size(); i++) {
-            selectionlist[i] = selection.get(i);
-        }
-        DialogMultiChoiceExtKt.listItemsMultiChoice(dialog, R.array.menu_auto_screen_dialog_options, null, null, selectionlist, true, false, new Function3<MaterialDialog, int[], List<? extends CharSequence>, Unit>() {
+        dialog.title(R.string.teamgroup_menu_auto_screen, null);
+        int autocount = new SetupPreference().getAutocount();
+        LinearLayout linearLayout = new LinearLayout(getContext());
+        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        TextView auto = new TextView(getContext());
+        auto.setText(Utils.getStringWithPlaceHolder(R.string.teamgroup_menu_auto_screen_autocount, autocount));
+        auto.setTextColor(Utils.getColor(R.color.green_350));
+        TextView notauto = new TextView(getContext());
+        notauto.setText(Utils.getStringWithPlaceHolder(R.string.teamgroup_menu_auto_screen_notautocount, 3 - autocount));
+        notauto.setTextColor(Utils.getColor(R.color.red_light));
+        AppCompatSeekBar seekBar = new AppCompatSeekBar(getContext());
+        seekBar.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+        seekBar.setProgressDrawable(getResources().getDrawable(R.drawable.teamgroup_auto_screen_progress_drawable));
+        seekBar.setMax(3);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public Unit invoke(MaterialDialog materialDialog, int[] ints, List<? extends CharSequence> charSequences) {
-                new SetupPreference().setNotautoscreen(false);
-                new SetupPreference().setAutoscreen(false);
-                for (int which : ints) {
-                    switch (which) {
-                        case 0:
-                            new SetupPreference().setNotautoscreen(true);
-                            break;
-                        case 1:
-                            new SetupPreference().setAutoscreen(true);
-                            break;
-                        default:
-                            break;
-                    }
-                }
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                new SetupPreference().setAutocount(progress);
+                auto.setText(Utils.getStringWithPlaceHolder(R.string.teamgroup_menu_auto_screen_autocount, progress));
+                notauto.setText(Utils.getStringWithPlaceHolder(R.string.teamgroup_menu_auto_screen_notautocount, 3 - progress));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+            }
+        });
+        seekBar.setProgress(autocount);
+        linearLayout.addView(auto);
+        linearLayout.addView(seekBar);
+        linearLayout.addView(notauto);
+        DialogCustomViewExtKt.customView(dialog, null, linearLayout, false, false, true, false);
+        DialogCheckboxExtKt.checkBoxPrompt(dialog, R.string.teamgroup_menu_auto_screen_use, null, new SetupPreference().isUseautoscreen(), new Function1<Boolean, Unit>() {
+            @Override
+            public Unit invoke(Boolean aBoolean) {
+                new SetupPreference().setUseautoscreen(aBoolean);
                 return null;
             }
         });
-        dialog.positiveButton(R.string.menu_auto_screen_dialog_confirm, null, null);
         dialog.show();
     }
 

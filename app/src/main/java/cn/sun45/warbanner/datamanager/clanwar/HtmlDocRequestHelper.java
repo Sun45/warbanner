@@ -38,7 +38,6 @@ public class HtmlDocRequestHelper {
             @Override
             public void onRequest(String url) {
                 if (!requested) {
-                    //"https://docs.qq.com/dop-api/get/sheet?tab=s3dwgf&padId=300000000$ZQZZgREoQooR&subId=s3dwgf&startrow=0&endrow=417&xsrf=cf874c7ed6ddf074&_r=0.4841650719923919&outformat=1&normal=1&preview_token=&nowb=1&rev=8891"
                     if (url.startsWith("https://docs.qq.com/dop-api/get/sheet?")) {
                         requested = true;
                         Matcher m = Pattern.compile("startrow=[0-9]+(&|$)").matcher(url);
