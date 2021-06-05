@@ -139,7 +139,7 @@ public class TeamListFragment extends BaseFragment {
     public void onCreateOptionsMenu(@NonNull @NotNull Menu menu, @NonNull @NotNull MenuInflater inflater) {
         menu.clear();
         inflater.inflate(R.menu.fragment_teamlist_drop_toolbar, menu);
-        menu.getItem(new ClanwarPreference().getTeamlistshowtype()).setChecked(true);
+        menu.getItem(new ClanwarPreference().getTeamlistshowtype() + 2).setChecked(true);
     }
 
     @Override

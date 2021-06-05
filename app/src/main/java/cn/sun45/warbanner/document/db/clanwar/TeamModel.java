@@ -10,7 +10,6 @@ import cn.sun45.warbanner.framework.document.db.annotation.DbTableParamConfigure
  */
 @DbTableConfigure(tablename = "team")
 public class TeamModel extends BaseDbTableModel {
-
     //唯一值
     @DbTableParamConfigure(iskeyparm = true)
     private String number;

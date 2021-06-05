@@ -28,6 +28,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_nav_main_to_nav_record"
+            app:destination="@id/nav_record"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/nav_collection"
@@ -65,4 +72,20 @@
         android:id="@+id/nav_characterscreen"
         android:name="cn.sun45.warbanner.ui.fragments.CharacterScreenFragment"
         android:label="fragment_characterscreen" />
+    <fragment
+        android:id="@+id/nav_record"
+        android:name="cn.sun45.warbanner.ui.fragments.record.RecordFragment"
+        android:label="fragment_record">
+        <action
+            android:id="@+id/action_nav_record_to_nav_recordtext"
+            app:destination="@id/nav_recordtext"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_recordtext"
+        android:name="cn.sun45.warbanner.ui.fragments.record.RecordTextFragment"
+        android:label="fragment_recordtext" />
 </navigation>

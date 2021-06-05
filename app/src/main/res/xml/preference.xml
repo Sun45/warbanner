@@ -46,5 +46,9 @@
             app:icon="@drawable/ic_baseline_link_24"
             app:key="link_open_type"
             app:title="@string/menu_link_open_type" />
+        <Preference
+            app:icon="@drawable/ic_baseline_text_snippet_24"
+            app:key="record"
+            app:title="@string/menu_record" />
     </PreferenceCategory>
 </PreferenceScreen>

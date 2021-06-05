@@ -47,6 +47,7 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
     private SwitchPreferenceCompat characterScreenEnable;
 
     private Preference link;
+    private Preference record;
 
     private SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
@@ -195,6 +196,16 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
                 dialog.positiveButton(R.string.menu_link_open_type_dialog_confirm, null, null);
                 dialog.show();
                 return false;
+            }
+        });
+
+        record = findPreference("record");
+        record.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                NavController controller = Navigation.findNavController(getView());
+                controller.navigate(R.id.action_nav_main_to_nav_record);
+                return true;
             }
         });
 

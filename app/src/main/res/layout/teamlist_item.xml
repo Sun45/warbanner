@@ -30,7 +30,6 @@
             android:gravity="center_vertical"
             android:paddingHorizontal="5dp"
             android:singleLine="true"
-            android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintBottom_toTopOf="@id/character_lay"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -66,7 +65,6 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:singleLine="true"
-                    android:textColor="@color/white"
                     android:textSize="12sp" />
 
                 <TextView
@@ -77,7 +75,7 @@
                     android:ems="1"
                     android:gravity="center"
                     android:text="@string/auto"
-                    android:textColor="@color/white"
+                    android:textColor="@color/white_50"
                     android:textSize="8sp"
                     android:textStyle="bold" />
             </com.google.android.material.card.MaterialCardView>
@@ -103,7 +101,6 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:singleLine="true"
-                    android:textColor="@color/white"
                     android:textSize="12sp" />
             </com.google.android.material.card.MaterialCardView>
 
@@ -127,7 +124,6 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:singleLine="true"
-                    android:textColor="@color/white"
                     android:textSize="12sp" />
             </com.google.android.material.card.MaterialCardView>
 
@@ -151,7 +147,6 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:singleLine="true"
-                    android:textColor="@color/white"
                     android:textSize="12sp" />
             </com.google.android.material.card.MaterialCardView>
 
@@ -175,7 +170,6 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:singleLine="true"
-                    android:textColor="@color/white"
                     android:textSize="12sp" />
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>

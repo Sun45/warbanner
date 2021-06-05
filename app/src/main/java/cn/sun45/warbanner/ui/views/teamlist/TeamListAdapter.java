@@ -298,7 +298,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
                     }
                 }
                 if (screen) {
-                    lay.setCardBackgroundColor(Utils.getColor(R.color.red_dark));
+                    lay.setCardBackgroundColor(Utils.getColor(R.color.red_dark_alpha));
                 } else {
                     lay.setCardBackgroundColor(Utils.getColor(R.color.gray));
                 }

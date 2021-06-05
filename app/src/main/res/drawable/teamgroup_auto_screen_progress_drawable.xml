@@ -4,7 +4,7 @@
         <shape android:shape="line">
             <stroke
                 android:width="2dp"
-                android:color="@color/red_light" />
+                android:color="@color/red_200" />
         </shape>
     </item>
     <!--    <item android:id="@android:id/secondaryProgress">-->
@@ -33,7 +33,7 @@
                     <shape android:shape="line">
                         <stroke
                             android:width="2dp"
-                            android:color="@color/green_350" />
+                            android:color="@color/green_200" />
                     </shape>
                 </item>
             </selector>

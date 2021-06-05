@@ -177,7 +177,7 @@ public class TeamGroupListAdapter extends RecyclerView.Adapter<TeamGroupListAdap
         public void setdata(String nickname, int id, boolean borrow) {
             CharacterModel characterModel = findCharacter(id);
             if (borrow) {
-                lay.setCardBackgroundColor(Utils.getColor(R.color.red_dark));
+                lay.setCardBackgroundColor(Utils.getColor(R.color.red_dark_alpha));
             } else {
                 lay.setCardBackgroundColor(Utils.getColor(R.color.gray));
             }

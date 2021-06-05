@@ -1,14 +1,14 @@
-package cn.sun45.warbanner.ui.views.teamgrouplist;
+package cn.sun45.warbanner.teamgroup;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 
 /**
  * Created by Sun45 on 2021/5/30
+ * 分刀元素数据
  */
-public class TeamGroupListElementModel {
+public class TeamGroupElementModel {
     private List<Integer> idlist;
     private int screencharacter;
     private TeamModel teamModel;

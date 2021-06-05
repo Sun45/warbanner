@@ -4,11 +4,11 @@ import cn.sun45.warbanner.util.FileUtil;
 
 /**
  * Created by Sun45 on 2021/2/5.
- * 记录管理
+ * 错误记录管理
  */
 public class ErrorRecordManager extends BaseRecordManager {
     @Override
-    protected String getDirPath() {
+    public String getDirPath() {
         return FileUtil.getExternalFilesDir("error");
     }
 

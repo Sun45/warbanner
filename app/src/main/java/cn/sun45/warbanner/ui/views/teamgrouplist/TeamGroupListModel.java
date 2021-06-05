@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
+import cn.sun45.warbanner.teamgroup.TeamGroupElementModel;
 
 /**
  * Created by Sun45 on 2021/5/30
@@ -24,7 +25,7 @@ public class TeamGroupListModel implements Serializable {
 
     private boolean collected;
 
-    public TeamGroupListModel(TeamGroupListElementModel elementone, int idone, TeamGroupListElementModel elementtwo, int idtwo, TeamGroupListElementModel elementthree, int idthree, boolean collected) {
+    public TeamGroupListModel(TeamGroupElementModel elementone, int idone, TeamGroupElementModel elementtwo, int idtwo, TeamGroupElementModel elementthree, int idthree, boolean collected) {
         teamone = elementone.getTeamModel();
         idlistone = elementone.getIdlist();
         borrowindexone = idlistone.indexOf((Object) idone);

@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/purple_300</item>
-        <item name="colorPrimaryVariant">@color/purple_300_alpha</item>
-        <item name="colorSecondary">@color/red_200</item>
-        <item name="colorSecondaryVariant">@color/red_200_alpha</item>
+        <item name="colorPrimary">@color/red_light_alpha</item>
+        <item name="colorPrimaryVariant">@color/red_dark_alpha</item>
+        <item name="colorSecondary">@color/yellow_200</item>
+        <item name="colorSecondaryVariant">@color/yellow_200_alpha</item>
         <item name="android:colorBackground">@color/black_750</item>
         <item name="colorSurface">@color/black_750</item>
-        <item name="colorError">@color/red_200</item>
+        <item name="colorError">@color/yellow_200</item>
         <item name="colorOnPrimary">@color/white_50</item>
         <item name="colorOnSecondary">@color/black_900</item>
         <item name="colorOnBackground">@color/colorOnCustom</item>
@@ -73,7 +74,7 @@
     </style>
 
     <style name="AppFloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
-        <item name="backgroundTint">?attr/colorPrimary</item>
+        <item name="backgroundTint">@color/purple_300</item>
         <item name="tint">?attr/colorOnPrimary</item>
     </style>
 </resources>

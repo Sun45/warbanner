@@ -17,31 +17,28 @@
             android:id="@+id/drop_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:menu="@menu/fragment_teamgroup_drop_toolbar"
             app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
-            app:title="@string/teamgroup_title" />
+            app:title="@string/record_title" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupList
-        android:id="@+id/teamgrouplist"
+    <cn.sun45.warbanner.ui.views.recordlist.RecordList
+        android:id="@+id/recordlist"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@id/state"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appbar" />
 
-    <TextView
-        android:id="@+id/state"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="@color/black"
-        android:gravity="center_vertical"
-        android:paddingHorizontal="15dp"
-        android:text="@string/character_screen_state_start"
-        android:textColor="@color/white_50"
-        android:textSize="18sp"
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:clickable="true"
+        android:src="@drawable/ic_baseline_cleaning_services_24"
+        android:tint="?attr/colorOnPrimary"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

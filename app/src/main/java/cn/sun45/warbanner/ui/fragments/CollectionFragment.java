@@ -133,7 +133,6 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
 
     @Override
     protected void onShow() {
-
     }
 
     @Override

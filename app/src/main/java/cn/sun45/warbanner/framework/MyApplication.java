@@ -3,6 +3,8 @@ package cn.sun45.warbanner.framework;
 import android.app.Application;
 import android.util.Log;
 
+import androidx.appcompat.app.AppCompatDelegate;
+
 import com.tencent.smtt.export.external.TbsCoreSettings;
 import com.tencent.smtt.sdk.QbSdk;
 
@@ -31,6 +33,8 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
     public void onCreate() {
         super.onCreate();
         this.application = this;
+
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 
         //获取系统默认的UncaughtException处理器
         mDefaultHandler = Thread.getDefaultUncaughtExceptionHandler();

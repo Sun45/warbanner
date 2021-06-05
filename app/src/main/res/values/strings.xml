@@ -82,6 +82,7 @@
         <item>通过文本分享</item>
     </string-array>
     <string name="menu_link_open_type_dialog_confirm">确定</string>
+    <string name="menu_record">日志</string>
 
     <string name="character_screen_title">角色筛选</string>
     <string name="character_screen_state_start">点击生成分刀</string>
@@ -107,4 +108,14 @@
     <string name="teamgroup_menu_auto_screen_use">启用auto筛选</string>
 
     <string name="teamgroup_detail_title">分刀详情</string>
+
+    <string name="record_title">日志</string>
+    <string name="record_clean_dialog_title">日志</string>
+    <string name="record_clean_dialog_text">确定删除所有的日志？</string>
+    <string name="record_clean_dialog_confirm">删除</string>
+    <string name="record_clean_dialog_cancel">否</string>
+
+    <string name="record_text_title">日志</string>
+    <string name="record_text_menu_copy">拷贝</string>
+    <string name="record_text_menu_copy_hint">已将文字复制至剪贴板</string>
 </resources>

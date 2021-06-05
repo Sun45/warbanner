@@ -105,7 +105,7 @@ public class CharacterListAdapter extends RecyclerView.Adapter<CharacterListAdap
 
         private void showSelectState() {
             if (model.isSelect()) {
-                card.setCardBackgroundColor(Utils.getColor(R.color.red_dark));
+                card.setCardBackgroundColor(Utils.getColor(R.color.red_dark_alpha));
             } else {
                 card.setCardBackgroundColor(Utils.getColor(R.color.theme_dark));
             }

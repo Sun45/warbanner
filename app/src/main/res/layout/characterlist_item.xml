@@ -32,7 +32,6 @@
                 android:layout_height="0dp"
                 android:gravity="center"
                 android:singleLine="true"
-                android:textColor="@color/white"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent"
