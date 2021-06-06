@@ -74,7 +74,7 @@
     </style>
 
     <style name="AppFloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
-        <item name="backgroundTint">@color/purple_300</item>
+        <item name="backgroundTint">?attr/colorPrimary</item>
         <item name="tint">?attr/colorOnPrimary</item>
     </style>
 </resources>

@@ -316,8 +316,10 @@ public class ClanWarManager {
                             }
                         }
                     }
-                    teamModel.setRemarks(remarks.toString());
-                    teamModels.add(teamModel);
+                    if (teamModel != null) {
+                        teamModel.setRemarks(remarks.toString());
+                        teamModels.add(teamModel);
+                    }
                     for (TeamModel model : teamModels) {
                         DbHelper.insert(activity, model);
                     }
