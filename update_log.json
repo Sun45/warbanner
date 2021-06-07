@@ -1,6 +1,6 @@
 {
-  "versionCode": "9",
-  "versionName": "0.8.8",
+  "versionCode": "10",
+  "versionName": "0.8.9",
   "fource": "false",
-  "content": "1.修复空作业更新作业时崩溃的问题"
+  "content": "1.昵称数据完善"
 }
