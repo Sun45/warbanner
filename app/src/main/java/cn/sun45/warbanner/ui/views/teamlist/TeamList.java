@@ -1,27 +1,27 @@
 package cn.sun45.warbanner.ui.views.teamlist;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.document.db.setup.ScreenCharacterModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
+import cn.sun45.warbanner.document.db.source.ClanWarModel;
+import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListListener;
 
 /**
  * Created by Sun45 on 2021/5/20
  * 阵容列表
  */
 public class TeamList extends RecyclerView {
-
     private TeamListAdapter adapter;
 
     public TeamList(@NonNull Context context, @Nullable AttributeSet attrs) {
@@ -35,20 +35,140 @@ public class TeamList extends RecyclerView {
         setAdapter(adapter);
     }
 
-    public void setData(List<TeamModel> list) {
-        adapter.setList(list);
-        adapter.notifyDataSetChanged();
+    public void setListener(TeamListListener listener) {
+        adapter.setListener(listener);
     }
 
-    public void setData(List<TeamModel> list, boolean showlink, int showtype) {
-        adapter.setList(list);
+    public void setData(List<TeamModel> list, boolean showlink) {
+        setData(list, null, showlink, 0, TeamListAdapter.SHOW_TYPE_ALL);
+    }
+
+    public void setData(List<TeamModel> list, boolean showlink, int autoScreen, int showtype) {
+        setData(list, null, showlink, autoScreen, showtype);
+    }
+
+    public void setData(List<TeamModel> list, ClanWarModel clanWarModel, boolean showlink, int autoScreen, int showtype) {
+        List<TeamListTeamModel> teamModelOnelist = new ArrayList<>();
+        List<TeamListTeamModel> teamModelTwolist = new ArrayList<>();
+        List<TeamListTeamModel> teamModelThreelist = new ArrayList<>();
+        for (TeamModel teamModel : list) {
+            switch (teamModel.getStage()) {
+                case 1:
+                    teamModelOnelist.add(new TeamListTeamModel(teamModel));
+                    break;
+                case 2:
+                    teamModelTwolist.add(new TeamListTeamModel(teamModel));
+                    break;
+                case 3:
+                    teamModelThreelist.add(new TeamListTeamModel(teamModel));
+                    break;
+                default:
+                    break;
+            }
+        }
+        adapter.setList(fillList(new ArrayList<>(), clanWarModel, teamModelOnelist), fillList(new ArrayList<>(), clanWarModel, teamModelTwolist), fillList(new ArrayList<>(), clanWarModel, teamModelThreelist));
         adapter.setShowlink(showlink);
+        adapter.setAutoScreen(autoScreen);
         adapter.setShowtype(showtype);
         adapter.notifyDataSetChanged();
     }
 
+    private List<Object> fillList(List<Object> list, ClanWarModel clanWarModel, List<TeamListTeamModel> teamModellist) {
+        if (clanWarModel != null) {
+            list.add(new TeamListBossModel(clanWarModel.getBossonename(), clanWarModel.getBossoneiconurl()));
+        }
+        for (TeamListTeamModel teamListTeamModel : teamModellist) {
+            String boss = teamListTeamModel.getTeamModel().getBoss().substring(1, 2);
+            boolean auto = teamListTeamModel.getTeamModel().isAuto();
+            if (boss.equals("1") && !auto) {
+                list.add(teamListTeamModel);
+            }
+        }
+        for (TeamListTeamModel teamListTeamModel : teamModellist) {
+            String boss = teamListTeamModel.getTeamModel().getBoss().substring(1, 2);
+            boolean auto = teamListTeamModel.getTeamModel().isAuto();
+            if (boss.equals("1") && auto) {
+                list.add(teamListTeamModel);
+            }
+        }
+        if (clanWarModel != null) {
+            list.add(new TeamListBossModel(clanWarModel.getBosstwoname(), clanWarModel.getBosstwoiconurl()));
+        }
+        for (TeamListTeamModel teamListTeamModel : teamModellist) {
+            String boss = teamListTeamModel.getTeamModel().getBoss().substring(1, 2);
+            boolean auto = teamListTeamModel.getTeamModel().isAuto();
+            if (boss.equals("2") && !auto) {
+                list.add(teamListTeamModel);
+            }
+        }
+        for (TeamListTeamModel teamListTeamModel : teamModellist) {
+            String boss = teamListTeamModel.getTeamModel().getBoss().substring(1, 2);
+            boolean auto = teamListTeamModel.getTeamModel().isAuto();
+            if (boss.equals("2") && auto) {
+                list.add(teamListTeamModel);
+            }
+        }
+        if (clanWarModel != null) {
+            list.add(new TeamListBossModel(clanWarModel.getBossthreename(), clanWarModel.getBossthreeiconurl()));
+        }
+        for (TeamListTeamModel teamListTeamModel : teamModellist) {
+            String boss = teamListTeamModel.getTeamModel().getBoss().substring(1, 2);
+            boolean auto = teamListTeamModel.getTeamModel().isAuto();
+            if (boss.equals("3") && !auto) {
+                list.add(teamListTeamModel);
+            }
+        }
+        for (TeamListTeamModel teamListTeamModel : teamModellist) {
+            String boss = teamListTeamModel.getTeamModel().getBoss().substring(1, 2);
+            boolean auto = teamListTeamModel.getTeamModel().isAuto();
+            if (boss.equals("3") && auto) {
+                list.add(teamListTeamModel);
+            }
+        }
+        if (clanWarModel != null) {
+            list.add(new TeamListBossModel(clanWarModel.getBossfourname(), clanWarModel.getBossfouriconurl()));
+        }
+        for (TeamListTeamModel teamListTeamModel : teamModellist) {
+            String boss = teamListTeamModel.getTeamModel().getBoss().substring(1, 2);
+            boolean auto = teamListTeamModel.getTeamModel().isAuto();
+            if (boss.equals("4") && !auto) {
+                list.add(teamListTeamModel);
+            }
+        }
+        for (TeamListTeamModel teamListTeamModel : teamModellist) {
+            String boss = teamListTeamModel.getTeamModel().getBoss().substring(1, 2);
+            boolean auto = teamListTeamModel.getTeamModel().isAuto();
+            if (boss.equals("4") && auto) {
+                list.add(teamListTeamModel);
+            }
+        }
+        if (clanWarModel != null) {
+            list.add(new TeamListBossModel(clanWarModel.getBossfivename(), clanWarModel.getBossfiveiconurl()));
+        }
+        for (TeamListTeamModel teamListTeamModel : teamModellist) {
+            String boss = teamListTeamModel.getTeamModel().getBoss().substring(1, 2);
+            boolean auto = teamListTeamModel.getTeamModel().isAuto();
+            if (boss.equals("5") && !auto) {
+                list.add(teamListTeamModel);
+            }
+        }
+        for (TeamListTeamModel teamListTeamModel : teamModellist) {
+            String boss = teamListTeamModel.getTeamModel().getBoss().substring(1, 2);
+            boolean auto = teamListTeamModel.getTeamModel().isAuto();
+            if (boss.equals("5") && auto) {
+                list.add(teamListTeamModel);
+            }
+        }
+        return list;
+    }
+
     public void notifyShowLink(boolean showlink) {
         adapter.setShowlink(showlink);
+        adapter.notifyDataSetChanged();
+    }
+
+    public void notifyAutoScreen(int autoScreen) {
+        adapter.setAutoScreen(autoScreen);
         adapter.notifyDataSetChanged();
     }
 

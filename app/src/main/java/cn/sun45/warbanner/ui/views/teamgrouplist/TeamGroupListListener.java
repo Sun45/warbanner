@@ -5,7 +5,7 @@ package cn.sun45.warbanner.ui.views.teamgrouplist;
  * 分刀列表监听
  */
 public interface TeamGroupListListener {
-    void collect(TeamGroupListModel teamGroupListModel);
+    void collect(TeamGroupListModel teamGroupListModel,boolean collect);
 
     void open(TeamGroupListModel teamGroupListModel);
 }

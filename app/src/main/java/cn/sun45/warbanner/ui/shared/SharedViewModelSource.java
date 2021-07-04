@@ -11,29 +11,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.sun45.warbanner.document.db.source.CharacterModel;
+import cn.sun45.warbanner.document.db.source.ClanWarModel;
 import cn.sun45.warbanner.framework.MyApplication;
 import cn.sun45.warbanner.framework.document.db.DbHelper;
 import cn.sun45.warbanner.util.Utils;
 
 /**
  * Created by Sun45 on 2021/5/23
- * 角色列表数据
+ * 数据源数据
  */
-public class SharedViewModelCharacterModelList extends ViewModel {
+public class SharedViewModelSource extends ViewModel {
+    private static final String TAG = "SharedViewModelSource";
+
     public MutableLiveData<List<CharacterModel>> characterlist = new MutableLiveData<>();
+    public MutableLiveData<List<ClanWarModel>> clanWarlist = new MutableLiveData<>();
 
-    private MasterCharaCallBack callBack;
+    private CallBack callBack;
 
-    public void setCallBack(MasterCharaCallBack callBack) {
+    public void setCallBack(CallBack callBack) {
         this.callBack = callBack;
     }
 
     public void loadData() {
-        boolean succeeded;
+        boolean succeeded = true;
         List<CharacterModel> characterModelList = DbHelper.query(MyApplication.application, CharacterModel.class);
         if (characterModelList == null || characterModelList.isEmpty()) {
             succeeded = false;
-        } else {
+        }
+        List<ClanWarModel> clanWarModelList = DbHelper.query(MyApplication.application, ClanWarModel.class);
+        if (clanWarModelList == null || clanWarModelList.isEmpty()) {
+            succeeded = false;
+        }
+
+        if (succeeded) {
             //导入昵称数据
             try {
                 JSONObject nicknamesjson = new JSONObject(Utils.getJson(MyApplication.application, "nicknames.json"));
@@ -50,19 +60,29 @@ public class SharedViewModelCharacterModelList extends ViewModel {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            succeeded = true;
+            characterlist.postValue(characterModelList);
+//            for (CharacterModel characterModel : characterModelList) {
+//                Utils.logD(TAG, characterModel.toString());
+//            }
+
+            //导入会战排期
+            clanWarlist.postValue(clanWarModelList);
+//            for (ClanWarModel clanWarModel : clanWarModelList) {
+//                Utils.logD(TAG, clanWarModel.toString());
+//            }
         }
-        characterlist.postValue(characterModelList);
+
         if (callBack != null) {
-            callBack.charaLoadFinished(succeeded);
+            callBack.sourceLoadFinished(succeeded);
         }
     }
 
     public void clearData() {
         characterlist.postValue(new ArrayList<>());
+        clanWarlist.postValue(new ArrayList<>());
     }
 
-    public interface MasterCharaCallBack {
-        void charaLoadFinished(boolean succeeded);
+    public interface CallBack {
+        void sourceLoadFinished(boolean succeeded);
     }
 }

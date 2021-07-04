@@ -17,6 +17,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import cn.sun45.warbanner.R;
+import cn.sun45.warbanner.character.CharacterHelper;
+import cn.sun45.warbanner.clanwar.ClanwarHelper;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
 import cn.sun45.warbanner.framework.image.ImageRequester;
@@ -78,6 +80,7 @@ public class TeamGroupListAdapter extends RecyclerView.Adapter<TeamGroupListAdap
         private TeamHolder mTeamThree;
 
         private TeamGroupListModel model;
+        private boolean collect;
 
         public Holder(@NonNull @NotNull View itemView) {
             super(itemView);
@@ -89,10 +92,10 @@ public class TeamGroupListAdapter extends RecyclerView.Adapter<TeamGroupListAdap
             mCollection.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    model.setCollected(!model.isCollected());
+                    collect = !collect;
                     showCollection();
                     if (listener != null) {
-                        listener.collect(model);
+                        listener.collect(model, collect);
                     }
                 }
             });
@@ -108,6 +111,7 @@ public class TeamGroupListAdapter extends RecyclerView.Adapter<TeamGroupListAdap
 
         public void setData(TeamGroupListModel teamGroupListModel) {
             model = teamGroupListModel;
+            collect = ClanwarHelper.isCollect(teamGroupListModel);
             TeamModel teamone = teamGroupListModel.getTeamone();
             TeamModel teamtwo = teamGroupListModel.getTeamtwo();
             TeamModel teamthree = teamGroupListModel.getTeamthree();
@@ -120,7 +124,7 @@ public class TeamGroupListAdapter extends RecyclerView.Adapter<TeamGroupListAdap
         }
 
         private void showCollection() {
-            if (model.isCollected()) {
+            if (collect) {
                 mCollection.setImageResource(R.drawable.ic_baseline_star_yellow);
             } else {
                 mCollection.setImageResource(R.drawable.ic_baseline_star_white);
@@ -139,13 +143,13 @@ public class TeamGroupListAdapter extends RecyclerView.Adapter<TeamGroupListAdap
         private CharacterHolder mCharacterfive;
 
         public TeamHolder(ViewGroup lay) {
-            this.mTitle = lay.findViewById(R.id.title);
+            mTitle = lay.findViewById(R.id.title);
             mAuto = lay.findViewById(R.id.auto);
-            this.mCharacterone = new CharacterHolder(lay.findViewById(R.id.characterone_lay), R.id.characterone_icon, R.id.characterone_name);
-            this.mCharactertwo = new CharacterHolder(lay.findViewById(R.id.charactertwo_lay), R.id.charactertwo_icon, R.id.charactertwo_name);
-            this.mCharacterthree = new CharacterHolder(lay.findViewById(R.id.characterthree_lay), R.id.characterthree_icon, R.id.characterthree_name);
-            this.mCharacterfour = new CharacterHolder(lay.findViewById(R.id.characterfour_lay), R.id.characterfour_icon, R.id.characterfour_name);
-            this.mCharacterfive = new CharacterHolder(lay.findViewById(R.id.characterfive_lay), R.id.characterfive_icon, R.id.characterfive_name);
+            mCharacterone = new CharacterHolder(lay.findViewById(R.id.characterone_lay), R.id.characterone_icon, R.id.characterone_name);
+            mCharactertwo = new CharacterHolder(lay.findViewById(R.id.charactertwo_lay), R.id.charactertwo_icon, R.id.charactertwo_name);
+            mCharacterthree = new CharacterHolder(lay.findViewById(R.id.characterthree_lay), R.id.characterthree_icon, R.id.characterthree_name);
+            mCharacterfour = new CharacterHolder(lay.findViewById(R.id.characterfour_lay), R.id.characterfour_icon, R.id.characterfour_name);
+            mCharacterfive = new CharacterHolder(lay.findViewById(R.id.characterfive_lay), R.id.characterfive_icon, R.id.characterfive_name);
         }
 
         public void setdata(TeamModel teamModel, List<Integer> idlist, int borrowindex) {
@@ -175,7 +179,7 @@ public class TeamGroupListAdapter extends RecyclerView.Adapter<TeamGroupListAdap
         }
 
         public void setdata(String nickname, int id, boolean borrow) {
-            CharacterModel characterModel = findCharacter(id);
+            CharacterModel characterModel = CharacterHelper.findCharacterById(id, characterModels);
             if (borrow) {
                 lay.setCardBackgroundColor(Utils.getColor(R.color.red_dark_alpha));
             } else {
@@ -190,24 +194,6 @@ public class TeamGroupListAdapter extends RecyclerView.Adapter<TeamGroupListAdap
                 name.setVisibility(View.INVISIBLE);
                 name.setText("");
             }
-        }
-
-        /**
-         * 根据id获取角色信息
-         *
-         * @param id 角色id
-         */
-        private CharacterModel findCharacter(int id) {
-            CharacterModel characterModel = null;
-            if (characterModels != null && !characterModels.isEmpty()) {
-                for (CharacterModel model : characterModels) {
-                    if (model.getId() == (id)) {
-                        characterModel = model;
-                        break;
-                    }
-                }
-            }
-            return characterModel;
         }
     }
 }

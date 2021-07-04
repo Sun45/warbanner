@@ -74,7 +74,7 @@
     </style>
 
     <style name="AppFloatingActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
-        <item name="backgroundTint">?attr/colorPrimary</item>
+        <item name="backgroundTint">@color/red_light</item>
         <item name="tint">?attr/colorOnPrimary</item>
     </style>
 </resources>

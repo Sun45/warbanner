@@ -16,6 +16,7 @@ public class SetupProvider extends BaseProvider {
     @Override
     protected List<BaseDbTableModel> getTableClassList() {
         List<BaseDbTableModel> list = new ArrayList<>();
+        list.add(new UserModel());
         list.add(new ScreenCharacterModel());
         return list;
     }

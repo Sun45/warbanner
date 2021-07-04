@@ -11,6 +11,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.framework.ui.BaseFragment;
+import cn.sun45.warbanner.ui.fragments.menu.MenuFragment;
+import cn.sun45.warbanner.ui.fragments.team.TeamListFragment;
 
 /**
  * Created by Sun45 on 2021/5/22

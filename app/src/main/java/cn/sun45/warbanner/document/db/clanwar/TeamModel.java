@@ -1,5 +1,8 @@
 package cn.sun45.warbanner.document.db.clanwar;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import cn.sun45.warbanner.framework.document.db.BaseDbTableModel;
 import cn.sun45.warbanner.framework.document.db.annotation.DbTableConfigure;
 import cn.sun45.warbanner.framework.document.db.annotation.DbTableParamConfigure;
@@ -152,5 +155,27 @@ public class TeamModel extends BaseDbTableModel {
     @Override
     protected Class getProviderClass() {
         return ClanWarProvider.class;
+    }
+
+    public JSONObject getJson() {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("number", number);
+            jsonObject.put("stage", stage);
+            jsonObject.put("boss", boss);
+            jsonObject.put("damage", damage);
+            jsonObject.put("damagenumber", damagenumber);
+            jsonObject.put("auto", auto);
+            jsonObject.put("characterone", characterone);
+            jsonObject.put("charactertwo", charactertwo);
+            jsonObject.put("characterthree", characterthree);
+            jsonObject.put("characterfour", characterfour);
+            jsonObject.put("characterfive", characterfive);
+            jsonObject.put("remarks", remarks);
+            jsonObject.put("collect", collect);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 }

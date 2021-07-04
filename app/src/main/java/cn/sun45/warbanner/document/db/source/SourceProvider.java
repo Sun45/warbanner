@@ -17,6 +17,7 @@ public class SourceProvider extends BaseProvider {
     protected List<BaseDbTableModel> getTableClassList() {
         List<BaseDbTableModel> list = new ArrayList<>();
         list.add(new CharacterModel());
+        list.add(new ClanWarModel());
         return list;
     }
 }

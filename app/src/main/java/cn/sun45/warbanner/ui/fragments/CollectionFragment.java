@@ -14,12 +14,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.sun45.warbanner.R;
-import cn.sun45.warbanner.document.db.clanwar.TeamGroupModel;
+import cn.sun45.warbanner.character.CharacterHelper;
+import cn.sun45.warbanner.clanwar.ClanwarHelper;
+import cn.sun45.warbanner.document.db.clanwar.TeamGroupCollectionModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
 import cn.sun45.warbanner.framework.document.db.DbHelper;
 import cn.sun45.warbanner.framework.ui.BaseFragment;
-import cn.sun45.warbanner.ui.shared.SharedViewModelCharacterModelList;
+import cn.sun45.warbanner.ui.shared.SharedViewModelClanwar;
+import cn.sun45.warbanner.ui.shared.SharedViewModelSource;
 import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupList;
 import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListListener;
 import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListModel;
@@ -29,7 +32,8 @@ import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListModel;
  * 收藏Fragment
  */
 public class CollectionFragment extends BaseFragment implements TeamGroupListListener {
-    private SharedViewModelCharacterModelList sharedCharacterModelList;
+    private SharedViewModelSource sharedSource;
+    private SharedViewModelClanwar sharedClanwar;
 
     private TeamGroupList mTeamGroupList;
     private FloatingActionButton mFloatingButton;
@@ -56,8 +60,10 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
     @Override
     protected void dataRequest() {
         logD("dataRequest");
-        sharedCharacterModelList = new ViewModelProvider(requireActivity()).get(SharedViewModelCharacterModelList.class);
-        sharedCharacterModelList.characterlist.observe(requireActivity(), new Observer<List<CharacterModel>>() {
+        sharedSource = new ViewModelProvider(requireActivity()).get(SharedViewModelSource.class);
+        sharedClanwar = new ViewModelProvider(requireActivity()).get(SharedViewModelClanwar.class);
+
+        sharedSource.characterlist.observe(requireActivity(), new Observer<List<CharacterModel>>() {
             @Override
             public void onChanged(List<CharacterModel> characterModels) {
                 mFloatingButton.setOnClickListener(new View.OnClickListener() {
@@ -69,27 +75,33 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
                 });
                 CollectionFragment.this.characterModels = characterModels;
                 mTeamGroupList.setCharacterModels(characterModels);
-                List<TeamGroupModel> collectionlist = DbHelper.query(getContext(), TeamGroupModel.class);
+            }
+        });
+        sharedClanwar.teamGroupCollectionList.observe(requireActivity(), new Observer<List<TeamGroupCollectionModel>>() {
+            @Override
+            public void onChanged(List<TeamGroupCollectionModel> teamGroupCollectionModels) {
                 List<TeamGroupListModel> list = new ArrayList<>();
-                for (int i = collectionlist.size() - 1; i >= 0; i--) {
-                    TeamGroupModel teamGroupModel = collectionlist.get(i);
-                    TeamModel teamone = DbHelper.query(getContext(), TeamModel.class, teamGroupModel.getTeamone());
-                    if (teamone == null) {
-                        continue;
+                for (int i = teamGroupCollectionModels.size() - 1; i >= 0; i--) {
+                    TeamGroupCollectionModel teamGroupCollectionModel = teamGroupCollectionModels.get(i);
+                    if (ClanwarHelper.isCollect(teamGroupCollectionModel)) {
+                        TeamModel teamone = DbHelper.query(getContext(), TeamModel.class, teamGroupCollectionModel.getTeamone());
+                        if (teamone == null) {
+                            continue;
+                        }
+                        TeamModel teamtwo = DbHelper.query(getContext(), TeamModel.class, teamGroupCollectionModel.getTeamtwo());
+                        if (teamtwo == null) {
+                            continue;
+                        }
+                        TeamModel teamthree = DbHelper.query(getContext(), TeamModel.class, teamGroupCollectionModel.getTeamthree());
+                        if (teamthree == null) {
+                            continue;
+                        }
+                        TeamGroupListModel teamGroupListModel = new TeamGroupListModel(
+                                teamone, buildIdlist(teamone), teamGroupCollectionModel.getBorrowindexone(),
+                                teamtwo, buildIdlist(teamtwo), teamGroupCollectionModel.getBorrowindextwo(),
+                                teamthree, buildIdlist(teamthree), teamGroupCollectionModel.getBorrowindexthree());
+                        list.add(teamGroupListModel);
                     }
-                    TeamModel teamtwo = DbHelper.query(getContext(), TeamModel.class, teamGroupModel.getTeamtwo());
-                    if (teamtwo == null) {
-                        continue;
-                    }
-                    TeamModel teamthree = DbHelper.query(getContext(), TeamModel.class, teamGroupModel.getTeamthree());
-                    if (teamthree == null) {
-                        continue;
-                    }
-                    TeamGroupListModel teamGroupListModel = new TeamGroupListModel(
-                            teamone, buildIdlist(teamone), teamGroupModel.getBorrowindexone(),
-                            teamtwo, buildIdlist(teamtwo), teamGroupModel.getBorrowindextwo(),
-                            teamthree, buildIdlist(teamthree), teamGroupModel.getBorrowindexthree());
-                    list.add(teamGroupListModel);
                 }
                 mTeamGroupList.setData(list);
             }
@@ -98,37 +110,12 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
 
     private List<Integer> buildIdlist(TeamModel teamModel) {
         List<Integer> idlist = new ArrayList<>();
-        idlist.add(findCharacter(teamModel.getCharacterone()).getId());
-        idlist.add(findCharacter(teamModel.getCharactertwo()).getId());
-        idlist.add(findCharacter(teamModel.getCharacterthree()).getId());
-        idlist.add(findCharacter(teamModel.getCharacterfour()).getId());
-        idlist.add(findCharacter(teamModel.getCharacterfive()).getId());
+        idlist.add(CharacterHelper.findCharacterByNickname(teamModel.getCharacterone(), characterModels).getId());
+        idlist.add(CharacterHelper.findCharacterByNickname(teamModel.getCharactertwo(), characterModels).getId());
+        idlist.add(CharacterHelper.findCharacterByNickname(teamModel.getCharacterthree(), characterModels).getId());
+        idlist.add(CharacterHelper.findCharacterByNickname(teamModel.getCharacterfour(), characterModels).getId());
+        idlist.add(CharacterHelper.findCharacterByNickname(teamModel.getCharacterfive(), characterModels).getId());
         return idlist;
-    }
-
-    /**
-     * 根据昵称获取角色信息
-     *
-     * @param nickname 角色昵称
-     */
-    private CharacterModel findCharacter(String nickname) {
-        CharacterModel characterModel = null;
-        if (characterModels != null && !characterModels.isEmpty()) {
-            boolean find = false;
-            for (CharacterModel model : characterModels) {
-                for (String str : model.getNicknames()) {
-                    if (nickname.equals(str)) {
-                        find = true;
-                        break;
-                    }
-                }
-                if (find) {
-                    characterModel = model;
-                    break;
-                }
-            }
-        }
-        return characterModel;
     }
 
     @Override
@@ -141,25 +128,8 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
     }
 
     @Override
-    public void collect(TeamGroupListModel teamGroupListModel) {
-        if (teamGroupListModel.isCollected()) {
-            TeamGroupModel teamGroupModel = new TeamGroupModel();
-            teamGroupModel.setTeamone(teamGroupListModel.getTeamone().getNumber());
-            teamGroupModel.setBorrowindexone(teamGroupListModel.getBorrowindexone());
-            teamGroupModel.setTeamtwo(teamGroupListModel.getTeamtwo().getNumber());
-            teamGroupModel.setBorrowindextwo(teamGroupListModel.getBorrowindextwo());
-            teamGroupModel.setTeamthree(teamGroupListModel.getTeamthree().getNumber());
-            teamGroupModel.setBorrowindexthree(teamGroupListModel.getBorrowindexthree());
-            DbHelper.insert(getContext(), teamGroupModel);
-        } else {
-            DbHelper.delete(getContext(), TeamGroupModel.class
-                    , new String[]{"teamone", "teamtwo", "teamthree"}
-                    , new String[]{
-                            teamGroupListModel.getTeamone().getNumber(),
-                            teamGroupListModel.getTeamtwo().getNumber(),
-                            teamGroupListModel.getTeamthree().getNumber()
-                    });
-        }
+    public void collect(TeamGroupListModel teamGroupListModel, boolean collect) {
+        ClanwarHelper.collect(teamGroupListModel, collect);
     }
 
     @Override
@@ -173,6 +143,7 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
     @Override
     public void onDestroy() {
         super.onDestroy();
-        sharedCharacterModelList.characterlist.removeObservers(requireActivity());
+        sharedSource.characterlist.removeObservers(requireActivity());
+        sharedClanwar.teamGroupCollectionList.removeObservers(requireActivity());
     }
 }

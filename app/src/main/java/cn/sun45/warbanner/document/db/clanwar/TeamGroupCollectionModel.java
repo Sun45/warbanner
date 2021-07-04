@@ -6,10 +6,12 @@ import cn.sun45.warbanner.framework.document.db.annotation.DbTableParamConfigure
 
 /**
  * Created by Sun45 on 2021/5/23
- * 分刀信息数据模型
+ * 分刀信息收藏数据模型
  */
-@DbTableConfigure(tablename = "teamgroup")
-public class TeamGroupModel extends BaseDbTableModel {
+@DbTableConfigure(tablename = "teamgroupcollection")
+public class TeamGroupCollectionModel extends BaseDbTableModel {
+    @DbTableParamConfigure
+    private int userId;
 
     @DbTableParamConfigure
     private String teamone;
@@ -25,6 +27,14 @@ public class TeamGroupModel extends BaseDbTableModel {
     private String teamthree;
     @DbTableParamConfigure
     private int borrowindexthree;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     public String getTeamone() {
         return teamone;

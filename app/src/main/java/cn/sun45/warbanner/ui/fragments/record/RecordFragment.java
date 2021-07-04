@@ -8,6 +8,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
@@ -16,6 +17,7 @@ import java.util.List;
 
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.framework.record.ErrorRecordManager;
+import cn.sun45.warbanner.framework.ui.BaseActivity;
 import cn.sun45.warbanner.framework.ui.BaseFragment;
 import cn.sun45.warbanner.ui.views.recordlist.RecordList;
 import cn.sun45.warbanner.ui.views.recordlist.RecordListListener;
@@ -46,6 +48,15 @@ public class RecordFragment extends BaseFragment implements RecordListListener {
 
     @Override
     protected void initView() {
+        MaterialToolbar toolbar = mRoot.findViewById(R.id.drop_toolbar);
+        ((BaseActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigateUp();
+            }
+        });
+
         mRecordList = mRoot.findViewById(R.id.recordlist);
         mRecordList.setListener(this);
         mFloatingButton = mRoot.findViewById(R.id.floating_button);
@@ -72,7 +83,7 @@ public class RecordFragment extends BaseFragment implements RecordListListener {
                         .positiveButton(R.string.record_clean_dialog_confirm, null, new Function1<MaterialDialog, Unit>() {
                             @Override
                             public Unit invoke(MaterialDialog materialDialog) {
-                                FileUtil.deleteDirectory(errorRecordPath);
+                                FileUtil.deleteDirectory(new File(errorRecordPath));
                                 mRecordList.setData(null);
                                 return null;
                             }

@@ -1,4 +1,4 @@
-package cn.sun45.warbanner.ui.fragments;
+package cn.sun45.warbanner.ui.fragments.teamgroup;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -30,21 +30,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.sun45.warbanner.R;
-import cn.sun45.warbanner.document.db.clanwar.TeamGroupModel;
+import cn.sun45.warbanner.character.CharacterHelper;
+import cn.sun45.warbanner.clanwar.ClanwarHelper;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
-import cn.sun45.warbanner.document.db.setup.ScreenCharacterModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
 import cn.sun45.warbanner.document.preference.SetupPreference;
-import cn.sun45.warbanner.framework.MyApplication;
-import cn.sun45.warbanner.framework.document.db.DbHelper;
 import cn.sun45.warbanner.framework.ui.BaseActivity;
 import cn.sun45.warbanner.framework.ui.BaseFragment;
 import cn.sun45.warbanner.teamgroup.TeamGroupHelper;
-import cn.sun45.warbanner.ui.shared.SharedViewModelCharacterModelList;
-import cn.sun45.warbanner.ui.shared.SharedViewModelSetup;
-import cn.sun45.warbanner.ui.shared.SharedViewModelTeamList;
+import cn.sun45.warbanner.ui.shared.SharedViewModelClanwar;
+import cn.sun45.warbanner.ui.shared.SharedViewModelSource;
 import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupList;
-import cn.sun45.warbanner.teamgroup.TeamGroupElementModel;
 import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListListener;
 import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListModel;
 import cn.sun45.warbanner.util.Utils;
@@ -57,9 +53,8 @@ import kotlin.jvm.functions.Function3;
  * 分刀Fragment
  */
 public class TeamGroupFragment extends BaseFragment implements TeamGroupListListener {
-    private SharedViewModelCharacterModelList sharedCharacterModelList;
-    private SharedViewModelTeamList sharedTeamList;
-    private SharedViewModelSetup sharedSetup;
+    private SharedViewModelSource sharedSource;
+    private SharedViewModelClanwar sharedClanwar;
 
     private TeamGroupHelper teamGroupHelper;
 
@@ -89,6 +84,7 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
                 Navigation.findNavController(v).navigateUp();
             }
         });
+
         mTeamGroupList = mRoot.findViewById(R.id.teamgrouplist);
         mTeamGroupList.setListener(this);
         mState = mRoot.findViewById(R.id.state);
@@ -97,47 +93,41 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
     @Override
     protected void dataRequest() {
         logD("dataRequest");
-        sharedCharacterModelList = new ViewModelProvider(requireActivity()).get(SharedViewModelCharacterModelList.class);
-        sharedTeamList = new ViewModelProvider(requireActivity()).get(SharedViewModelTeamList.class);
-        sharedSetup = new ViewModelProvider(requireActivity()).get(SharedViewModelSetup.class);
+        sharedSource = new ViewModelProvider(requireActivity()).get(SharedViewModelSource.class);
+        sharedClanwar = new ViewModelProvider(requireActivity()).get(SharedViewModelClanwar.class);
 
         if (list != null) {
             showresult();
         }
-        sharedSetup.screencharacterlist.observe(requireActivity(), new Observer<List<ScreenCharacterModel>>() {
+        sharedClanwar.teamList.observe(requireActivity(), new Observer<List<TeamModel>>() {
             @Override
-            public void onChanged(List<ScreenCharacterModel> screenCharacterModelList) {
-                sharedTeamList.teamList.observe(requireActivity(), new Observer<List<TeamModel>>() {
+            public void onChanged(List<TeamModel> teamModels) {
+                sharedSource.characterlist.observe(requireActivity(), new Observer<List<CharacterModel>>() {
                     @Override
-                    public void onChanged(List<TeamModel> teamModels) {
-                        sharedCharacterModelList.characterlist.observe(requireActivity(), new Observer<List<CharacterModel>>() {
+                    public void onChanged(List<CharacterModel> characterModels) {
+                        mTeamGroupList.setCharacterModels(characterModels);
+                        mState.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onChanged(List<CharacterModel> characterModels) {
-                                mTeamGroupList.setCharacterModels(characterModels);
-                                mState.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+                                mState.setClickable(false);
+                                mState.setText(R.string.teamgroup_state_progressing);
+                                new Thread() {
                                     @Override
-                                    public void onClick(View v) {
-                                        mState.setClickable(false);
-                                        mState.setText(R.string.character_screen_state_progressing);
-                                        new Thread() {
-                                            @Override
-                                            public void run() {
-                                                super.run();
-                                                list = teamGroupHelper.build(screenCharacterModelList, teamModels, characterModels, DbHelper.query(getContext(), TeamGroupModel.class));
-                                                logD("buildTeamGroupList " + list.size());
-                                                Activity activity = getActivity();
-                                                if (activity != null) {
-                                                    activity.runOnUiThread(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            showresult();
-                                                        }
-                                                    });
+                                    public void run() {
+                                        super.run();
+                                        list = teamGroupHelper.build(CharacterHelper.getScreenCharacterList(), teamModels, characterModels);
+                                        logD("buildTeamGroupList " + list.size());
+                                        Activity activity = getActivity();
+                                        if (activity != null) {
+                                            activity.runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    showresult();
                                                 }
-                                            }
-                                        }.start();
+                                            });
+                                        }
                                     }
-                                });
+                                }.start();
                             }
                         });
                     }
@@ -152,9 +142,9 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
     private void showresult() {
         int size = list.size();
         if (size == TeamGroupHelper.interruptsize) {
-            mState.setText(Utils.getStringWithPlaceHolder(R.string.character_screen_state_interrupt_finish, size));
+            mState.setText(Utils.getStringWithPlaceHolder(R.string.teamgroup_state_interrupt_finish, size));
         } else {
-            mState.setText(Utils.getStringWithPlaceHolder(R.string.character_screen_state_finish, list.size()));
+            mState.setText(Utils.getStringWithPlaceHolder(R.string.teamgroup_state_finish, list.size()));
         }
         mState.setClickable(true);
         mTeamGroupList.setData(list);
@@ -179,11 +169,9 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
     @Override
     public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_boss:
-                showbossdialog();
-                break;
-            case R.id.menu_auto:
-                showautodialog();
+            case R.id.menu_screen:
+                NavController controller = Navigation.findNavController(getView());
+                controller.navigate(R.id.action_nav_teamgroup_to_nav_teamgroupscreen);
                 break;
         }
         return true;
@@ -191,7 +179,7 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
 
     private void showbossdialog() {
         MaterialDialog dialog = new MaterialDialog(getContext(), MaterialDialog.getDEFAULT_BEHAVIOR());
-        dialog.title(R.string.teamgroup_menu_boss_screen, null);
+//        dialog.title(R.string.teamgroup_menu_boss_screen, null);
         List<Integer> selection = new ArrayList<>();
         if (new SetupPreference().isBossonescreen()) {
             selection.add(0);
@@ -321,25 +309,8 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
     }
 
     @Override
-    public void collect(TeamGroupListModel teamGroupListModel) {
-        if (teamGroupListModel.isCollected()) {
-            TeamGroupModel teamGroupModel = new TeamGroupModel();
-            teamGroupModel.setTeamone(teamGroupListModel.getTeamone().getNumber());
-            teamGroupModel.setBorrowindexone(teamGroupListModel.getBorrowindexone());
-            teamGroupModel.setTeamtwo(teamGroupListModel.getTeamtwo().getNumber());
-            teamGroupModel.setBorrowindextwo(teamGroupListModel.getBorrowindextwo());
-            teamGroupModel.setTeamthree(teamGroupListModel.getTeamthree().getNumber());
-            teamGroupModel.setBorrowindexthree(teamGroupListModel.getBorrowindexthree());
-            DbHelper.insert(getContext(), teamGroupModel);
-        } else {
-            DbHelper.delete(getContext(), TeamGroupModel.class
-                    , new String[]{"teamone", "teamtwo", "teamthree"}
-                    , new String[]{
-                            teamGroupListModel.getTeamone().getNumber(),
-                            teamGroupListModel.getTeamtwo().getNumber(),
-                            teamGroupListModel.getTeamthree().getNumber()
-                    });
-        }
+    public void collect(TeamGroupListModel teamGroupListModel, boolean collect) {
+        ClanwarHelper.collect(teamGroupListModel, collect);
     }
 
     @Override
@@ -353,8 +324,8 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
     @Override
     public void onDestroy() {
         super.onDestroy();
-        sharedCharacterModelList.characterlist.removeObservers(requireActivity());
-        sharedTeamList.teamList.removeObservers(requireActivity());
-        sharedSetup.screencharacterlist.removeObservers(requireActivity());
+        sharedSource.characterlist.removeObservers(requireActivity());
+        sharedClanwar.teamList.removeObservers(requireActivity());
+        sharedClanwar.loadData();
     }
 }

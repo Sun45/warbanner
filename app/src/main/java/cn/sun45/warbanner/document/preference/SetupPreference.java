@@ -7,13 +7,6 @@ import cn.sun45.warbanner.framework.document.preference.BasePreference;
  * 设置信息
  */
 public class SetupPreference extends BasePreference {
-    //筛选阶段一
-    private boolean stageonescreen = true;
-    //筛选阶段二
-    private boolean stagetwoscreen = true;
-    //筛选阶段三
-    private boolean stagethreescreen = true;
-
     //角色筛选生效
     private boolean characterscreenenable = false;
 

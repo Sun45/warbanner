@@ -1,4 +1,4 @@
-package cn.sun45.warbanner.ui.fragments;
+package cn.sun45.warbanner.ui.fragments.menu;
 
 import android.view.View;
 

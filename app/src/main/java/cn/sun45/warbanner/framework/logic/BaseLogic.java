@@ -1,7 +1,11 @@
 package cn.sun45.warbanner.framework.logic;
 
+import java.io.File;
+
 import cn.sun45.warbanner.framework.MyApplication;
+import cn.sun45.warbanner.util.FileUtil;
 import cn.sun45.warbanner.util.Utils;
+import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -20,6 +24,8 @@ public class BaseLogic {
             synchronized (BaseLogic.class) {
                 if (mOkHttpClient == null) {
                     OkHttpClient.Builder builder = new OkHttpClient.Builder();
+                    File cachefile = new File(FileUtil.getExternalFilesDir("OkHttpClient"));
+                    builder.cache(new Cache(cachefile, FileUtil.calculateDiskCacheSize(cachefile)));
                     if (MyApplication.testing) {
                         // Log信息拦截器
                         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();

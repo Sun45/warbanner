@@ -10,16 +10,39 @@ import cn.sun45.warbanner.framework.document.db.annotation.DbTableParamConfigure
  */
 @DbTableConfigure(tablename = "screencharacter")
 public class ScreenCharacterModel extends BaseDbTableModel {
-    //唯一值
-    @DbTableParamConfigure(iskeyparm = true)
-    private int id;
+    public static final int TYPE_LACK = 1;
+    public static final int TYPE_SKIP = 2;
+    @DbTableParamConfigure
+    private int userId;
 
-    public int getId() {
-        return id;
+    @DbTableParamConfigure
+    private int characterId;
+
+    @DbTableParamConfigure
+    private int type;
+
+    public int getUserId() {
+        return userId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public int getCharacterId() {
+        return characterId;
+    }
+
+    public void setCharacterId(int characterId) {
+        this.characterId = characterId;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 
     @Override

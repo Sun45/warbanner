@@ -14,13 +14,13 @@ import cn.sun45.warbanner.util.Utils;
 
 /**
  * Created by Sun45 on 2021/6/2
- * 阵容列表数据模型
+ * 阵容列表阵容信息数据模型
  */
-public class TeamListModel {
+public class TeamListTeamModel {
     private TeamModel teamModel;
     private List<TeamListRemarkModel> remarkModels;
 
-    public TeamListModel(TeamModel teamModel) {
+    public TeamListTeamModel(TeamModel teamModel) {
         this.teamModel = teamModel;
         remarkModels = new ArrayList<>();
         try {

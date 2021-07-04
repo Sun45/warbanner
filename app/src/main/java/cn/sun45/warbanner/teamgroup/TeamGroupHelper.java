@@ -3,7 +3,9 @@ package cn.sun45.warbanner.teamgroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.sun45.warbanner.document.db.clanwar.TeamGroupModel;
+import cn.sun45.warbanner.character.CharacterHelper;
+import cn.sun45.warbanner.clanwar.ClanwarHelper;
+import cn.sun45.warbanner.document.db.clanwar.TeamGroupScreenModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.document.db.setup.ScreenCharacterModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
@@ -28,43 +30,23 @@ public class TeamGroupHelper {
         this.characterscreenenable = characterscreenenable;
     }
 
-    public List<TeamGroupListModel> build(List<ScreenCharacterModel> screenCharacterModelList, List<TeamModel> teamModels, List<CharacterModel> characterModels, List<TeamGroupModel> collectionlist) {
-        return buildElementList(screenCharacterModelList, teamModels, characterModels, collectionlist);
+    public List<TeamGroupListModel> build(List<ScreenCharacterModel> screenCharacterModelList, List<TeamModel> teamModels, List<CharacterModel> characterModels) {
+        TeamGroupScreenModel teamGroupScreenModel = ClanwarHelper.getScreenModel();
+        return buildElementList(screenCharacterModelList, teamModels, characterModels, teamGroupScreenModel);
     }
 
     /**
      * 构建分刀元素列表
      */
-    private List<TeamGroupListModel> buildElementList(List<ScreenCharacterModel> screenCharacterModelList, List<TeamModel> teamModels, List<CharacterModel> characterModels, List<TeamGroupModel> collectionlist) {
+    private List<TeamGroupListModel> buildElementList(List<ScreenCharacterModel> screenCharacterModelList, List<TeamModel> teamModels, List<CharacterModel> characterModels, TeamGroupScreenModel teamGroupScreenModel) {
         Utils.logD(TAG, "buildElementList");
         List<TeamGroupElementModel> elementModels = new ArrayList<>();
-        boolean stageonescreen = new SetupPreference().isStageonescreen();
-        boolean stagetwoscreen = new SetupPreference().isStagetwoscreen();
-        boolean stagethreescreen = new SetupPreference().isStagethreescreen();
         for (TeamModel teamModel : teamModels) {
-            int stage = teamModel.getStage();
-            switch (stage) {
-                case 1:
-                    if (!stageonescreen) {
-                        continue;
-                    }
-                    break;
-                case 2:
-                    if (!stagetwoscreen) {
-                        continue;
-                    }
-                    break;
-                case 3:
-                    if (!stagethreescreen) {
-                        continue;
-                    }
-                    break;
-            }
-            CharacterModel characterone = findCharacter(teamModel.getCharacterone(), characterModels);
-            CharacterModel charactertwo = findCharacter(teamModel.getCharactertwo(), characterModels);
-            CharacterModel characterthree = findCharacter(teamModel.getCharacterthree(), characterModels);
-            CharacterModel characterfour = findCharacter(teamModel.getCharacterfour(), characterModels);
-            CharacterModel characterfive = findCharacter(teamModel.getCharacterfive(), characterModels);
+            CharacterModel characterone = CharacterHelper.findCharacterByNickname(teamModel.getCharacterone(), characterModels);
+            CharacterModel charactertwo = CharacterHelper.findCharacterByNickname(teamModel.getCharactertwo(), characterModels);
+            CharacterModel characterthree = CharacterHelper.findCharacterByNickname(teamModel.getCharacterthree(), characterModels);
+            CharacterModel characterfour = CharacterHelper.findCharacterByNickname(teamModel.getCharacterfour(), characterModels);
+            CharacterModel characterfive = CharacterHelper.findCharacterByNickname(teamModel.getCharacterfive(), characterModels);
             if (characterone != null
                     && charactertwo != null
                     && characterthree != null
@@ -78,26 +60,34 @@ public class TeamGroupHelper {
                 idlist.add(characterfive.getId());
                 int screencharacter = 0;
                 if (characterscreenenable) {
-                    boolean morethanone = false;
+                    boolean notuseable = false;
                     for (int i = 0; i < idlist.size(); i++) {
                         int id = idlist.get(i);
                         boolean find = false;
                         for (ScreenCharacterModel screenCharacterModel : screenCharacterModelList) {
-                            if (id == screenCharacterModel.getId()) {
-                                find = true;
-                                break;
+                            if (id == screenCharacterModel.getCharacterId()) {
+                                if (screenCharacterModel.getType() == 1) {//TYPE_LACK
+                                    find = true;
+                                    break;
+                                } else {
+                                    notuseable = true;
+                                    break;
+                                }
                             }
+                        }
+                        if (notuseable) {
+                            break;
                         }
                         if (find) {
                             if (screencharacter != 0) {
-                                morethanone = true;
+                                notuseable = true;
                                 break;
                             } else {
                                 screencharacter = id;
                             }
                         }
                     }
-                    if (morethanone) {
+                    if (notuseable) {
                         continue;
                     }
                 }
@@ -108,119 +98,75 @@ public class TeamGroupHelper {
                 elementModels.add(elementModel);
             }
         }
-        return buildTeamGroupList(elementModels, collectionlist);
-    }
-
-    private CharacterModel findCharacter(String nickname, List<CharacterModel> characterModels) {
-        CharacterModel characterModel = null;
-        boolean find = false;
-        for (CharacterModel model : characterModels) {
-            for (String str : model.getNicknames()) {
-                if (nickname.equals(str)) {
-                    find = true;
-                    break;
-                }
-            }
-            if (find) {
-                characterModel = model;
-                break;
+        List<TeamGroupElementModel> elementModelListOne = new ArrayList<>();
+        for (TeamGroupElementModel teamGroupElementModel : elementModels) {
+            if (fit(teamGroupElementModel, teamGroupScreenModel.getTeamonestage(), teamGroupScreenModel.getTeamoneboss(), teamGroupScreenModel.getTeamoneauto(), teamGroupScreenModel.getTeamonecharacteroneid(), teamGroupScreenModel.getTeamonecharactertwoid(), teamGroupScreenModel.getTeamonecharacterthreeid(), teamGroupScreenModel.getTeamonecharacterfourid(), teamGroupScreenModel.getTeamonecharacterfiveid())) {
+                elementModelListOne.add(teamGroupElementModel);
             }
         }
-        return characterModel;
+        List<TeamGroupElementModel> elementModelListTwo = new ArrayList<>();
+        for (TeamGroupElementModel teamGroupElementModel : elementModels) {
+            if (fit(teamGroupElementModel, teamGroupScreenModel.getTeamtwostage(), teamGroupScreenModel.getTeamtwoboss(), teamGroupScreenModel.getTeamtwoauto(), teamGroupScreenModel.getTeamtwocharacteroneid(), teamGroupScreenModel.getTeamtwocharactertwoid(), teamGroupScreenModel.getTeamtwocharacterthreeid(), teamGroupScreenModel.getTeamtwocharacterfourid(), teamGroupScreenModel.getTeamtwocharacterfiveid())) {
+                elementModelListTwo.add(teamGroupElementModel);
+            }
+        }
+        List<TeamGroupElementModel> elementModelListThree = new ArrayList<>();
+        for (TeamGroupElementModel teamGroupElementModel : elementModels) {
+            if (fit(teamGroupElementModel, teamGroupScreenModel.getTeamthreestage(), teamGroupScreenModel.getTeamthreeboss(), teamGroupScreenModel.getTeamthreeauto(), teamGroupScreenModel.getTeamthreecharacteroneid(), teamGroupScreenModel.getTeamthreecharactertwoid(), teamGroupScreenModel.getTeamthreecharacterthreeid(), teamGroupScreenModel.getTeamthreecharacterfourid(), teamGroupScreenModel.getTeamthreecharacterfiveid())) {
+                elementModelListThree.add(teamGroupElementModel);
+            }
+        }
+        return buildTeamGroupList(elementModelListOne, elementModelListTwo, elementModelListThree);
+    }
+
+    private boolean fit(TeamGroupElementModel teamGroupElementModel, int stage, int boss, int auto, int characteroneid, int charactertwoid, int characterthreeid, int characterfourid, int characterfiveid) {
+        List<Integer> idlist = teamGroupElementModel.getIdlist();
+        TeamModel teamModel = teamGroupElementModel.getTeamModel();
+        if (teamModel.getStage() != stage + 1) {
+            return false;
+        }
+        if (Integer.valueOf(teamModel.getBoss().substring(1, 2)) != boss + 1) {
+            return false;
+        }
+        if (auto != 0 && (teamModel.isAuto() ? 1 : 2) != auto) {
+            return false;
+        }
+        if (characteroneid != 0 && !idlist.contains(characteroneid)) {
+            return false;
+        }
+        if (charactertwoid != 0 && !idlist.contains(charactertwoid)) {
+            return false;
+        }
+        if (characterthreeid != 0 && !idlist.contains(characterthreeid)) {
+            return false;
+        }
+        if (characterfourid != 0 && !idlist.contains(characterfourid)) {
+            return false;
+        }
+        if (characterfiveid != 0 && !idlist.contains(characterfiveid)) {
+            return false;
+        }
+        return true;
     }
 
     /**
      * 构建分刀数据
      */
-    private List<TeamGroupListModel> buildTeamGroupList(List<TeamGroupElementModel> elementModelList, List<TeamGroupModel> collectionlist) {
+    private List<TeamGroupListModel> buildTeamGroupList(List<TeamGroupElementModel> elementModelListOne, List<TeamGroupElementModel> elementModelListTwo, List<TeamGroupElementModel> elementModelListThree) {
         Utils.logD(TAG, "buildTeamGroupList");
         List<TeamGroupListModel> list = new ArrayList<>();
-        int size = elementModelList.size();
-        List<String> bossscreentask = new ArrayList<>();
-        if (new SetupPreference().isBossonescreen()) {
-            bossscreentask.add("1");
-        }
-        if (new SetupPreference().isBosstwoscreen()) {
-            bossscreentask.add("2");
-        }
-        if (new SetupPreference().isBossthreescreen()) {
-            bossscreentask.add("3");
-        }
-        if (new SetupPreference().isBossfourscreen()) {
-            bossscreentask.add("4");
-        }
-        if (new SetupPreference().isBossfivescreen()) {
-            bossscreentask.add("5");
-        }
-        boolean useautoscreen = new SetupPreference().isUseautoscreen();
-        int targetautocount = new SetupPreference().getAutocount();
-        int currentautocount = 0;
-        for (int i = 0; i < size; i++) {
-            TeamGroupElementModel one = elementModelList.get(i);
-            if (useautoscreen) {
-                currentautocount = 0;
-                if (one.getTeamModel().isAuto()) {
-                    currentautocount++;
-                }
-                if (!autoscreencompatible(targetautocount, currentautocount, 1)) {
-                    continue;
-                }
-            }
-            List<String> provide = new ArrayList<>();
-            provide.add(one.getTeamModel().getBoss().substring(1, 2));
-            if (!bossscreencompatible(bossscreentask, provide)) {
-                continue;
-            }
-            for (int j = i + 1; j < elementModelList.size(); j++) {
-                TeamGroupElementModel two = elementModelList.get(j);
-                if (useautoscreen) {
-                    currentautocount = 0;
-                    if (one.getTeamModel().isAuto()) {
-                        currentautocount++;
-                    }
-                    if (two.getTeamModel().isAuto()) {
-                        currentautocount++;
-                    }
-                    if (!autoscreencompatible(targetautocount, currentautocount, 2)) {
-                        continue;
-                    }
-                }
-                provide.clear();
-                provide.add(one.getTeamModel().getBoss().substring(1, 2));
-                provide.add(two.getTeamModel().getBoss().substring(1, 2));
-                if (!bossscreencompatible(bossscreentask, provide)) {
-                    continue;
-                }
+        for (int i = 0; i < elementModelListOne.size(); i++) {
+            TeamGroupElementModel one = elementModelListOne.get(i);
+            for (int j = 0; j < elementModelListTwo.size(); j++) {
+                TeamGroupElementModel two = elementModelListTwo.get(j);
                 if (compatible(one, two)) {
-                    for (int k = j + 1; k < elementModelList.size(); k++) {
-                        TeamGroupElementModel three = elementModelList.get(k);
-                        if (useautoscreen) {
-                            currentautocount = 0;
-                            if (one.getTeamModel().isAuto()) {
-                                currentautocount++;
-                            }
-                            if (two.getTeamModel().isAuto()) {
-                                currentautocount++;
-                            }
-                            if (three.getTeamModel().isAuto()) {
-                                currentautocount++;
-                            }
-                            if (!autoscreencompatible(targetautocount, currentautocount, 3)) {
-                                continue;
-                            }
-                        }
-                        provide.clear();
-                        provide.add(one.getTeamModel().getBoss().substring(1, 2));
-                        provide.add(two.getTeamModel().getBoss().substring(1, 2));
-                        provide.add(three.getTeamModel().getBoss().substring(1, 2));
-                        if (!bossscreencompatible(bossscreentask, provide)) {
-                            continue;
-                        }
-                        TeamGroupListModel teamGroupListModel = compatible(one, two, three, collectionlist);
+                    for (int k = 0; k < elementModelListThree.size(); k++) {
+                        TeamGroupElementModel three = elementModelListThree.get(k);
+                        TeamGroupListModel teamGroupListModel = compatible(one, two, three);
                         if (teamGroupListModel != null) {
                             int n = -1;
                             for (int m = 0; m < list.size(); m++) {
-                                if (teamGroupListModel.getTotaldamage() >= list.get(m).getTotaldamage()) {
+                                if (teamGroupListModel.getTotaldamage() > list.get(m).getTotaldamage()) {
                                     n = m;
                                     break;
                                 }
@@ -245,51 +191,6 @@ public class TeamGroupHelper {
             }
         }
         return list;
-    }
-
-    /**
-     * 满足BOSS筛选
-     */
-    private boolean bossscreencompatible(List<String> task, List<String> provide) {
-        for (String a : provide) {
-            boolean find = false;
-            for (String b : task) {
-                if (a.equals(b)) {
-                    find = true;
-                }
-            }
-            if (!find) {
-                return false;
-            }
-        }
-        if (provide.size() == 3) {
-            for (String a : task) {
-                boolean find = false;
-                for (String b : provide) {
-                    if (a.equals(b)) {
-                        find = true;
-                        break;
-                    }
-                }
-                if (!find) {
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    /**
-     * 满足auto筛选
-     */
-    private boolean autoscreencompatible(int targetautocount, int currentautocount, int layer) {
-        if (currentautocount > targetautocount) {
-            return false;
-        }
-        if (layer - currentautocount > (3 - targetautocount)) {
-            return false;
-        }
-        return true;
     }
 
     /**
@@ -328,7 +229,7 @@ public class TeamGroupHelper {
         return compatible;
     }
 
-    private TeamGroupListModel compatible(TeamGroupElementModel elementone, TeamGroupElementModel elementtwo, TeamGroupElementModel elementthree, List<TeamGroupModel> collectionlist) {
+    private TeamGroupListModel compatible(TeamGroupElementModel elementone, TeamGroupElementModel elementtwo, TeamGroupElementModel elementthree) {
 //        if (elementone.getTeamModel().getNumber().equals("a103") && elementtwo.getTeamModel().getNumber().equals("a111") && elementthree.getTeamModel().getNumber().equals("a307")) {
 //            int a = 0;
 //            int b = a;
@@ -491,18 +392,7 @@ public class TeamGroupHelper {
                     throw new RuntimeException("分刀计算遗漏");
                 }
             }
-            boolean collected = false;
-            for (TeamGroupModel teamGroupModel : collectionlist) {
-                if (teamGroupModel.getTeamone().equals(elementone.getTeamModel().getNumber())) {
-                    if (teamGroupModel.getTeamtwo().equals(elementtwo.getTeamModel().getNumber())) {
-                        if (teamGroupModel.getTeamthree().equals(elementthree.getTeamModel().getNumber())) {
-                            collected = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            return new TeamGroupListModel(elementone, screencharacterone, elementtwo, screencharactertwo, elementthree, screencharacterthree, collected);
+            return new TeamGroupListModel(elementone, screencharacterone, elementtwo, screencharactertwo, elementthree, screencharacterthree);
         }
         return null;
     }

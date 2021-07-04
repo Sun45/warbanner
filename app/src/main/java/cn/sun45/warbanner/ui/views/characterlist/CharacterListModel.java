@@ -8,11 +8,11 @@ import cn.sun45.warbanner.document.db.source.CharacterModel;
  */
 public class CharacterListModel {
     private CharacterModel characterModel;
-    private boolean select;
+    private int type;
 
-    public CharacterListModel(CharacterModel characterModel, boolean select) {
+    public CharacterListModel(CharacterModel characterModel, int type) {
         this.characterModel = characterModel;
-        this.select = select;
+        this.type = type;
     }
 
     public CharacterModel getCharacterModel() {
@@ -23,11 +23,11 @@ public class CharacterListModel {
         this.characterModel = characterModel;
     }
 
-    public boolean isSelect() {
-        return select;
+    public int getType() {
+        return type;
     }
 
-    public void setSelect(boolean select) {
-        this.select = select;
+    public void setType(int type) {
+        this.type = type;
     }
 }

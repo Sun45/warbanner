@@ -1,5 +1,6 @@
 package cn.sun45.warbanner.util;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -8,7 +9,9 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
 import android.net.ConnectivityManager;
@@ -28,6 +31,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.ArrayRes;
+import androidx.annotation.AttrRes;
 import androidx.annotation.ColorInt;
 import androidx.annotation.ColorRes;
 import androidx.annotation.DimenRes;
@@ -60,6 +64,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.framework.MyApplication;
 import dalvik.system.DexClassLoader;
 
@@ -277,6 +282,15 @@ public class Utils {
     public static void showSoftInput(View view) {
         InputMethodManager inputManager = (InputMethodManager) view.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         inputManager.showSoftInput(view, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    /**
+     * 隐藏软键盘
+     */
+    public static void hideSoftInput(Activity activity) {
+        activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
     }
 
     /**
@@ -560,6 +574,27 @@ public class Utils {
         return view.getDrawingCache();
     }
 
+    /**
+     * shot the current screen ,with the status but the status is trans * * * @param ctx current activity
+     */
+    public static Bitmap shotActivity(Activity activity) {
+        View view = activity.getWindow().getDecorView();
+        view.setDrawingCacheEnabled(true);
+        view.buildDrawingCache();
+        Bitmap bp = Bitmap.createBitmap(view.getDrawingCache(), 0, 0, view.getMeasuredWidth(), view.getMeasuredHeight());
+        view.setDrawingCacheEnabled(false);
+        view.destroyDrawingCache();
+        return bp;
+    }
+
+    /**
+     * 截屏到文件
+     *
+     * @param path 文件路径
+     */
+    public static void screencap(String path) {
+        adbShell("screencap -p " + path);
+    }
     //view
 
     /**
@@ -608,7 +643,6 @@ public class Utils {
     public static int getDimension(@DimenRes int res) {
         return (int) (MyApplication.application.getResources().getDimension(res) + 0.5f);
     }
-
 
     /**
      * 获取资源文件中的浮点数尺寸数值
@@ -680,6 +714,22 @@ public class Utils {
             list.add(str);
         }
         return list;
+    }
+
+    //attr
+
+    /**
+     * 获取预定义的颜色数值
+     *
+     * @param res 资源id
+     * @return 数值
+     */
+    public static int getAttrColor(Context context,@AttrRes int res) {
+        int[] attribute = new int[]{res};
+        TypedArray array = context.getTheme().obtainStyledAttributes(attribute);
+        int color = array.getColor(0, Color.TRANSPARENT);
+        array.recycle();
+        return color;
     }
 
     //file
@@ -945,30 +995,12 @@ public class Utils {
         try {
             md = MessageDigest.getInstance("SHA-256");// 将此换成SHA-1、SHA-512、SHA-384等参数
             md.update(bt);
-            strDes = bytes2Hex(md.digest()); // to HexString
+            strDes = bytes2HexString(md.digest(), false); // to HexString
         } catch (NoSuchAlgorithmException e) {
             return null;
         }
         return strDes;
     }
-
-    public static String bytes2Hex(byte[] bts) {
-        String des = "";
-        String tmp = null;
-        for (int i = 0; i < bts.length; i++) {
-            tmp = (Integer.toHexString(bts[i] & 0xFF));
-            if (tmp.length() == 1) {
-                des += "0";
-            }
-            des += tmp;
-        }
-        return des;
-    }
-
-    private static final char[] HEX_DIGITS_UPPER =
-            {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-    private static final char[] HEX_DIGITS_LOWER =
-            {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
     /**
      * Bytes to hex string.
@@ -980,6 +1012,8 @@ public class Utils {
      */
     public static String bytes2HexString(final byte[] bytes, boolean isUpperCase) {
         if (bytes == null) return "";
+        char[] HEX_DIGITS_UPPER = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+        char[] HEX_DIGITS_LOWER = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
         char[] hexDigits = isUpperCase ? HEX_DIGITS_UPPER : HEX_DIGITS_LOWER;
         int len = bytes.length;
         if (len <= 0) return "";

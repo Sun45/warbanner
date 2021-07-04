@@ -38,7 +38,7 @@
         android:background="@color/black"
         android:gravity="center_vertical"
         android:paddingHorizontal="15dp"
-        android:text="@string/character_screen_state_start"
+        android:text="@string/teamgroup_state_start"
         android:textColor="@color/white_50"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"

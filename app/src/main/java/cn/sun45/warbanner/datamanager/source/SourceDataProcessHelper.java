@@ -216,6 +216,9 @@ public class SourceDataProcessHelper extends SQLiteOpenHelper {
 
     /************************* public field **************************/
 
+    /***
+     * 获取角色基础数据
+     */
     public List<RawUnitBasic> getCharaBase() {
         return getBeanListByRaw("\n" +
                 "                        SELECT ud.unit_id\n" +
@@ -248,5 +251,126 @@ public class SourceDataProcessHelper extends SQLiteOpenHelper {
                 "                        WHERE ud.comment <> ''\n" +
                 "                        AND ud.unit_id < 400000\n" +
                 "                        ", RawUnitBasic.class);
+    }
+
+    /***
+     * 获取会战期次
+     * @param
+     * @return
+     */
+    public List<RawClanBattlePeriod> getClanBattlePeriod() {
+        //只显示最近13期会战
+        boolean limit = false;
+        return getBeanListByRaw("\n" +
+                "                        SELECT *\n" +
+                "                        FROM clan_battle_period\n" +
+                "                        ORDER BY clan_battle_id DESC\n" +
+                "                        " + (limit ? "LIMIT 13" : ""), RawClanBattlePeriod.class);
+    }
+
+    /***
+     * 获取会战phase
+     * @param
+     * @return
+     */
+    public List<RawClanBattlePhase> getClanBattlePhase(int clanBattleId) {
+        return getBeanListByRaw("\n" +
+                "                        SELECT DISTINCT \n" +
+                "                        phase \n" +
+                "                        ,wave_group_id_1 \n" +
+                "                        ,wave_group_id_2 \n" +
+                "                        ,wave_group_id_3 \n" +
+                "                        ,wave_group_id_4 \n" +
+                "                        ,wave_group_id_5 \n" +
+                "                        FROM clan_battle_2_map_data WHERE clan_battle_id=" + clanBattleId + "\n" +
+                "                        ORDER BY phase DESC", RawClanBattlePhase.class);
+    }
+
+    /***
+     * 获取wave
+     * @param
+     * @return
+     */
+    public List<RawWaveGroup> getWaveGroupData(List<Integer> waveGroupList) {
+        String in = "";
+        for (int i = 0; i < waveGroupList.size(); i++) {
+            Integer integer = waveGroupList.get(i);
+            if (i != 0) {
+                in += ",";
+            }
+            in += integer;
+        }
+        return getBeanListByRaw("\n" +
+                "                        SELECT * \n" +
+                "                        FROM wave_group_data\n" +
+                "                        WHERE wave_group_id IN ( " + in +
+                "                        )\n", RawWaveGroup.class);
+    }
+
+    /***
+     * 获取enemyList
+     * @param
+     * @return
+     */
+    public List<RawEnemy> getEnemy(List<Integer> enemyIdList) {
+        String in = "";
+        for (int i = 0; i < enemyIdList.size(); i++) {
+            Integer integer = enemyIdList.get(i);
+            if (i != 0) {
+                in += ",";
+            }
+            in += integer;
+        }
+        return getBeanListByRaw("\n" +
+                "                    SELECT \n" +
+                "                    a.* \n" +
+                "                    ,b.union_burst \n" +
+                "                    ,b.union_burst_evolution \n" +
+                "                    ,b.main_skill_1 \n" +
+                "                    ,b.main_skill_evolution_1 \n" +
+                "                    ,b.main_skill_2 \n" +
+                "                    ,b.main_skill_evolution_2 \n" +
+                "                    ,b.ex_skill_1 \n" +
+                "                    ,b.ex_skill_evolution_1 \n" +
+                "                    ,b.main_skill_3 \n" +
+                "                    ,b.main_skill_4 \n" +
+                "                    ,b.main_skill_5 \n" +
+                "                    ,b.main_skill_6 \n" +
+                "                    ,b.main_skill_7 \n" +
+                "                    ,b.main_skill_8 \n" +
+                "                    ,b.main_skill_9 \n" +
+                "                    ,b.main_skill_10 \n" +
+                "                    ,b.ex_skill_2 \n" +
+                "                    ,b.ex_skill_evolution_2 \n" +
+                "                    ,b.ex_skill_3 \n" +
+                "                    ,b.ex_skill_evolution_3 \n" +
+                "                    ,b.ex_skill_4 \n" +
+                "                    ,b.ex_skill_evolution_4 \n" +
+                "                    ,b.ex_skill_5 \n" +
+                "                    ,b.sp_skill_1 \n" +
+                "                    ,b.ex_skill_evolution_5 \n" +
+                "                    ,b.sp_skill_2 \n" +
+                "                    ,b.sp_skill_3 \n" +
+                "                    ,b.sp_skill_4 \n" +
+                "                    ,b.sp_skill_5 \n" +
+                "                    ,c.child_enemy_parameter_1 \n" +
+                "                    ,c.child_enemy_parameter_2 \n" +
+                "                    ,c.child_enemy_parameter_3 \n" +
+                "                    ,c.child_enemy_parameter_4 \n" +
+                "                    ,c.child_enemy_parameter_5 \n" +
+                "                    ,u.prefab_id \n" +
+                "                    ,u.atk_type \n" +
+                "                    ,u.normal_atk_cast_time\n" +
+                "                    ,u.search_area_width\n" +
+                "                    ,u.comment\n" +
+                "                    FROM \n" +
+                "                    unit_skill_data b \n" +
+                "                    ,enemy_parameter a \n" +
+                "                    LEFT JOIN enemy_m_parts c ON a.enemy_id = c.enemy_id \n" +
+                "                    LEFT JOIN unit_enemy_data u ON a.unit_id = u.unit_id \n" +
+                "                    WHERE \n" +
+                "                    a.unit_id = b.unit_id \n" +
+                "                    AND a.enemy_id in ( " + in +
+                "                    )\n", RawEnemy.class);
     }
 }

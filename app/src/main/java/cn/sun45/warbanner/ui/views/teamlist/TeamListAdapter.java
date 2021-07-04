@@ -6,8 +6,6 @@ import android.net.Uri;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
-import android.text.TextPaint;
-import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
@@ -15,36 +13,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import cn.sun45.warbanner.R;
+import cn.sun45.warbanner.character.CharacterHelper;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.document.db.setup.ScreenCharacterModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
 import cn.sun45.warbanner.document.preference.SetupPreference;
 import cn.sun45.warbanner.framework.image.ImageRequester;
+import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListListener;
+import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListModel;
 import cn.sun45.warbanner.util.Utils;
 
 /**
  * Created by Sun45 on 2021/5/20
  * 阵容列表Adapter
  */
-public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder> {
+public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = "TeamListAdapter";
 
     public static final int SHOW_TYPE_ALL = 0;
@@ -54,14 +47,20 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
 
     private Context context;
 
-    private boolean showlink = true;
+    private TeamListListener listener;
 
+    private boolean showlink;
+    private int autoScreen;
     private int showtype;
-    private List<TeamListModel> onelist;
-    private List<TeamListModel> twolist;
-    private List<TeamListModel> threelist;
+
+    private List<Object> onelist;
+    private List<Object> twolist;
+    private List<Object> threelist;
+
+    //角色信息
     private List<CharacterModel> characterModels;
 
+    //筛选信息
     private boolean screenfunction;
     private List<ScreenCharacterModel> screenCharacterModels;
 
@@ -69,33 +68,26 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
         this.context = context;
     }
 
+    public void setListener(TeamListListener listener) {
+        this.listener = listener;
+    }
+
     public void setShowlink(boolean showlink) {
         this.showlink = showlink;
+    }
+
+    public void setAutoScreen(int autoScreen) {
+        this.autoScreen = autoScreen;
     }
 
     public void setShowtype(int showtype) {
         this.showtype = showtype;
     }
 
-    public void setList(List<TeamModel> list) {
-        onelist = new ArrayList<>();
-        twolist = new ArrayList<>();
-        threelist = new ArrayList<>();
-        for (TeamModel teamModel : list) {
-            switch (teamModel.getStage()) {
-                case 1:
-                    onelist.add(new TeamListModel(teamModel));
-                    break;
-                case 2:
-                    twolist.add(new TeamListModel(teamModel));
-                    break;
-                case 3:
-                    threelist.add(new TeamListModel(teamModel));
-                    break;
-                default:
-                    break;
-            }
-        }
+    public void setList(List<Object> onelist, List<Object> twolist, List<Object> threelist) {
+        this.onelist = onelist;
+        this.twolist = twolist;
+        this.threelist = threelist;
     }
 
     public void setCharacterModels(List<CharacterModel> characterModels) {
@@ -110,16 +102,37 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
         this.screenCharacterModels = screenCharacterModels;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        Object item = getItem(position);
+        return item instanceof TeamListBossModel ? 0 : 1;
+    }
+
     @NonNull
     @Override
-    public Holder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.teamlist_item, parent, false);
-        return new Holder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        RecyclerView.ViewHolder holder = null;
+        switch (viewType) {
+            case 0:
+                holder = new BossHolder(LayoutInflater.from(context).inflate(R.layout.teamlist_bossitem, parent, false));
+                break;
+            case 1:
+                holder = new TeamHolder(LayoutInflater.from(context).inflate(R.layout.teamlist_teamitem, parent, false));
+                break;
+        }
+        return holder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull TeamListAdapter.Holder holder, int position) {
-        holder.setData(getItem(position));
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        switch (getItemViewType(position)) {
+            case 0:
+                ((BossHolder) holder).setData((TeamListBossModel) getItem(position));
+                break;
+            case 1:
+                ((TeamHolder) holder).setData((TeamListTeamModel) getItem(position));
+                break;
+        }
     }
 
     @Override
@@ -128,23 +141,23 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
         switch (showtype) {
             case SHOW_TYPE_ALL:
                 if (onelist != null) {
-                    count += onelist.size();
+                    count += countList(onelist);
                 }
                 if (twolist != null) {
-                    count += twolist.size();
+                    count += countList(twolist);
                 }
                 if (threelist != null) {
-                    count += threelist.size();
+                    count += countList(threelist);
                 }
                 break;
             case SHOW_TYPE_ONE:
-                count = onelist != null ? onelist.size() : 0;
+                count = countList(onelist);
                 break;
             case SHOW_TYPE_TWO:
-                count = twolist != null ? twolist.size() : 0;
+                count = countList(twolist);
                 break;
             case SHOW_TYPE_THREE:
-                count = threelist != null ? threelist.size() : 0;
+                count = countList(threelist);
                 break;
             default:
                 break;
@@ -153,43 +166,135 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
         return count;
     }
 
-    private TeamListModel getItem(int position) {
-        TeamListModel teamListModel = null;
+    private int countList(List<Object> list) {
+        int count = 0;
+        if (list != null) {
+            switch (autoScreen) {
+                case 0:
+                    count = list.size();
+                    break;
+                case 1:
+                    for (Object object : list) {
+                        if (object instanceof TeamListTeamModel) {
+                            if (!((TeamListTeamModel) object).getTeamModel().isAuto()) {
+                                continue;
+                            }
+                        }
+                        count++;
+                    }
+                    break;
+                case 2:
+                    for (Object object : list) {
+                        if (object instanceof TeamListTeamModel) {
+                            if (((TeamListTeamModel) object).getTeamModel().isAuto()) {
+                                continue;
+                            }
+                        }
+                        count++;
+                    }
+                    break;
+            }
+        }
+        Utils.logD(TAG, "countList count:" + count);
+        return count;
+    }
+
+    private Object getItem(int position) {
+        Object item = null;
         switch (showtype) {
             case SHOW_TYPE_ALL:
                 int p = position;
-                if (onelist != null && onelist.size() > p) {
-                    teamListModel = onelist.get(p);
+                int onelistcount = countList(onelist);
+                if (onelist != null && onelistcount > p) {
+                    item = getItemFromList(onelist, p);
                 } else {
-                    if (onelist != null) {
-                        p -= onelist.size();
-                    }
-                    if (twolist != null && twolist.size() > p) {
-                        teamListModel = twolist.get(p);
+                    p -= onelistcount;
+                    int twolistcount = countList(twolist);
+                    if (twolist != null && twolistcount > p) {
+                        item = getItemFromList(twolist, p);
                     } else {
-                        if (twolist != null) {
-                            p -= twolist.size();
-                        }
-                        teamListModel = threelist.get(p);
+                        p -= twolistcount;
+                        item = getItemFromList(threelist, p);
                     }
                 }
                 break;
             case SHOW_TYPE_ONE:
-                teamListModel = onelist.get(position);
+                item = getItemFromList(onelist, position);
                 break;
             case SHOW_TYPE_TWO:
-                teamListModel = twolist.get(position);
+                item = getItemFromList(twolist, position);
                 break;
             case SHOW_TYPE_THREE:
-                teamListModel = threelist.get(position);
+                item = getItemFromList(threelist, position);
                 break;
             default:
                 break;
         }
-        return teamListModel;
+        if (item == null) {
+            int a = 0;
+            int b = a;
+        }
+        return item;
     }
 
-    public class Holder extends RecyclerView.ViewHolder {
+    private Object getItemFromList(List<Object> list, int position) {
+        int p = 0;
+        Object item = null;
+        switch (autoScreen) {
+            case 0:
+                item = list.get(position);
+                break;
+            case 1:
+                for (int i = 0; i < list.size(); i++) {
+                    Object object = list.get(i);
+                    if (object instanceof TeamListTeamModel) {
+                        if (!((TeamListTeamModel) object).getTeamModel().isAuto()) {
+                            continue;
+                        }
+                    }
+                    if (position == p) {
+                        item = object;
+                        break;
+                    }
+                    p++;
+                }
+                break;
+            case 2:
+                for (int i = 0; i < list.size(); i++) {
+                    Object object = list.get(i);
+                    if (object instanceof TeamListTeamModel) {
+                        if (((TeamListTeamModel) object).getTeamModel().isAuto()) {
+                            continue;
+                        }
+                    }
+                    if (position == p) {
+                        item = object;
+                        break;
+                    }
+                    p++;
+                }
+                break;
+        }
+        return item;
+    }
+
+    public class BossHolder extends RecyclerView.ViewHolder {
+        private ImageView icon;
+        private TextView name;
+
+        public BossHolder(@NonNull View itemView) {
+            super(itemView);
+            icon = itemView.findViewById(R.id.boss_icon);
+            name = itemView.findViewById(R.id.boss_name);
+        }
+
+        public void setData(TeamListBossModel teamListBossModel) {
+            ImageRequester.request(teamListBossModel.getIconUrl(), R.drawable.ic_character_default).loadImage(icon);
+            name.setText(teamListBossModel.getName());
+        }
+    }
+
+    public class TeamHolder extends RecyclerView.ViewHolder {
         private TextView mBoss;
         private TextView mTitle;
         private View mAuto;
@@ -200,7 +305,9 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
         private CharacterHolder mCharacterfive;
         private TextView mRemarks;
 
-        public Holder(@NonNull View itemView) {
+        private TeamListTeamModel model;
+
+        public TeamHolder(@NonNull View itemView) {
             super(itemView);
             mBoss = itemView.findViewById(R.id.boss);
             mTitle = itemView.findViewById(R.id.title);
@@ -211,11 +318,20 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
             mCharacterfour = new CharacterHolder(itemView.findViewById(R.id.characterfour_lay), R.id.characterfour_icon, R.id.characterfour_name);
             mCharacterfive = new CharacterHolder(itemView.findViewById(R.id.characterfive_lay), R.id.characterfive_icon, R.id.characterfive_name);
             mRemarks = itemView.findViewById(R.id.remarks);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        listener.select(model.getTeamModel());
+                    }
+                }
+            });
         }
 
-        public void setData(TeamListModel teamListModel) {
-            TeamModel teamModel = teamListModel.getTeamModel();
-            List<TeamListRemarkModel> remarkModels = teamListModel.getRemarkModels();
+        public void setData(TeamListTeamModel teamListTeamModel) {
+            model = teamListTeamModel;
+            TeamModel teamModel = teamListTeamModel.getTeamModel();
+            List<TeamListRemarkModel> remarkModels = teamListTeamModel.getRemarkModels();
             mBoss.setText(teamModel.getBoss());
             String title = teamModel.getNumber() + " " + teamModel.getDamage();
             mTitle.setText(title);
@@ -286,19 +402,26 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
         }
 
         public void setData(String nickname) {
-            CharacterModel characterModel = findCharacter(nickname);
+            CharacterModel characterModel = CharacterHelper.findCharacterByNickname(nickname, characterModels);
             if (screenfunction) {
-                boolean screen = false;
+                ScreenCharacterModel screenCharacterModel = null;
                 if (screenCharacterModels != null && characterModel != null) {
-                    for (ScreenCharacterModel screenCharacterModel : screenCharacterModels) {
-                        if (screenCharacterModel.getId() == characterModel.getId()) {
-                            screen = true;
+                    for (ScreenCharacterModel model : screenCharacterModels) {
+                        if (model.getCharacterId() == characterModel.getId()) {
+                            screenCharacterModel = model;
                             break;
                         }
                     }
                 }
-                if (screen) {
-                    lay.setCardBackgroundColor(Utils.getColor(R.color.red_dark_alpha));
+                if (screenCharacterModel != null) {
+                    switch (screenCharacterModel.getType()) {
+                        case 1://TYPE_LACK
+                            lay.setCardBackgroundColor(Utils.getAttrColor(context, R.attr.colorSecondary));
+                            break;
+                        case 2://TYPE_SKIP
+                            lay.setCardBackgroundColor(Utils.getAttrColor(context, R.attr.colorPrimary));
+                            break;
+                    }
                 } else {
                     lay.setCardBackgroundColor(Utils.getColor(R.color.gray));
                 }
@@ -315,31 +438,5 @@ public class TeamListAdapter extends RecyclerView.Adapter<TeamListAdapter.Holder
                 name.setText("");
             }
         }
-
-    }
-
-    /**
-     * 根据昵称获取角色信息
-     *
-     * @param nickname 角色昵称
-     */
-    private CharacterModel findCharacter(String nickname) {
-        CharacterModel characterModel = null;
-        if (characterModels != null && !characterModels.isEmpty()) {
-            boolean find = false;
-            for (CharacterModel model : characterModels) {
-                for (String str : model.getNicknames()) {
-                    if (nickname.equals(str)) {
-                        find = true;
-                        break;
-                    }
-                }
-                if (find) {
-                    characterModel = model;
-                    break;
-                }
-            }
-        }
-        return characterModel;
     }
 }

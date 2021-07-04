@@ -23,9 +23,7 @@ public class TeamGroupListModel implements Serializable {
 
     private int totaldamage;
 
-    private boolean collected;
-
-    public TeamGroupListModel(TeamGroupElementModel elementone, int idone, TeamGroupElementModel elementtwo, int idtwo, TeamGroupElementModel elementthree, int idthree, boolean collected) {
+    public TeamGroupListModel(TeamGroupElementModel elementone, int idone, TeamGroupElementModel elementtwo, int idtwo, TeamGroupElementModel elementthree, int idthree) {
         teamone = elementone.getTeamModel();
         idlistone = elementone.getIdlist();
         borrowindexone = idlistone.indexOf((Object) idone);
@@ -36,7 +34,6 @@ public class TeamGroupListModel implements Serializable {
         idlistthree = elementthree.getIdlist();
         borrowindexthree = idlistthree.indexOf((Object) idthree);
         totaldamage = teamone.getDamagenumber() + teamtwo.getDamagenumber() + teamthree.getDamagenumber();
-        this.collected = collected;
     }
 
     public TeamGroupListModel(TeamModel teamone, List<Integer> idlistone, int borrowindexone, TeamModel teamtwo, List<Integer> idlisttwo, int borrowindextwo, TeamModel teamthree, List<Integer> idlistthree, int borrowindexthree) {
@@ -50,7 +47,6 @@ public class TeamGroupListModel implements Serializable {
         this.idlistthree = idlistthree;
         this.borrowindexthree = borrowindexthree;
         totaldamage = teamone.getDamagenumber() + teamtwo.getDamagenumber() + teamthree.getDamagenumber();
-        collected = true;
     }
 
     public TeamModel getTeamone() {
@@ -91,13 +87,5 @@ public class TeamGroupListModel implements Serializable {
 
     public int getTotaldamage() {
         return totaldamage;
-    }
-
-    public boolean isCollected() {
-        return collected;
-    }
-
-    public void setCollected(boolean collected) {
-        this.collected = collected;
     }
 }

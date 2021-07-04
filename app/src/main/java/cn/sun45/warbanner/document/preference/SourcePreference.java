@@ -11,11 +11,6 @@ public class SourcePreference extends BasePreference {
 
     private String dbHash;
 
-    @Override
-    public String getName() {
-        return "source";
-    }
-
     public long getDbVersion() {
         return load("dbVersion");
     }
@@ -31,5 +26,10 @@ public class SourcePreference extends BasePreference {
     public void setDbHash(String dbHash) {
         this.dbHash = dbHash;
         save("dbHash", dbHash);
+    }
+
+    @Override
+    public String getName() {
+        return "source";
     }
 }

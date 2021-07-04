@@ -18,19 +18,18 @@
             app:icon="@drawable/ic_baseline_adb_24"
             app:key="app_version"
             app:title="@string/menu_app_version" />
+        <Preference
+            app:icon="@drawable/ic_baseline_account_circle_24"
+            app:key="user"
+            app:title="@string/menu_user" />
     </PreferenceCategory>
     <PreferenceCategory
         android:theme="@style/AppTheme"
         app:key="screen_category"
         app:title="@string/menu_screen">
         <Preference
-            app:icon="@drawable/ic_baseline_insert_chart_outlined_24"
-            app:key="stage_screen"
-            app:title="@string/menu_stage_screen" />
-        <Preference
             app:icon="@drawable/ic_baseline_view_comfy_24"
             app:key="character_screen"
-            app:summary="@string/menu_character_screen_summary"
             app:title="@string/menu_character_screen" />
         <SwitchPreferenceCompat
             app:defaultValue="false"

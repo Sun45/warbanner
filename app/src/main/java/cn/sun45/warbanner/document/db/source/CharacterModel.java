@@ -20,6 +20,9 @@ public class CharacterModel extends BaseDbTableModel {
     private String name;
 
     @DbTableParamConfigure
+    private String range;
+
+    @DbTableParamConfigure
     private String iconUrl;
 
     private List<String> nicknames;
@@ -38,6 +41,14 @@ public class CharacterModel extends BaseDbTableModel {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getRange() {
+        return range;
+    }
+
+    public void setRange(String range) {
+        this.range = range;
     }
 
     public String getIconUrl() {

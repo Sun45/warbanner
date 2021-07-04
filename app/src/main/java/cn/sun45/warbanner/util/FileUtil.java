@@ -1,5 +1,8 @@
 package cn.sun45.warbanner.util;
 
+import android.annotation.TargetApi;
+import android.os.StatFs;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedInputStream;
@@ -20,11 +23,16 @@ import java.security.NoSuchAlgorithmException;
 import cn.sun45.warbanner.document.StaticHelper;
 import cn.sun45.warbanner.framework.MyApplication;
 
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR2;
+
 /**
  * Created by Sun45 on 2020/1/10.
  * 文件方法类
  */
 public class FileUtil {
+    private static final String TAG = "FileUtil";
+
     public static String getDbFilePath(String name) {
         return MyApplication.application.getDatabasePath(name).getAbsolutePath();
     }
@@ -41,6 +49,20 @@ public class FileUtil {
         return MyApplication.application.getExternalCacheDir().getAbsolutePath();
     }
 
+    /**
+     * 文件夹判断，不存在就创建一个
+     *
+     * @param path
+     * @return
+     */
+    public static boolean createWhenNotExist(String path) {
+        boolean success = true;
+        File file = new File(path);
+        if (!file.exists()) {
+            success = file.mkdirs();
+        }
+        return success;
+    }
 
     /***
      * 单纯的复制文件
@@ -78,6 +100,11 @@ public class FileUtil {
         }
     }
 
+    /**
+     * 删除文件夹下的文件
+     *
+     * @param directoryFile 文件夹
+     */
     public static boolean deleteDirectory(File directoryFile) {
         if (directoryFile.isDirectory()) {
             File[] files = directoryFile.listFiles();
@@ -90,10 +117,20 @@ public class FileUtil {
         return deleteFile(directoryFile);
     }
 
+    /**
+     * 删除单个文件
+     *
+     * @param filePath 文件路径
+     */
     public static boolean deleteFile(String filePath) {
         return deleteFile(new File(filePath));
     }
 
+    /**
+     * 删除单个文件
+     *
+     * @param file 文件
+     */
     public static boolean deleteFile(File file) {
         boolean flag = true;
         try {
@@ -101,7 +138,7 @@ public class FileUtil {
                 flag = false;
                 throw new IOException("Failed to delete file: " + file.getAbsolutePath() + ". Size: " + file.length() / 1024 + "KB.");
             } else {
-                Utils.logD("FileDelete", "Delete file " + file.getAbsolutePath());
+                Utils.logD(TAG, "FileDelete Delete file " + file.getAbsolutePath());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -109,19 +146,35 @@ public class FileUtil {
         return flag;
     }
 
+    /**
+     * 检查文件是否存在
+     *
+     * @param file 文件
+     */
     public static boolean checkFile(@NotNull File file) {
         if (!file.exists()) {
-            Utils.logD("FileCheck", "FileNotExists: " + file.getAbsolutePath());
+            Utils.logD(TAG, "FileCheck FileNotExists: " + file.getAbsolutePath());
             return false;
         }
         return true;
     }
 
+    /**
+     * 检查文件是否存在
+     *
+     * @param filePath 文件路径
+     */
     public static boolean checkFile(String filePath) {
         File file = new File(filePath);
         return checkFile(file);
     }
 
+    /**
+     * 检查文件存在且大小足够
+     *
+     * @param filePath 文件路径
+     * @param border   需求大小
+     */
     public static boolean checkFileAndSize(String filePath, long border) {
         File file = new File(filePath);
         if (!checkFile(file)) {
@@ -135,6 +188,11 @@ public class FileUtil {
         return true;
     }
 
+    /**
+     * 检查并删除文件
+     *
+     * @param file 文件
+     */
     public static void checkFileAndDeleteIfExists(File file) {
         if (file.exists()) deleteFile(file);
     }
@@ -201,37 +259,6 @@ public class FileUtil {
             }
         }
         return null;
-    }
-
-    /**
-     * 删除目录及目录下的文件
-     *
-     * @param dir 要删除的目录的文件路径
-     */
-    public static void deleteDirectory(String dir) {
-        // 如果dir不以文件分隔符结尾，自动添加文件分隔符
-        if (!dir.endsWith(File.separator)) {
-            dir = dir + File.separator;
-        }
-        File dirFile = new File(dir);
-        // 如果dir对应的文件不存在，或者不是一个目录，则退出
-        if ((!dirFile.exists()) || (!dirFile.isDirectory())) {
-            return;
-        }
-        // 删除文件夹中的所有文件包括子目录
-        File[] files = dirFile.listFiles();
-        for (int i = 0; i < files.length; i++) {
-            // 删除子文件
-            if (files[i].isFile()) {
-                files[i].delete();
-            }
-            // 删除子目录
-            else if (files[i].isDirectory()) {
-                deleteDirectory(files[i].getAbsolutePath());
-            }
-        }
-        // 删除当前目录
-        dirFile.delete();
     }
 
     /**
@@ -333,5 +360,30 @@ public class FileUtil {
                 }
             }
         }
+    }
+
+    private static final int MIN_DISK_CACHE_SIZE = 5 * 1024 * 1024; // 5MB
+    private static final int MAX_DISK_CACHE_SIZE = 50 * 1024 * 1024; // 50MB
+
+    @TargetApi(JELLY_BEAN_MR2)
+    public static long calculateDiskCacheSize(File dir) {
+        long size = MIN_DISK_CACHE_SIZE;
+
+        try {
+            StatFs statFs = new StatFs(dir.getAbsolutePath());
+            //noinspection deprecation
+            long blockCount =
+                    SDK_INT < JELLY_BEAN_MR2 ? (long) statFs.getBlockCount() : statFs.getBlockCountLong();
+            //noinspection deprecation
+            long blockSize =
+                    SDK_INT < JELLY_BEAN_MR2 ? (long) statFs.getBlockSize() : statFs.getBlockSizeLong();
+            long available = blockCount * blockSize;
+            // Target 2% of the total space.
+            size = available / 50;
+        } catch (IllegalArgumentException ignored) {
+        }
+
+        // Bound inside min/max size for disk cache.
+        return Math.max(Math.min(size, MAX_DISK_CACHE_SIZE), MIN_DISK_CACHE_SIZE);
     }
 }

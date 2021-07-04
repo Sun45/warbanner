@@ -1,6 +1,8 @@
 package cn.sun45.warbanner.ui.views.characterlist;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,21 +80,23 @@ public class CharacterListAdapter extends RecyclerView.Adapter<CharacterListAdap
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    boolean select = model.isSelect();
                     CharacterModel characterModel = model.getCharacterModel();
-                    select = !select;
-                    model.setSelect(select);
-                    if (listener != null) {
-                        listener.changeState(select, characterModel);
+                    int type = model.getType() + 1;
+                    if (type == 3) {
+                        type = 0;
                     }
-                    showSelectState();
+                    model.setType(type);
+                    if (listener != null) {
+                        listener.changeState(characterModel, type);
+                    }
+                    showState();
                 }
             });
         }
 
         public void setData(CharacterListModel characterListModel) {
             model = characterListModel;
-            showSelectState();
+            showState();
             CharacterModel characterModel = characterListModel.getCharacterModel();
             String iconUrl = characterModel.getIconUrl();
             if (TextUtils.isEmpty(iconUrl)) {
@@ -103,11 +107,20 @@ public class CharacterListAdapter extends RecyclerView.Adapter<CharacterListAdap
             name.setText(characterModel.getName());
         }
 
-        private void showSelectState() {
-            if (model.isSelect()) {
-                card.setCardBackgroundColor(Utils.getColor(R.color.red_dark_alpha));
-            } else {
-                card.setCardBackgroundColor(Utils.getColor(R.color.theme_dark));
+        private void showState() {
+            switch (model.getType()) {
+                case 0://默认
+                    card.setCardBackgroundColor(Utils.getColor(R.color.theme_dark));
+                    name.setTextColor(Utils.getColor(R.color.white_50));
+                    break;
+                case 1://TYPE_LACK
+                    card.setCardBackgroundColor(Utils.getAttrColor(context, R.attr.colorSecondary));
+                    name.setTextColor(Utils.getColor(R.color.black));
+                    break;
+                case 2://TYPE_SKIP
+                    card.setCardBackgroundColor(Utils.getAttrColor(context, R.attr.colorPrimary));
+                    name.setTextColor(Utils.getColor(R.color.black));
+                    break;
             }
         }
     }

@@ -1,4 +1,4 @@
-package cn.sun45.warbanner.ui.fragments;
+package cn.sun45.warbanner.ui.fragments.menu;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -26,6 +26,7 @@ import cn.sun45.warbanner.datamanager.update.UpdateManager;
 import cn.sun45.warbanner.document.preference.ClanwarPreference;
 import cn.sun45.warbanner.document.preference.SetupPreference;
 import cn.sun45.warbanner.document.preference.SourcePreference;
+import cn.sun45.warbanner.user.UserManager;
 import cn.sun45.warbanner.util.Utils;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
@@ -41,8 +42,8 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
     private Preference clanware;
     private Preference db;
     private Preference app;
+    private Preference user;
 
-    private Preference stageScreen;
     private Preference characterScreen;
     private SwitchPreferenceCompat characterScreenEnable;
 
@@ -96,53 +97,13 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
             }
         });
 
-        stageScreen = findPreference("stage_screen");
-        stageScreen.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+        user = findPreference("user");
+        user.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                MaterialDialog dialog = new MaterialDialog(getContext(), MaterialDialog.getDEFAULT_BEHAVIOR());
-                dialog.title(R.string.menu_stage_screen, null);
-                List<Integer> selection = new ArrayList<>();
-                if (new SetupPreference().isStageonescreen()) {
-                    selection.add(0);
-                }
-                if (new SetupPreference().isStagetwoscreen()) {
-                    selection.add(1);
-                }
-                if (new SetupPreference().isStagethreescreen()) {
-                    selection.add(2);
-                }
-                int[] selectionlist = new int[selection.size()];
-                for (int i = 0; i < selection.size(); i++) {
-                    selectionlist[i] = selection.get(i);
-                }
-                DialogMultiChoiceExtKt.listItemsMultiChoice(dialog, R.array.menu_stage_screen_dialog_options, null, null, selectionlist, true, false, new Function3<MaterialDialog, int[], List<? extends CharSequence>, Unit>() {
-                    @Override
-                    public Unit invoke(MaterialDialog materialDialog, int[] ints, List<? extends CharSequence> charSequences) {
-                        new SetupPreference().setStageonescreen(false);
-                        new SetupPreference().setStagetwoscreen(false);
-                        new SetupPreference().setStagethreescreen(false);
-                        for (int which : ints) {
-                            switch (which) {
-                                case 0:
-                                    new SetupPreference().setStageonescreen(true);
-                                    break;
-                                case 1:
-                                    new SetupPreference().setStagetwoscreen(true);
-                                    break;
-                                case 2:
-                                    new SetupPreference().setStagethreescreen(true);
-                                    break;
-                                default:
-                                    break;
-                            }
-                        }
-                        return null;
-                    }
-                });
-                dialog.positiveButton(R.string.menu_stage_screen_dialog_confirm, null, null);
-                dialog.show();
-                return false;
+                NavController controller = Navigation.findNavController(getView());
+                controller.navigate(R.id.action_nav_main_to_nav_usermanager);
+                return true;
             }
         });
 
@@ -171,20 +132,6 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
             public boolean onPreferenceClick(Preference preference) {
                 MaterialDialog dialog = new MaterialDialog(getContext(), MaterialDialog.getDEFAULT_BEHAVIOR());
                 dialog.title(R.string.menu_link_open_type, null);
-                List<Integer> selection = new ArrayList<>();
-                if (new SetupPreference().isStageonescreen()) {
-                    selection.add(0);
-                }
-                if (new SetupPreference().isStagetwoscreen()) {
-                    selection.add(1);
-                }
-                if (new SetupPreference().isStagethreescreen()) {
-                    selection.add(2);
-                }
-                int[] selectionlist = new int[selection.size()];
-                for (int i = 0; i < selection.size(); i++) {
-                    selectionlist[i] = selection.get(i);
-                }
                 DialogSingleChoiceExtKt.listItemsSingleChoice(dialog, R.array.menu_link_open_type_dialog_options, null, null, new SetupPreference().getLinkopentype(), true, 0, 0, new Function3<MaterialDialog, Integer, CharSequence, Unit>() {
                     @Override
                     public Unit invoke(MaterialDialog materialDialog, Integer integer, CharSequence charSequence) {
@@ -244,6 +191,7 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
         clanware.setSummary(ClanWarManager.getInstance().getUpdateInfo());
         db.setSummary(SourceManager.getInstance().getDbVersion() + "");
         app.setSummary(Utils.getVersionName());
+        user.setSummary(UserManager.getInstance().getCurrentUserName());
     }
 
     @Override

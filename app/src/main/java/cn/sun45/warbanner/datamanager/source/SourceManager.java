@@ -20,6 +20,7 @@ import java.net.URL;
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.document.StaticHelper;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
+import cn.sun45.warbanner.document.db.source.ClanWarModel;
 import cn.sun45.warbanner.document.preference.SourcePreference;
 import cn.sun45.warbanner.framework.document.db.DbHelper;
 import cn.sun45.warbanner.framework.logic.RequestListener;
@@ -193,10 +194,8 @@ public class SourceManager {
                     HttpURLConnection conn = (HttpURLConnection) new URL(StaticHelper.DB_FILE_URL).openConnection();
                     maxLength = conn.getContentLength();
                     InputStream inputStream = conn.getInputStream();
-                    if (!new File(FileUtil.getDbFilePath(StaticHelper.DB_FILE_NAME_COMPRESSED)).exists()) {
-                        if (!new File(FileUtil.getDbFilePath(StaticHelper.DB_FILE_NAME_COMPRESSED)).mkdirs()) {
-                            throw new RuntimeException("Cannot create DB path.");
-                        }
+                    if (!FileUtil.createWhenNotExist(FileUtil.getDbFilePath(StaticHelper.DB_FILE_NAME_COMPRESSED))) {
+                        throw new RuntimeException("Cannot create DB path.");
                     }
                     File compressedFile = new File(FileUtil.getDbFilePath(StaticHelper.DB_FILE_NAME_COMPRESSED));
                     if (compressedFile.exists()) {
@@ -245,6 +244,7 @@ public class SourceManager {
                 //先关闭所有连接，释放sqliteHelper类中的所有旧版本数据库缓存
                 SourceDataProcessHelper.getInstance().close();
                 DbHelper.delete(activity, CharacterModel.class);
+                DbHelper.delete(activity, ClanWarModel.class);
                 synchronized (SourceDataProcessHelper.class) {
                     doDecompress(autocheck);
                 }

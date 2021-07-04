@@ -3,12 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <group android:checkableBehavior="none">
         <item
-            android:id="@+id/menu_boss"
-            android:title="@string/teamgroup_menu_boss"
-            app:showAsAction="always" />
-        <item
-            android:id="@+id/menu_auto"
-            android:title="@string/teamgroup_menu_auto"
+            android:id="@+id/menu_screen"
+            android:title="@string/teamgroup_menu_screen"
             app:showAsAction="always" />
     </group>
 </menu>

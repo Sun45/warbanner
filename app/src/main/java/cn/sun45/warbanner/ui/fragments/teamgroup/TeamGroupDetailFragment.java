@@ -1,4 +1,4 @@
-package cn.sun45.warbanner.ui.fragments;
+package cn.sun45.warbanner.ui.fragments.teamgroup;
 
 import android.os.Bundle;
 import android.view.View;
@@ -15,10 +15,9 @@ import java.util.List;
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
-import cn.sun45.warbanner.document.preference.ClanwarPreference;
 import cn.sun45.warbanner.framework.ui.BaseActivity;
 import cn.sun45.warbanner.framework.ui.BaseFragment;
-import cn.sun45.warbanner.ui.shared.SharedViewModelCharacterModelList;
+import cn.sun45.warbanner.ui.shared.SharedViewModelSource;
 import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListModel;
 import cn.sun45.warbanner.ui.views.teamlist.TeamList;
 
@@ -29,7 +28,7 @@ import cn.sun45.warbanner.ui.views.teamlist.TeamList;
 public class TeamGroupDetailFragment extends BaseFragment {
     private TeamGroupListModel teamGroupListModel;
 
-    private SharedViewModelCharacterModelList sharedCharacterModelList;
+    private SharedViewModelSource sharedSource;
 
     private TeamList mTeamList;
 
@@ -59,14 +58,14 @@ public class TeamGroupDetailFragment extends BaseFragment {
 
     @Override
     protected void dataRequest() {
-        sharedCharacterModelList = new ViewModelProvider(requireActivity()).get(SharedViewModelCharacterModelList.class);
+        sharedSource = new ViewModelProvider(requireActivity()).get(SharedViewModelSource.class);
 
         List<TeamModel> teamModels = new ArrayList<>();
         teamModels.add(teamGroupListModel.getTeamone());
         teamModels.add(teamGroupListModel.getTeamtwo());
         teamModels.add(teamGroupListModel.getTeamthree());
-        mTeamList.setData(teamModels);
-        sharedCharacterModelList.characterlist.observe(requireActivity(), new Observer<List<CharacterModel>>() {
+        mTeamList.setData(teamModels, true);
+        sharedSource.characterlist.observe(requireActivity(), new Observer<List<CharacterModel>>() {
             @Override
             public void onChanged(List<CharacterModel> characterModels) {
                 mTeamList.notifyCharacter(characterModels);
@@ -82,5 +81,11 @@ public class TeamGroupDetailFragment extends BaseFragment {
     @Override
     protected void onHide() {
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        sharedSource.characterlist.removeObservers(requireActivity());
     }
 }

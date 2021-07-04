@@ -1,7 +1,6 @@
-package cn.sun45.warbanner.ui.fragments;
+package cn.sun45.warbanner.ui.fragments.team;
 
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -9,8 +8,6 @@ import android.view.MenuItem;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.checkbox.DialogCheckboxExtKt;
@@ -23,18 +20,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.sun45.warbanner.R;
-import cn.sun45.warbanner.datamanager.clanwar.ClanWarManager;
-import cn.sun45.warbanner.datamanager.source.SourceManager;
+import cn.sun45.warbanner.character.CharacterHelper;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
-import cn.sun45.warbanner.document.db.setup.ScreenCharacterModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
+import cn.sun45.warbanner.document.db.source.ClanWarModel;
 import cn.sun45.warbanner.document.preference.ClanwarPreference;
 import cn.sun45.warbanner.document.preference.SetupPreference;
 import cn.sun45.warbanner.framework.ui.BaseActivity;
 import cn.sun45.warbanner.framework.ui.BaseFragment;
-import cn.sun45.warbanner.ui.shared.SharedViewModelCharacterModelList;
-import cn.sun45.warbanner.ui.shared.SharedViewModelSetup;
-import cn.sun45.warbanner.ui.shared.SharedViewModelTeamList;
+import cn.sun45.warbanner.ui.shared.SharedViewModelClanwar;
+import cn.sun45.warbanner.ui.shared.SharedViewModelSource;
 import cn.sun45.warbanner.ui.views.teamlist.TeamList;
 import cn.sun45.warbanner.ui.views.teamlist.TeamListAdapter;
 import kotlin.Unit;
@@ -46,9 +41,8 @@ import kotlin.jvm.functions.Function3;
  * 阵容列表Fragment
  */
 public class TeamListFragment extends BaseFragment {
-    private SharedViewModelCharacterModelList sharedCharacterModelList;
-    private SharedViewModelTeamList sharedTeamList;
-    private SharedViewModelSetup sharedSetup;
+    private SharedViewModelSource sharedSource;
+    private SharedViewModelClanwar sharedClanwar;
 
     private TeamList mTeamList;
 
@@ -81,50 +75,32 @@ public class TeamListFragment extends BaseFragment {
     @Override
     protected void dataRequest() {
         logD("dataRequest");
-        sharedCharacterModelList = new ViewModelProvider(requireActivity()).get(SharedViewModelCharacterModelList.class);
-        sharedTeamList = new ViewModelProvider(requireActivity()).get(SharedViewModelTeamList.class);
-        sharedSetup = new ViewModelProvider(requireActivity()).get(SharedViewModelSetup.class);
+        sharedSource = new ViewModelProvider(requireActivity()).get(SharedViewModelSource.class);
+        sharedClanwar = new ViewModelProvider(requireActivity()).get(SharedViewModelClanwar.class);
 
-        sharedTeamList.teamList.observe(requireActivity(), new Observer<List<TeamModel>>() {
+        sharedClanwar.teamList.observe(requireActivity(), new Observer<List<TeamModel>>() {
             @Override
             public void onChanged(List<TeamModel> teamModels) {
                 logD("sharedTeamList onChanged");
 //                for (TeamModel teamModel : teamModels) {
 //                    logD(teamModel.toString());
 //                }
-                listShow(teamModels);
-                sharedCharacterModelList.characterlist.observe(requireActivity(), new Observer<List<CharacterModel>>() {
+                sharedSource.clanWarlist.observe(requireActivity(), new Observer<List<ClanWarModel>>() {
                     @Override
-                    public void onChanged(List<CharacterModel> characterModels) {
-                        mTeamList.notifyCharacter(characterModels);
-                    }
-                });
-                sharedSetup.screencharacterlist.observe(requireActivity(), new Observer<List<ScreenCharacterModel>>() {
-                    @Override
-                    public void onChanged(List<ScreenCharacterModel> screenCharacterModels) {
-                        mTeamList.notifyScreenCharacter(new SetupPreference().isCharacterscreenenable(), screenCharacterModels);
+                    public void onChanged(List<ClanWarModel> clanWarModels) {
+                        mTeamList.setData(teamModels, clanWarModels.get(0), new ClanwarPreference().isLinkshow(), new ClanwarPreference().getTeamlistautoscreen(), new ClanwarPreference().getTeamlistshowtype());
+                        sharedSource.characterlist.observe(requireActivity(), new Observer<List<CharacterModel>>() {
+                            @Override
+                            public void onChanged(List<CharacterModel> characterModels) {
+                                mTeamList.notifyCharacter(characterModels);
+                                mTeamList.notifyScreenCharacter(new SetupPreference().isCharacterscreenenable(), CharacterHelper.getScreenCharacterList());
+                            }
+                        });
                     }
                 });
             }
         });
         new SetupPreference().registListener(listener);
-    }
-
-    private void listShow(List<TeamModel> teamModels) {
-        int teamlistautoscreen = new ClanwarPreference().getTeamlistautoscreen();
-        List<TeamModel> data = new ArrayList<>();
-        for (TeamModel teamModel : teamModels) {
-            if (teamModel.isAuto()) {
-                if (teamlistautoscreen == 0 || teamlistautoscreen == 1) {
-                    data.add(teamModel);
-                }
-            } else {
-                if (teamlistautoscreen == 0 || teamlistautoscreen == 2) {
-                    data.add(teamModel);
-                }
-            }
-        }
-        mTeamList.setData(data, new ClanwarPreference().isLinkshow(), new ClanwarPreference().getTeamlistshowtype());
     }
 
     @Override
@@ -221,7 +197,7 @@ public class TeamListFragment extends BaseFragment {
             @Override
             public Unit invoke(MaterialDialog materialDialog, Integer integer, CharSequence charSequence) {
                 new ClanwarPreference().setTeamlistautoscreen(integer);
-                listShow(sharedTeamList.teamList.getValue());
+                mTeamList.notifyAutoScreen(integer);
                 return null;
             }
         });
@@ -235,8 +211,8 @@ public class TeamListFragment extends BaseFragment {
         logD("onDestroy");
         super.onDestroy();
         new SetupPreference().unregistListener(listener);
-        sharedCharacterModelList.characterlist.removeObservers(requireActivity());
-        sharedTeamList.teamList.removeObservers(requireActivity());
-        sharedSetup.screencharacterlist.removeObservers(requireActivity());
+        sharedSource.clanWarlist.removeObservers(requireActivity());
+        sharedSource.characterlist.removeObservers(requireActivity());
+        sharedClanwar.teamList.removeObservers(requireActivity());
     }
 }

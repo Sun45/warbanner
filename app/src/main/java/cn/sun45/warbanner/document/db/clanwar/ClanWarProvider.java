@@ -17,7 +17,8 @@ public class ClanWarProvider extends BaseProvider {
     protected List<BaseDbTableModel> getTableClassList() {
         List<BaseDbTableModel> list = new ArrayList<>();
         list.add(new TeamModel());
-        list.add(new TeamGroupModel());
+        list.add(new TeamGroupCollectionModel());
+        list.add(new TeamGroupScreenModel());
         return list;
     }
 }

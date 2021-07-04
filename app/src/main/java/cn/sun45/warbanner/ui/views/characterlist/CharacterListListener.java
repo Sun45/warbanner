@@ -7,5 +7,5 @@ import cn.sun45.warbanner.document.db.source.CharacterModel;
  * 角色列表监听
  */
 public interface CharacterListListener {
-    void changeState(boolean select, CharacterModel characterModel);
+    void changeState(CharacterModel characterModel, int type);
 }
