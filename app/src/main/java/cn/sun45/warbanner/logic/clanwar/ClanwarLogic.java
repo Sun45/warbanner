@@ -49,18 +49,21 @@ public class ClanwarLogic extends BaseLogic {
                 JSONArray c = textarray.optJSONArray(textarray.length() - 1).optJSONObject(0).optJSONArray("c");
                 JSONObject cellObject = c.optJSONObject(1);
 //                if (cellObject != null) {
+                int n = 0;
                 for (int i = 0; i < cellObject.length(); i++) {
                     HtmlDocCellModel cellModel = new HtmlDocCellModel();
-                    JSONObject total = cellObject.optJSONObject(i + "");
-                    if (total != null) {
-                        JSONArray strarray = total.optJSONArray("2");
-                        if (strarray != null) {
-                            String content = strarray.optString(1);
-                            cellModel.setContent(content);
-                        }
-                        String link = total.optString("6");
-                        cellModel.setLink(link);
+                    JSONObject total = null;
+                    do {
+                        total = cellObject.optJSONObject(n + "");
+                        n++;
+                    } while (total == null);
+                    JSONArray strarray = total.optJSONArray("2");
+                    if (strarray != null) {
+                        String content = strarray.optString(1);
+                        cellModel.setContent(content);
                     }
+                    String link = total.optString("6");
+                    cellModel.setLink(link);
                     cellModels.add(cellModel);
                 }
 //                }

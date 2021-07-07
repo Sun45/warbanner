@@ -1,6 +1,6 @@
 {
-  "versionCode": "12",
-  "versionName": "1.0.1",
+  "versionCode": "13",
+  "versionName": "1.0.2",
   "fource": "true",
-  "content": "1.修改2阶段作业下载地址"
+  "content": "1.修复作业下载不完全的问题"
 }
