@@ -11,7 +11,7 @@ import cn.sun45.warbanner.framework.document.db.annotation.ProviderConfigure;
  * Created by Sun45 on 2021/5/23
  * 会战数据库数据提供器
  */
-@ProviderConfigure(version = 1, dbname = "clanwar")
+@ProviderConfigure(version = 2, dbname = "clanwar")
 public class ClanWarProvider extends BaseProvider {
     @Override
     protected List<BaseDbTableModel> getTableClassList() {

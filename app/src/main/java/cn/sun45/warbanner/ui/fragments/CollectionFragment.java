@@ -81,18 +81,31 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
             @Override
             public void onChanged(List<TeamGroupCollectionModel> teamGroupCollectionModels) {
                 List<TeamGroupListModel> list = new ArrayList<>();
+                String date = ClanwarHelper.getCurrentClanWarDate();
                 for (int i = teamGroupCollectionModels.size() - 1; i >= 0; i--) {
                     TeamGroupCollectionModel teamGroupCollectionModel = teamGroupCollectionModels.get(i);
                     if (ClanwarHelper.isCollect(teamGroupCollectionModel)) {
-                        TeamModel teamone = DbHelper.query(getContext(), TeamModel.class, teamGroupCollectionModel.getTeamone());
+                        List<TeamModel> listone = DbHelper.query(getContext(), TeamModel.class, new String[]{"date", "number"}, new String[]{date, teamGroupCollectionModel.getTeamone()});
+                        TeamModel teamone = null;
+                        if (listone != null && !listone.isEmpty()) {
+                            teamone = listone.get(0);
+                        }
                         if (teamone == null) {
                             continue;
                         }
-                        TeamModel teamtwo = DbHelper.query(getContext(), TeamModel.class, teamGroupCollectionModel.getTeamtwo());
+                        List<TeamModel> listtwo = DbHelper.query(getContext(), TeamModel.class, new String[]{"date", "number"}, new String[]{date, teamGroupCollectionModel.getTeamtwo()});
+                        TeamModel teamtwo = null;
+                        if (listtwo != null && !listtwo.isEmpty()) {
+                            teamtwo = listtwo.get(0);
+                        }
                         if (teamtwo == null) {
                             continue;
                         }
-                        TeamModel teamthree = DbHelper.query(getContext(), TeamModel.class, teamGroupCollectionModel.getTeamthree());
+                        List<TeamModel> listthree = DbHelper.query(getContext(), TeamModel.class, new String[]{"date", "number"}, new String[]{date, teamGroupCollectionModel.getTeamthree()});
+                        TeamModel teamthree = null;
+                        if (listthree != null && !listthree.isEmpty()) {
+                            teamthree = listthree.get(0);
+                        }
                         if (teamthree == null) {
                             continue;
                         }
@@ -110,11 +123,11 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
 
     private List<Integer> buildIdlist(TeamModel teamModel) {
         List<Integer> idlist = new ArrayList<>();
-        idlist.add(CharacterHelper.findCharacterByNickname(teamModel.getCharacterone(), characterModels).getId());
-        idlist.add(CharacterHelper.findCharacterByNickname(teamModel.getCharactertwo(), characterModels).getId());
-        idlist.add(CharacterHelper.findCharacterByNickname(teamModel.getCharacterthree(), characterModels).getId());
-        idlist.add(CharacterHelper.findCharacterByNickname(teamModel.getCharacterfour(), characterModels).getId());
-        idlist.add(CharacterHelper.findCharacterByNickname(teamModel.getCharacterfive(), characterModels).getId());
+        idlist.add(teamModel.getCharacterone());
+        idlist.add(teamModel.getCharactertwo());
+        idlist.add(teamModel.getCharacterthree());
+        idlist.add(teamModel.getCharacterfour());
+        idlist.add(teamModel.getCharacterfive());
         return idlist;
     }
 

@@ -13,6 +13,10 @@ public class TeamGroupCollectionModel extends BaseDbTableModel {
     @DbTableParamConfigure
     private int userId;
 
+    //会战日期 202107
+    @DbTableParamConfigure
+    private String date;
+
     @DbTableParamConfigure
     private String teamone;
     @DbTableParamConfigure
@@ -34,6 +38,14 @@ public class TeamGroupCollectionModel extends BaseDbTableModel {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getTeamone() {

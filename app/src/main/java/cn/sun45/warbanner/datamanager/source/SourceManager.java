@@ -22,6 +22,7 @@ import cn.sun45.warbanner.document.StaticHelper;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
 import cn.sun45.warbanner.document.db.source.ClanWarModel;
 import cn.sun45.warbanner.document.preference.SourcePreference;
+import cn.sun45.warbanner.framework.MyApplication;
 import cn.sun45.warbanner.framework.document.db.DbHelper;
 import cn.sun45.warbanner.framework.logic.RequestListener;
 import cn.sun45.warbanner.logic.source.SourceLogic;
@@ -39,51 +40,21 @@ import kotlin.jvm.functions.Function1;
 public class SourceManager {
     private static final String TAG = "SourceManager";
 
-    private Activity activity;
-
-    private Handler handler;
-
     //单例对象
     private static SourceManager instance;
 
-    public static void init(Activity activity) {
+    public static SourceManager getInstance() {
         if (instance == null) {
             synchronized (SourceManager.class) {
                 if (instance == null) {
-                    instance = new SourceManager(activity);
+                    instance = new SourceManager();
                 }
             }
         }
-    }
-
-    public static SourceManager getInstance() {
         return instance;
     }
 
-    public SourceManager(Activity activity) {
-        this.activity = activity;
-        handler = new Handler(activity.getMainLooper()) {
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-                switch (msg.what) {
-                    case DOWNLOAD_PROGRESSCHANGE://更新数据库时进度条变化
-                        if (progressDialog != null && progressDialog.isShowing()) {
-                            progressDialog.message(null, String.format("%d / %d KB download.", progress / 1024, maxLength / 1024), null);
-                        }
-                        break;
-                    case DOWNLOAD_COMPLETE://数据库下载完成
-                        Log.d(TAG, "DB download finished.");
-                        if (progressDialog != null && progressDialog.isShowing()) {
-                            progressDialog.message(R.string.db_update_download_finished_text, null, null);
-                        }
-                        break;
-                    default:
-                        break;
-                }
-            }
-        };
-    }
+    private Handler handler;
 
     private static final int DOWNLOAD_PROGRESSCHANGE = 0;
     private static final int DOWNLOAD_COMPLETE = 1;
@@ -120,6 +91,27 @@ public class SourceManager {
      * @param autocheck
      */
     public void checkDatabaseVersion(boolean autocheck) {
+        handler = new Handler(MyApplication.getCurrentActivity().getMainLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+                switch (msg.what) {
+                    case DOWNLOAD_PROGRESSCHANGE://更新数据库时进度条变化
+                        if (progressDialog != null && progressDialog.isShowing()) {
+                            progressDialog.message(null, String.format("%d / %d KB download.", progress / 1024, maxLength / 1024), null);
+                        }
+                        break;
+                    case DOWNLOAD_COMPLETE://数据库下载完成
+                        Log.d(TAG, "DB download finished.");
+                        if (progressDialog != null && progressDialog.isShowing()) {
+                            progressDialog.message(R.string.db_update_download_finished_text, null, null);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        };
         new SourceLogic().checkDatabaseVersion(new RequestListener<Long>() {
             @Override
             public void onSuccess(Long result) {
@@ -151,7 +143,7 @@ public class SourceManager {
      */
     private void hintUpdate(boolean autocheck) {
         Utils.logD(TAG, "hintUpdate  serverVersion:" + serverVersion);
-        new MaterialDialog(activity, MaterialDialog.getDEFAULT_BEHAVIOR())
+        new MaterialDialog(MyApplication.getCurrentActivity(), MaterialDialog.getDEFAULT_BEHAVIOR())
                 .title(R.string.db_update_dialog_title, null)
                 .message(R.string.db_update_dialog_text, null, null)
                 .cancelOnTouchOutside(false)
@@ -180,7 +172,7 @@ public class SourceManager {
      */
     private void downloadDB(boolean autocheck) {
         Log.d(TAG, "downloadDB serverVersion:" + serverVersion);
-        progressDialog = new MaterialDialog(activity, MaterialDialog.getDEFAULT_BEHAVIOR());
+        progressDialog = new MaterialDialog(MyApplication.getCurrentActivity(), MaterialDialog.getDEFAULT_BEHAVIOR());
         progressDialog
                 .title(R.string.db_update_progress_title, null)
                 .message(R.string.db_update_progress_text, null, null)
@@ -243,8 +235,8 @@ public class SourceManager {
                 super.run();
                 //先关闭所有连接，释放sqliteHelper类中的所有旧版本数据库缓存
                 SourceDataProcessHelper.getInstance().close();
-                DbHelper.delete(activity, CharacterModel.class);
-                DbHelper.delete(activity, ClanWarModel.class);
+                DbHelper.delete(MyApplication.application, CharacterModel.class);
+                DbHelper.delete(MyApplication.application, ClanWarModel.class);
                 synchronized (SourceDataProcessHelper.class) {
                     doDecompress(autocheck);
                 }

@@ -1,5 +1,7 @@
 package cn.sun45.warbanner.ui.shared;
 
+import android.text.TextUtils;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -10,6 +12,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.sun45.warbanner.clanwar.ClanwarHelper;
 import cn.sun45.warbanner.document.db.clanwar.TeamGroupCollectionModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.framework.MyApplication;
@@ -28,34 +31,38 @@ public class SharedViewModelClanwar extends ViewModel {
         boolean succeeded = true;
         List<TeamGroupCollectionModel> collectionlist = DbHelper.query(MyApplication.application, TeamGroupCollectionModel.class);
         teamGroupCollectionList.postValue(collectionlist);
-        List<TeamModel> teamModelList = DbHelper.query(MyApplication.application, TeamModel.class);
-        if (teamModelList.size() <= 3) {
-            try {
-                DbHelper.delete(MyApplication.application, TeamModel.class);
-                JSONArray array = new JSONArray(Utils.getJson(MyApplication.application, "teamgroup.json"));
-                for (int i = 0; i < array.length(); i++) {
-                    JSONObject object = array.optJSONObject(i);
-                    TeamModel teamModel = new TeamModel();
-                    teamModel.setNumber(object.optString("number"));
-                    teamModel.setStage(object.getInt("stage"));
-                    teamModel.setBoss(object.getString("boss"));
-                    teamModel.setDamage(object.optString("damage"));
-                    teamModel.setDamagenumber(object.getInt("damagenumber"));
-                    teamModel.setAuto(object.optBoolean("auto"));
-                    teamModel.setCharacterone(object.optString("characterone"));
-                    teamModel.setCharactertwo(object.optString("charactertwo"));
-                    teamModel.setCharacterthree(object.optString("characterthree"));
-                    teamModel.setCharacterfour(object.optString("characterfour"));
-                    teamModel.setCharacterfive(object.optString("characterfive"));
-                    teamModel.setRemarks(object.optString("remarks"));
-                    teamModel.setCollect(object.optBoolean("collect"));
-                    DbHelper.insert(MyApplication.application, teamModel);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            teamModelList = DbHelper.query(MyApplication.application, TeamModel.class);
+        String date = ClanwarHelper.getCurrentClanWarDate();
+        List<TeamModel> teamModelList = null;
+        if (!TextUtils.isEmpty(date)) {
+            teamModelList = DbHelper.query(MyApplication.application, TeamModel.class, "date", date);
         }
+//        if (teamModelList == null || teamModelList.size() <= 3) {
+//            try {
+//                DbHelper.delete(MyApplication.application, TeamModel.class);
+//                JSONArray array = new JSONArray(Utils.getJson(MyApplication.application, "teamgroup.json"));
+//                for (int i = 0; i < array.length(); i++) {
+//                    JSONObject object = array.optJSONObject(i);
+//                    TeamModel teamModel = new TeamModel();
+//                    teamModel.setNumber(object.optString("number"));
+//                    teamModel.setStage(object.getInt("stage"));
+//                    teamModel.setBoss(object.getString("boss"));
+//                    teamModel.setDamage(object.optString("damage"));
+//                    teamModel.setDamagenumber(object.getInt("damagenumber"));
+//                    teamModel.setAuto(object.optBoolean("auto"));
+//                    teamModel.setCharacterone(object.optString("characterone"));
+//                    teamModel.setCharactertwo(object.optString("charactertwo"));
+//                    teamModel.setCharacterthree(object.optString("characterthree"));
+//                    teamModel.setCharacterfour(object.optString("characterfour"));
+//                    teamModel.setCharacterfive(object.optString("characterfive"));
+//                    teamModel.setRemarks(object.optString("remarks"));
+//                    teamModel.setCollect(object.optBoolean("collect"));
+//                    DbHelper.insert(MyApplication.application, teamModel);
+//                }
+//            } catch (JSONException e) {
+//                e.printStackTrace();
+//            }
+//            teamModelList = DbHelper.query(MyApplication.application, TeamModel.class);
+//        }
         if (teamModelList == null || teamModelList.isEmpty()) {
             succeeded = false;
         } else {

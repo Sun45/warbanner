@@ -1,6 +1,5 @@
 package cn.sun45.warbanner.datamanager.update;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -20,6 +19,7 @@ import java.io.File;
 
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.document.StaticHelper;
+import cn.sun45.warbanner.framework.MyApplication;
 import cn.sun45.warbanner.framework.file.FileRequestListenerWithProgress;
 import cn.sun45.warbanner.framework.file.FileRequester;
 import cn.sun45.warbanner.framework.logic.RequestListener;
@@ -37,30 +37,47 @@ import kotlin.jvm.functions.Function1;
 public class UpdateManager {
     private static final String TAG = "UpdateManager";
 
-    private Activity activity;
-
-    private Handler handler;
-
     //单例对象
     private static UpdateManager instance;
 
-    public static void init(Activity activity) {
+    public static UpdateManager getInstance() {
         if (instance == null) {
             synchronized (UpdateManager.class) {
                 if (instance == null) {
-                    instance = new UpdateManager(activity);
+                    instance = new UpdateManager();
                 }
             }
         }
-    }
-
-    public static UpdateManager getInstance() {
         return instance;
     }
 
-    public UpdateManager(Activity activity) {
-        this.activity = activity;
-        handler = new Handler(activity.getMainLooper()) {
+    private Handler handler;
+
+    private static final int DOWNLOAD_PROGRESSCHANGE = 0;
+    private static final int DOWNLOAD_COMPLETE = 1;
+    private static final int DOWNLOAD_ERROR = 2;
+
+    private static final int UPDATE_REQUESTCODE = 5000;
+
+    private IActivityCallBack iActivityCallBack;
+
+    public void setiActivityCallBack(IActivityCallBack iActivityCallBack) {
+        this.iActivityCallBack = iActivityCallBack;
+    }
+
+    private MaterialDialog progressDialog;
+
+    private long currentOffset;
+    private long totalLength;
+
+    /**
+     * 检查app版本
+     *
+     * @param autocheck 自动检查
+     */
+    public void checkAppVersion(boolean autocheck) {
+        Utils.logD(TAG, "checkAppVersion");
+        handler = new Handler(MyApplication.getCurrentActivity().getMainLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {
                 super.handleMessage(msg);
@@ -88,32 +105,6 @@ public class UpdateManager {
                 }
             }
         };
-    }
-
-    private static final int DOWNLOAD_PROGRESSCHANGE = 0;
-    private static final int DOWNLOAD_COMPLETE = 1;
-    private static final int DOWNLOAD_ERROR = 2;
-
-    private static final int UPDATE_REQUESTCODE = 5000;
-
-    private IActivityCallBack iActivityCallBack;
-
-    public void setiActivityCallBack(IActivityCallBack iActivityCallBack) {
-        this.iActivityCallBack = iActivityCallBack;
-    }
-
-    private MaterialDialog progressDialog;
-
-    private long currentOffset;
-    private long totalLength;
-
-    /**
-     * 检查app版本
-     *
-     * @param autocheck 自动检查
-     */
-    public void checkAppVersion(boolean autocheck) {
-        Utils.logD(TAG, "checkAppVersion");
         new AppLogic().checkAppVersion(new RequestListener<AppModel>() {
             @Override
             public void onSuccess(AppModel result) {
@@ -150,7 +141,7 @@ public class UpdateManager {
      */
     private void showConfirmDialog(AppModel appModel, boolean autocheck) {
         Utils.logD(TAG, "showConfirmDialog");
-        new MaterialDialog(activity, MaterialDialog.getDEFAULT_BEHAVIOR())
+        new MaterialDialog(MyApplication.getCurrentActivity(), MaterialDialog.getDEFAULT_BEHAVIOR())
                 .title(null, Utils.getString(R.string.app_name) + " " + appModel.getVersionName())
                 .message(null, appModel.getContent(), null)
                 .cancelOnTouchOutside(false)
@@ -177,7 +168,7 @@ public class UpdateManager {
      */
     private void download(boolean autocheck) {
         Utils.logD(TAG, "download");
-        progressDialog = new MaterialDialog(activity, MaterialDialog.getDEFAULT_BEHAVIOR());
+        progressDialog = new MaterialDialog(MyApplication.getCurrentActivity(), MaterialDialog.getDEFAULT_BEHAVIOR());
         progressDialog.title(R.string.app_update_progress_title, null)
                 .message(R.string.app_update_progress_text_prepare, null, null)
                 .cancelable(false)
@@ -236,7 +227,7 @@ public class UpdateManager {
         File file = new File(path + File.separator + name);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            Uri contentUri = FileProvider.getUriForFile(activity, "cn.sun45.warbanner.fileprovider", file);
+            Uri contentUri = FileProvider.getUriForFile(MyApplication.application, "cn.sun45.warbanner.fileprovider", file);
             intent.setDataAndType(contentUri, "application/vnd.android.package-archive");
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setAction(android.content.Intent.ACTION_VIEW);
@@ -245,7 +236,7 @@ public class UpdateManager {
             intent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive");
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
-        activity.startActivityForResult(intent, UPDATE_REQUESTCODE);
+        MyApplication.getCurrentActivity().startActivityForResult(intent, UPDATE_REQUESTCODE);
     }
 
     /**

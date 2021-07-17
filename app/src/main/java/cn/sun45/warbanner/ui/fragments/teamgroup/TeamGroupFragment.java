@@ -35,6 +35,7 @@ import cn.sun45.warbanner.clanwar.ClanwarHelper;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
 import cn.sun45.warbanner.document.preference.SetupPreference;
+import cn.sun45.warbanner.framework.MyApplication;
 import cn.sun45.warbanner.framework.ui.BaseActivity;
 import cn.sun45.warbanner.framework.ui.BaseFragment;
 import cn.sun45.warbanner.teamgroup.TeamGroupHelper;
@@ -115,8 +116,10 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
                                     @Override
                                     public void run() {
                                         super.run();
+                                        long start = MyApplication.getTimecurrent();
+                                        logD("teamGroup build");
                                         list = teamGroupHelper.build(CharacterHelper.getScreenCharacterList(), teamModels, characterModels);
-                                        logD("buildTeamGroupList " + list.size());
+                                        logD("teamGroup finish:" + (list != null ? list.size() : 0) + " " + (MyApplication.getTimecurrent() - start) + "ms");
                                         Activity activity = getActivity();
                                         if (activity != null) {
                                             activity.runOnUiThread(new Runnable() {
@@ -140,11 +143,11 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
      * 展示分刀结果
      */
     private void showresult() {
-        int size = list.size();
+        int size = list != null ? list.size() : 0;
         if (size == TeamGroupHelper.interruptsize) {
             mState.setText(Utils.getStringWithPlaceHolder(R.string.teamgroup_state_interrupt_finish, size));
         } else {
-            mState.setText(Utils.getStringWithPlaceHolder(R.string.teamgroup_state_finish, list.size()));
+            mState.setText(Utils.getStringWithPlaceHolder(R.string.teamgroup_state_finish, size));
         }
         mState.setClickable(true);
         mTeamGroupList.setData(list);

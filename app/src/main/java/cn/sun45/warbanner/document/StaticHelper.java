@@ -31,10 +31,10 @@ public class StaticHelper {
     public static final String UNKNOWN_ICON = API_URL + "/icon/equipment/999999.webp";
 
     //ClanWar
-    public static final String CLANWAR_ONE_URL = "https://docs.qq.com/sheet/DWmZlaUZjeUZCUUdV?tab=s3dwgf";
-//    public static final String CLANWAR_TWO_URL = "https://docs.qq.com/sheet/DWk53T1FkUGFZYnl3?tab=s3dwgf";
-    public static final String CLANWAR_TWO_URL = "https://docs.qq.com/sheet/DWUpVT2RnZUNGbEJh?tab=BB08J2";
-    public static final String CLANWAR_THREE_URL = "https://docs.qq.com/sheet/DWlFaWmdSRW9Rb29S?tab=s3dwgf";
+    public static final String CLANWAR_BASE = "https://gitee.com/acaly/PcrGuildLibrary/raw/master/data/";
+    public static final String CLANWAR_ONE_NAME="/A.json";
+    public static final String CLANWAR_TWO_NAME="/B.json";
+    public static final String CLANWAR_THREE_NAME="/C.json";
 
     //昵称数据获取地址
     public static final String NICKNAME_URL = "https://github.com/pcrbot/pcr-nickname/blob/master/nicknames_zh-cn.csv";

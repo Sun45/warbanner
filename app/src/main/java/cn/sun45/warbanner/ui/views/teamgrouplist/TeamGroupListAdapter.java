@@ -153,17 +153,17 @@ public class TeamGroupListAdapter extends RecyclerView.Adapter<TeamGroupListAdap
         }
 
         public void setdata(TeamModel teamModel, List<Integer> idlist, int borrowindex) {
-            mTitle.setText(teamModel.getNumber() + " " + teamModel.getDamage());
+            mTitle.setText(teamModel.getNumber() + " " + teamModel.getEllipsisdamage() + "w");
             if (teamModel.isAuto()) {
                 mAuto.setVisibility(View.VISIBLE);
             } else {
                 mAuto.setVisibility(View.INVISIBLE);
             }
-            mCharacterone.setdata(teamModel.getCharacterone(), idlist.get(0), borrowindex == 0);
-            mCharactertwo.setdata(teamModel.getCharacterone(), idlist.get(1), borrowindex == 1);
-            mCharacterthree.setdata(teamModel.getCharacterone(), idlist.get(2), borrowindex == 2);
-            mCharacterfour.setdata(teamModel.getCharacterone(), idlist.get(3), borrowindex == 3);
-            mCharacterfive.setdata(teamModel.getCharacterone(), idlist.get(4), borrowindex == 4);
+            mCharacterone.setdata(idlist.get(0), borrowindex == 0);
+            mCharactertwo.setdata(idlist.get(1), borrowindex == 1);
+            mCharacterthree.setdata(idlist.get(2), borrowindex == 2);
+            mCharacterfour.setdata(idlist.get(3), borrowindex == 3);
+            mCharacterfive.setdata(idlist.get(4), borrowindex == 4);
         }
     }
 
@@ -178,17 +178,17 @@ public class TeamGroupListAdapter extends RecyclerView.Adapter<TeamGroupListAdap
             name = lay.findViewById(nameid);
         }
 
-        public void setdata(String nickname, int id, boolean borrow) {
+        public void setdata(int id, boolean borrow) {
             CharacterModel characterModel = CharacterHelper.findCharacterById(id, characterModels);
             if (borrow) {
-                lay.setCardBackgroundColor(Utils.getColor(R.color.red_dark_alpha));
+                lay.setCardBackgroundColor(Utils.getAttrColor(context, R.attr.colorPrimary));
             } else {
                 lay.setCardBackgroundColor(Utils.getColor(R.color.gray));
             }
             if (characterModel == null) {
                 icon.setImageBitmap(null);
                 name.setVisibility(View.VISIBLE);
-                name.setText(nickname);
+                name.setText(id + "");
             } else {
                 ImageRequester.request(characterModel.getIconUrl(), R.drawable.ic_character_default).loadImage(icon);
                 name.setVisibility(View.INVISIBLE);

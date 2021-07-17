@@ -9,32 +9,16 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.datamanager.clanwar.ClanWarManager;
-import cn.sun45.warbanner.datamanager.source.RawClanBattlePeriod;
-import cn.sun45.warbanner.datamanager.source.RawClanBattlePhase;
-import cn.sun45.warbanner.datamanager.source.RawEnemy;
-import cn.sun45.warbanner.datamanager.source.RawUnitBasic;
-import cn.sun45.warbanner.datamanager.source.RawWaveGroup;
-import cn.sun45.warbanner.datamanager.source.SourceDataProcessHelper;
 import cn.sun45.warbanner.datamanager.source.SourceManager;
 import cn.sun45.warbanner.datamanager.update.UpdateManager;
-import cn.sun45.warbanner.document.StaticHelper;
-import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
-import cn.sun45.warbanner.document.db.source.ClanWarModel;
 import cn.sun45.warbanner.document.preference.AppPreference;
 import cn.sun45.warbanner.document.preference.UserPreference;
-import cn.sun45.warbanner.framework.MyApplication;
-import cn.sun45.warbanner.framework.document.db.DbHelper;
 import cn.sun45.warbanner.framework.permission.PermissionRequestListener;
 import cn.sun45.warbanner.framework.permission.PermissionRequester;
 import cn.sun45.warbanner.framework.ui.BaseActivity;
@@ -90,13 +74,10 @@ public class MainActivity extends BaseActivity implements PermissionRequestListe
         });
         sharedSource.setCallBack(this);
         sharedClanwar = new ViewModelProvider(this).get(SharedViewModelClanwar.class);
-        SourceManager.init(this);
         sourceManager = SourceManager.getInstance();
         sourceManager.setiActivityCallBack(this);
-        ClanWarManager.init(this);
         clanWarManager = ClanWarManager.getInstance();
         clanWarManager.setiActivityCallBack(this);
-        UpdateManager.init(this);
         updateManager = UpdateManager.getInstance();
         updateManager.setiActivityCallBack(this);
 
@@ -184,58 +165,12 @@ public class MainActivity extends BaseActivity implements PermissionRequestListe
     public void sourceUpdateFinished(boolean dataGain, boolean autocheck) {
         if (dataGain) {
             sharedSource.clearData();
-            List<RawUnitBasic> rawUnitBasics = SourceDataProcessHelper.getInstance().getCharaBase();
-            if (rawUnitBasics != null && !rawUnitBasics.isEmpty()) {
-                for (RawUnitBasic rawUnitBasic : rawUnitBasics) {
-                    CharacterModel character = new CharacterModel();
-                    rawUnitBasic.set(character);
-                    DbHelper.insert(this, character);
-                }
-            }
-            List<RawClanBattlePeriod> rawClanBattlePeriods = SourceDataProcessHelper.getInstance().getClanBattlePeriod();
-            if (rawClanBattlePeriods != null && !rawClanBattlePeriods.isEmpty()) {
-                for (RawClanBattlePeriod rawClanBattlePeriod : rawClanBattlePeriods) {
-                    ClanWarModel clanWarModel = new ClanWarModel();
-                    rawClanBattlePeriod.set(clanWarModel);
-                    List<RawClanBattlePhase> rawClanBattlePhases = SourceDataProcessHelper.getInstance().getClanBattlePhase(rawClanBattlePeriod.clan_battle_id);
-                    if (rawClanBattlePhases != null && !rawClanBattlePhases.isEmpty()) {
-                        RawClanBattlePhase rawClanBattlePhase = rawClanBattlePhases.get(0);
-                        List<Integer> waveGroupList = new ArrayList<>();
-                        waveGroupList.add(rawClanBattlePhase.wave_group_id_1);
-                        waveGroupList.add(rawClanBattlePhase.wave_group_id_2);
-                        waveGroupList.add(rawClanBattlePhase.wave_group_id_3);
-                        waveGroupList.add(rawClanBattlePhase.wave_group_id_4);
-                        waveGroupList.add(rawClanBattlePhase.wave_group_id_5);
-                        List<RawWaveGroup> rawWaveGroups = SourceDataProcessHelper.getInstance().getWaveGroupData(waveGroupList);
-                        if (rawWaveGroups != null && rawWaveGroups.size() == 5) {
-                            List<Integer> enemyIdList = new ArrayList<>();
-                            enemyIdList.add(rawWaveGroups.get(0).enemy_id_1);
-                            enemyIdList.add(rawWaveGroups.get(1).enemy_id_1);
-                            enemyIdList.add(rawWaveGroups.get(2).enemy_id_1);
-                            enemyIdList.add(rawWaveGroups.get(3).enemy_id_1);
-                            enemyIdList.add(rawWaveGroups.get(4).enemy_id_1);
-                            List<RawEnemy> rawEnemies = SourceDataProcessHelper.getInstance().getEnemy(enemyIdList);
-                            if (rawEnemies != null && rawEnemies.size() == 5) {
-                                clanWarModel.setBossonename(rawEnemies.get(0).name);
-                                clanWarModel.setBossoneiconurl(String.format(Locale.US, StaticHelper.ICON_URL, rawEnemies.get(0).prefab_id));
-                                clanWarModel.setBosstwoname(rawEnemies.get(1).name);
-                                clanWarModel.setBosstwoiconurl(String.format(Locale.US, StaticHelper.ICON_URL, rawEnemies.get(1).prefab_id));
-                                clanWarModel.setBossthreename(rawEnemies.get(2).name);
-                                clanWarModel.setBossthreeiconurl(String.format(Locale.US, StaticHelper.ICON_URL, rawEnemies.get(2).prefab_id));
-                                clanWarModel.setBossfourname(rawEnemies.get(3).name);
-                                clanWarModel.setBossfouriconurl(String.format(Locale.US, StaticHelper.ICON_URL, rawEnemies.get(3).prefab_id));
-                                clanWarModel.setBossfivename(rawEnemies.get(4).name);
-                                clanWarModel.setBossfiveiconurl(String.format(Locale.US, StaticHelper.ICON_URL, rawEnemies.get(4).prefab_id));
-                            }
-                        }
-                    }
-                    DbHelper.insert(this, clanWarModel);
-                }
-            }
             sharedSource.loadData();
         }
         if (autocheck) {
             clanWarLoad();
+        } else {
+            sharedClanwar.loadData();
         }
     }
 

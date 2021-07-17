@@ -2,8 +2,10 @@
     <string name="app_name">炽旗</string>
     <string name="abnormal_exit_message">程序上次运行时出现致命异常，错误详情请参照日志</string>
 
+    <string name="confirm">确定</string>
     <string name="default_user">默认用户</string>
     <string name="auto">AUTO</string>
+    <string name="user_tip">视频和轴是UP主心血的结晶，抄完作业记得至少给点个赞哦👍</string>
 
     <string name="app_update_check_noneed">应用为最新版本，无需更新</string>
     <string name="app_update_check_fail">应用检查更新失败</string>
@@ -33,6 +35,7 @@
     <string name="clanwar_update_dialog_text">是否更新作业</string>
     <string name="clanwar_update_dialog_confirm">更新</string>
     <string name="clanwar_update_dialog_cancel">稍后</string>
+    <string name="clanwar_update_clanwar_empty">会战排期数据为空，请更新数据库</string>
     <string name="clanwar_update_progress_title">作业下载</string>
     <string name="clanwar_update_progress_text_one">一阶段作业下载中。。。</string>
     <string name="clanwar_update_progress_text_two">二阶段作业下载中。。。</string>

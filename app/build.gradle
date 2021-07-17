@@ -8,8 +8,8 @@ android {
         applicationId "cn.sun45.warbanner"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 13
-        versionName "1.0.2"
+        versionCode 14
+        versionName "1.0.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -59,8 +59,6 @@ dependencies {
 
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
-
-    implementation 'com.tencent.tbs.tbssdk:sdk:43939'
 
     implementation 'org.jsoup:jsoup:1.13.1'
 

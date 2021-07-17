@@ -1,11 +1,11 @@
 package cn.sun45.warbanner.framework.ui;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import cn.sun45.warbanner.framework.MyApplication;
 import cn.sun45.warbanner.util.Utils;
 
 /**
@@ -15,11 +15,18 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MyApplication.setCurrentActivity(this);
         setContentView(getContentViewId());
         initData();
         refreshDB();
         initView();
         initNet();
+    }
+
+    @Override
+    protected void onResume() {
+        MyApplication.setCurrentActivity(this);
+        super.onResume();
     }
 
     protected abstract int getContentViewId();

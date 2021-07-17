@@ -17,8 +17,6 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.list.DialogSingleChoiceExtKt;
 import com.google.android.material.appbar.MaterialToolbar;
 
-import java.util.List;
-
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.character.CharacterHelper;
 import cn.sun45.warbanner.clanwar.ClanwarHelper;
@@ -93,12 +91,11 @@ public class TeamGroupScreenFragment extends BaseFragment {
                     teamGroupScreenModel.setTeamonestage(stage);
                     teamGroupScreenModel.setTeamoneboss(boss);
                     teamGroupScreenModel.setTeamoneauto(auto);
-                    List<CharacterModel> characterModels = sharedSource.characterlist.getValue();
-                    teamGroupScreenModel.setTeamonecharacteroneid(CharacterHelper.findCharacterByNickname(teamModel.getCharacterone(), characterModels).getId());
-                    teamGroupScreenModel.setTeamonecharactertwoid(CharacterHelper.findCharacterByNickname(teamModel.getCharactertwo(), characterModels).getId());
-                    teamGroupScreenModel.setTeamonecharacterthreeid(CharacterHelper.findCharacterByNickname(teamModel.getCharacterthree(), characterModels).getId());
-                    teamGroupScreenModel.setTeamonecharacterfourid(CharacterHelper.findCharacterByNickname(teamModel.getCharacterfour(), characterModels).getId());
-                    teamGroupScreenModel.setTeamonecharacterfiveid(CharacterHelper.findCharacterByNickname(teamModel.getCharacterfive(), characterModels).getId());
+                    teamGroupScreenModel.setTeamonecharacteroneid(teamModel.getCharacterone());
+                    teamGroupScreenModel.setTeamonecharactertwoid(teamModel.getCharactertwo());
+                    teamGroupScreenModel.setTeamonecharacterthreeid(teamModel.getCharacterthree());
+                    teamGroupScreenModel.setTeamonecharacterfourid(teamModel.getCharacterfour());
+                    teamGroupScreenModel.setTeamonecharacterfiveid(teamModel.getCharacterfive());
                     mTeamOne.setData();
                 }
             }
@@ -113,12 +110,11 @@ public class TeamGroupScreenFragment extends BaseFragment {
                     teamGroupScreenModel.setTeamtwostage(stage);
                     teamGroupScreenModel.setTeamtwoboss(boss);
                     teamGroupScreenModel.setTeamtwoauto(auto);
-                    List<CharacterModel> characterModels = sharedSource.characterlist.getValue();
-                    teamGroupScreenModel.setTeamtwocharacteroneid(CharacterHelper.findCharacterByNickname(teamModel.getCharacterone(), characterModels).getId());
-                    teamGroupScreenModel.setTeamtwocharactertwoid(CharacterHelper.findCharacterByNickname(teamModel.getCharactertwo(), characterModels).getId());
-                    teamGroupScreenModel.setTeamtwocharacterthreeid(CharacterHelper.findCharacterByNickname(teamModel.getCharacterthree(), characterModels).getId());
-                    teamGroupScreenModel.setTeamtwocharacterfourid(CharacterHelper.findCharacterByNickname(teamModel.getCharacterfour(), characterModels).getId());
-                    teamGroupScreenModel.setTeamtwocharacterfiveid(CharacterHelper.findCharacterByNickname(teamModel.getCharacterfive(), characterModels).getId());
+                    teamGroupScreenModel.setTeamtwocharacteroneid(teamModel.getCharacterone());
+                    teamGroupScreenModel.setTeamtwocharactertwoid(teamModel.getCharactertwo());
+                    teamGroupScreenModel.setTeamtwocharacterthreeid(teamModel.getCharacterthree());
+                    teamGroupScreenModel.setTeamtwocharacterfourid(teamModel.getCharacterfour());
+                    teamGroupScreenModel.setTeamtwocharacterfiveid(teamModel.getCharacterfive());
                     mTeamTwo.setData();
                 }
             }
@@ -133,12 +129,11 @@ public class TeamGroupScreenFragment extends BaseFragment {
                     teamGroupScreenModel.setTeamthreestage(stage);
                     teamGroupScreenModel.setTeamthreeboss(boss);
                     teamGroupScreenModel.setTeamthreeauto(auto);
-                    List<CharacterModel> characterModels = sharedSource.characterlist.getValue();
-                    teamGroupScreenModel.setTeamthreecharacteroneid(CharacterHelper.findCharacterByNickname(teamModel.getCharacterone(), characterModels).getId());
-                    teamGroupScreenModel.setTeamthreecharactertwoid(CharacterHelper.findCharacterByNickname(teamModel.getCharactertwo(), characterModels).getId());
-                    teamGroupScreenModel.setTeamthreecharacterthreeid(CharacterHelper.findCharacterByNickname(teamModel.getCharacterthree(), characterModels).getId());
-                    teamGroupScreenModel.setTeamthreecharacterfourid(CharacterHelper.findCharacterByNickname(teamModel.getCharacterfour(), characterModels).getId());
-                    teamGroupScreenModel.setTeamthreecharacterfiveid(CharacterHelper.findCharacterByNickname(teamModel.getCharacterfive(), characterModels).getId());
+                    teamGroupScreenModel.setTeamthreecharacteroneid(teamModel.getCharacterone());
+                    teamGroupScreenModel.setTeamthreecharactertwoid(teamModel.getCharactertwo());
+                    teamGroupScreenModel.setTeamthreecharacterthreeid(teamModel.getCharacterthree());
+                    teamGroupScreenModel.setTeamthreecharacterfourid(teamModel.getCharacterfour());
+                    teamGroupScreenModel.setTeamthreecharacterfiveid(teamModel.getCharacterfive());
                     mTeamThree.setData();
                 }
             }

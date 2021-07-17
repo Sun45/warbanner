@@ -4,6 +4,7 @@ import java.util.List;
 
 import cn.sun45.warbanner.document.db.clanwar.TeamGroupCollectionModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamGroupScreenModel;
+import cn.sun45.warbanner.document.db.source.ClanWarModel;
 import cn.sun45.warbanner.framework.MyApplication;
 import cn.sun45.warbanner.framework.document.db.DbHelper;
 import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListModel;
@@ -14,6 +15,21 @@ import cn.sun45.warbanner.user.UserManager;
  * 会战帮助类
  */
 public class ClanwarHelper {
+    /**
+     * 获取当期会战日期
+     *
+     * @return
+     */
+    public static String getCurrentClanWarDate() {
+        String date = null;
+        List<ClanWarModel> clanWarModelList = DbHelper.query(MyApplication.application, ClanWarModel.class);
+        if (clanWarModelList != null && !clanWarModelList.isEmpty()) {
+            ClanWarModel current = clanWarModelList.get(0);
+            date = current.getStartdate().substring(0, 7).replace("/", "");
+        }
+        return date;
+    }
+
     /**
      * 判断分刀数据已收藏
      *
@@ -63,9 +79,11 @@ public class ClanwarHelper {
      */
     public static void collect(TeamGroupListModel teamGroupListModel, boolean collect) {
         int userId = UserManager.getInstance().getCurrentUserId();
+        String date = getCurrentClanWarDate();
         if (collect) {
             TeamGroupCollectionModel teamGroupCollectionModel = new TeamGroupCollectionModel();
             teamGroupCollectionModel.setUserId(userId);
+            teamGroupCollectionModel.setDate(date);
             teamGroupCollectionModel.setTeamone(teamGroupListModel.getTeamone().getNumber());
             teamGroupCollectionModel.setBorrowindexone(teamGroupListModel.getBorrowindexone());
             teamGroupCollectionModel.setTeamtwo(teamGroupListModel.getTeamtwo().getNumber());
@@ -75,9 +93,10 @@ public class ClanwarHelper {
             DbHelper.insert(MyApplication.application, teamGroupCollectionModel);
         } else {
             DbHelper.delete(MyApplication.application, TeamGroupCollectionModel.class
-                    , new String[]{"userId", "teamone", "teamtwo", "teamthree"}
+                    , new String[]{"userId", "date", "teamone", "teamtwo", "teamthree"}
                     , new String[]{
                             userId + "",
+                            date,
                             teamGroupListModel.getTeamone().getNumber(),
                             teamGroupListModel.getTeamtwo().getNumber(),
                             teamGroupListModel.getTeamthree().getNumber()

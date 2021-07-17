@@ -33,7 +33,7 @@ public class TeamGroupListModel implements Serializable {
         teamthree = elementthree.getTeamModel();
         idlistthree = elementthree.getIdlist();
         borrowindexthree = idlistthree.indexOf((Object) idthree);
-        totaldamage = teamone.getDamagenumber() + teamtwo.getDamagenumber() + teamthree.getDamagenumber();
+        totaldamage = teamone.getEllipsisdamage() + teamtwo.getEllipsisdamage() + teamthree.getEllipsisdamage();
     }
 
     public TeamGroupListModel(TeamModel teamone, List<Integer> idlistone, int borrowindexone, TeamModel teamtwo, List<Integer> idlisttwo, int borrowindextwo, TeamModel teamthree, List<Integer> idlistthree, int borrowindexthree) {
@@ -46,7 +46,7 @@ public class TeamGroupListModel implements Serializable {
         this.teamthree = teamthree;
         this.idlistthree = idlistthree;
         this.borrowindexthree = borrowindexthree;
-        totaldamage = teamone.getDamagenumber() + teamtwo.getDamagenumber() + teamthree.getDamagenumber();
+        totaldamage = teamone.getEllipsisdamage() + teamtwo.getEllipsisdamage() + teamthree.getEllipsisdamage();
     }
 
     public TeamModel getTeamone() {
@@ -88,4 +88,5 @@ public class TeamGroupListModel implements Serializable {
     public int getTotaldamage() {
         return totaldamage;
     }
+
 }

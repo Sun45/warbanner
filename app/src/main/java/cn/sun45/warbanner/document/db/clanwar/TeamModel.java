@@ -13,47 +13,61 @@ import cn.sun45.warbanner.framework.document.db.annotation.DbTableParamConfigure
  */
 @DbTableConfigure(tablename = "team")
 public class TeamModel extends BaseDbTableModel {
-    //唯一值
-    @DbTableParamConfigure(iskeyparm = true)
-    private String number;
-
+    //会战日期 202107
+    @DbTableParamConfigure
+    private String date;
+    //阶段 1,2,3
     @DbTableParamConfigure
     private int stage;
 
+    //阵容编号
+    @DbTableParamConfigure
+    private String number;
+    //阵容排序号
+    @DbTableParamConfigure
+    private String sortnumber;
+
+    //boss编号(A1)
     @DbTableParamConfigure
     private String boss;
 
+    //伤害数值(5500000)
     @DbTableParamConfigure
-    private String damage;
+    private int damage;
+    //伤害省略数值(550)
     @DbTableParamConfigure
-    private int damagenumber;
+    private int ellipsisdamage;
 
+    //自动刀
     @DbTableParamConfigure
     private boolean auto;
 
+    //角色id信息
     @DbTableParamConfigure
-    private String characterone;
+    private int characterone;
     @DbTableParamConfigure
-    private String charactertwo;
+    private int charactertwo;
     @DbTableParamConfigure
-    private String characterthree;
+    private int characterthree;
     @DbTableParamConfigure
-    private String characterfour;
+    private int characterfour;
     @DbTableParamConfigure
-    private String characterfive;
+    private int characterfive;
 
+    //简述
+    @DbTableParamConfigure
+    private String sketch;
+
+    //备注
     @DbTableParamConfigure
     private String remarks;
 
-    @DbTableParamConfigure
-    private boolean collect;
-
-    public String getNumber() {
-        return number;
+    public String getDate() {
+        return date;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public int getStage() {
@@ -64,6 +78,22 @@ public class TeamModel extends BaseDbTableModel {
         this.stage = stage;
     }
 
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public String getSortnumber() {
+        return sortnumber;
+    }
+
+    public void setSortnumber(String sortnumber) {
+        this.sortnumber = sortnumber;
+    }
+
     public String getBoss() {
         return boss;
     }
@@ -72,20 +102,20 @@ public class TeamModel extends BaseDbTableModel {
         this.boss = boss;
     }
 
-    public String getDamage() {
+    public int getDamage() {
         return damage;
     }
 
-    public void setDamage(String damage) {
+    public void setDamage(int damage) {
         this.damage = damage;
     }
 
-    public int getDamagenumber() {
-        return damagenumber;
+    public int getEllipsisdamage() {
+        return ellipsisdamage;
     }
 
-    public void setDamagenumber(int damagenumber) {
-        this.damagenumber = damagenumber;
+    public void setEllipsisdamage(int ellipsisdamage) {
+        this.ellipsisdamage = ellipsisdamage;
     }
 
     public boolean isAuto() {
@@ -96,44 +126,52 @@ public class TeamModel extends BaseDbTableModel {
         this.auto = auto;
     }
 
-    public String getCharacterone() {
+    public int getCharacterone() {
         return characterone;
     }
 
-    public void setCharacterone(String characterone) {
+    public void setCharacterone(int characterone) {
         this.characterone = characterone;
     }
 
-    public String getCharactertwo() {
+    public int getCharactertwo() {
         return charactertwo;
     }
 
-    public void setCharactertwo(String charactertwo) {
+    public void setCharactertwo(int charactertwo) {
         this.charactertwo = charactertwo;
     }
 
-    public String getCharacterthree() {
+    public int getCharacterthree() {
         return characterthree;
     }
 
-    public void setCharacterthree(String characterthree) {
+    public void setCharacterthree(int characterthree) {
         this.characterthree = characterthree;
     }
 
-    public String getCharacterfour() {
+    public int getCharacterfour() {
         return characterfour;
     }
 
-    public void setCharacterfour(String characterfour) {
+    public void setCharacterfour(int characterfour) {
         this.characterfour = characterfour;
     }
 
-    public String getCharacterfive() {
+    public int getCharacterfive() {
         return characterfive;
     }
 
-    public void setCharacterfive(String characterfive) {
+    public void setCharacterfive(int characterfive) {
         this.characterfive = characterfive;
+    }
+
+    public String getSketch() {
+        return sketch;
+    }
+
+    public void setSketch(String sketch) {
+        this.sketch = sketch;
     }
 
     public String getRemarks() {
@@ -144,14 +182,6 @@ public class TeamModel extends BaseDbTableModel {
         this.remarks = remarks;
     }
 
-    public boolean isCollect() {
-        return collect;
-    }
-
-    public void setCollect(boolean collect) {
-        this.collect = collect;
-    }
-
     @Override
     protected Class getProviderClass() {
         return ClanWarProvider.class;
@@ -160,19 +190,21 @@ public class TeamModel extends BaseDbTableModel {
     public JSONObject getJson() {
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("number", number);
+            jsonObject.put("date", date);
             jsonObject.put("stage", stage);
+            jsonObject.put("number", number);
+            jsonObject.put("sortnumber", sortnumber);
             jsonObject.put("boss", boss);
             jsonObject.put("damage", damage);
-            jsonObject.put("damagenumber", damagenumber);
+            jsonObject.put("ellipsisdamage", ellipsisdamage);
             jsonObject.put("auto", auto);
             jsonObject.put("characterone", characterone);
             jsonObject.put("charactertwo", charactertwo);
             jsonObject.put("characterthree", characterthree);
             jsonObject.put("characterfour", characterfour);
             jsonObject.put("characterfive", characterfive);
+            jsonObject.put("sketch", sketch);
             jsonObject.put("remarks", remarks);
-            jsonObject.put("collect", collect);
         } catch (JSONException e) {
             e.printStackTrace();
         }

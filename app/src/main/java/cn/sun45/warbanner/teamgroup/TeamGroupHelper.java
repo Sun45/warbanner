@@ -22,7 +22,7 @@ public class TeamGroupHelper {
     private static final String TAG = "TeamGroupHelper";
 
     //分刀中断阈值
-    public static final int interruptsize = 6000;
+    public static final int interruptsize = 10 * 10000;
 
     private boolean characterscreenenable;
 
@@ -42,61 +42,53 @@ public class TeamGroupHelper {
         Utils.logD(TAG, "buildElementList");
         List<TeamGroupElementModel> elementModels = new ArrayList<>();
         for (TeamModel teamModel : teamModels) {
-            CharacterModel characterone = CharacterHelper.findCharacterByNickname(teamModel.getCharacterone(), characterModels);
-            CharacterModel charactertwo = CharacterHelper.findCharacterByNickname(teamModel.getCharactertwo(), characterModels);
-            CharacterModel characterthree = CharacterHelper.findCharacterByNickname(teamModel.getCharacterthree(), characterModels);
-            CharacterModel characterfour = CharacterHelper.findCharacterByNickname(teamModel.getCharacterfour(), characterModels);
-            CharacterModel characterfive = CharacterHelper.findCharacterByNickname(teamModel.getCharacterfive(), characterModels);
-            if (characterone != null
-                    && charactertwo != null
-                    && characterthree != null
-                    && characterfour != null
-                    && characterfive != null) {
-                List<Integer> idlist = new ArrayList<>();
-                idlist.add(characterone.getId());
-                idlist.add(charactertwo.getId());
-                idlist.add(characterthree.getId());
-                idlist.add(characterfour.getId());
-                idlist.add(characterfive.getId());
-                int screencharacter = 0;
-                if (characterscreenenable) {
-                    boolean notuseable = false;
-                    for (int i = 0; i < idlist.size(); i++) {
-                        int id = idlist.get(i);
-                        boolean find = false;
-                        for (ScreenCharacterModel screenCharacterModel : screenCharacterModelList) {
-                            if (id == screenCharacterModel.getCharacterId()) {
-                                if (screenCharacterModel.getType() == 1) {//TYPE_LACK
-                                    find = true;
-                                    break;
-                                } else {
-                                    notuseable = true;
-                                    break;
-                                }
-                            }
-                        }
-                        if (notuseable) {
-                            break;
-                        }
-                        if (find) {
-                            if (screencharacter != 0) {
-                                notuseable = true;
+            List<Integer> idlist = new ArrayList<>();
+            idlist.add(teamModel.getCharacterone());
+            idlist.add(teamModel.getCharactertwo());
+            idlist.add(teamModel.getCharacterthree());
+            idlist.add(teamModel.getCharacterfour());
+            idlist.add(teamModel.getCharacterfive());
+            int screencharacter = 0;
+            if (characterscreenenable) {
+                boolean notuseable = false;
+                for (int i = 0; i < idlist.size(); i++) {
+                    int id = idlist.get(i);
+                    boolean find = false;
+                    for (ScreenCharacterModel screenCharacterModel : screenCharacterModelList) {
+                        if (id == screenCharacterModel.getCharacterId()) {
+                            if (screenCharacterModel.getType() == 1) {//TYPE_LACK
+                                find = true;
                                 break;
                             } else {
-                                screencharacter = id;
+                                notuseable = true;
+                                break;
                             }
                         }
                     }
                     if (notuseable) {
-                        continue;
+                        break;
+                    }
+                    if (find) {
+                        if (screencharacter != 0) {
+                            notuseable = true;
+                            break;
+                        } else {
+                            screencharacter = id;
+                        }
                     }
                 }
-                TeamGroupElementModel elementModel = new TeamGroupElementModel();
-                elementModel.setIdlist(idlist);
-                elementModel.setScreencharacter(screencharacter);
-                elementModel.setTeamModel(teamModel);
-                elementModels.add(elementModel);
+                if (notuseable) {
+                    continue;
+                }
             }
+            TeamGroupElementModel elementModel = new TeamGroupElementModel();
+            elementModel.setIdlist(idlist);
+            elementModel.setScreencharacter(screencharacter);
+            elementModel.setTeamModel(teamModel);
+            elementModels.add(elementModel);
+        }
+        if (elementModels.isEmpty()) {
+            return null;
         }
         List<TeamGroupElementModel> elementModelListOne = new ArrayList<>();
         for (TeamGroupElementModel teamGroupElementModel : elementModels) {
@@ -116,7 +108,22 @@ public class TeamGroupHelper {
                 elementModelListThree.add(teamGroupElementModel);
             }
         }
-        return buildTeamGroupList(elementModelListOne, elementModelListTwo, elementModelListThree);
+        if (elementModelListOne.isEmpty() || elementModelListTwo.isEmpty() || elementModelListThree.isEmpty()) {
+            return null;
+        }
+        int min = elementModels.get(0).getTeamModel().getEllipsisdamage();
+        int max = min;
+        for (int i = 0; i < elementModels.size(); i++) {
+            TeamGroupElementModel teamGroupElementModel = elementModels.get(i);
+            int damage = teamGroupElementModel.getTeamModel().getEllipsisdamage();
+            if (damage < min) {
+                min = damage;
+            }
+            if (damage > max) {
+                max = damage;
+            }
+        }
+        return buildTeamGroupList(min * 3, max * 3, elementModelListOne, elementModelListTwo, elementModelListThree);
     }
 
     private boolean fit(TeamGroupElementModel teamGroupElementModel, int stage, int boss, int auto, int characteroneid, int charactertwoid, int characterthreeid, int characterfourid, int characterfiveid) {
@@ -152,44 +159,56 @@ public class TeamGroupHelper {
     /**
      * 构建分刀数据
      */
-    private List<TeamGroupListModel> buildTeamGroupList(List<TeamGroupElementModel> elementModelListOne, List<TeamGroupElementModel> elementModelListTwo, List<TeamGroupElementModel> elementModelListThree) {
-        Utils.logD(TAG, "buildTeamGroupList");
-        List<TeamGroupListModel> list = new ArrayList<>();
+    private List<TeamGroupListModel> buildTeamGroupList(int min, int max, List<TeamGroupElementModel> elementModelListOne, List<TeamGroupElementModel> elementModelListTwo, List<TeamGroupElementModel> elementModelListThree) {
+        Utils.logD(TAG, "buildTeamGroupList min:" + min + " max:" + max + " elementModelListOne:" + elementModelListOne.size() + " elementModelListTwo:" + elementModelListTwo.size() + " elementModelListThree:" + elementModelListThree.size());
+        int generate = 0;
+        List<List<TeamGroupListModel>> sortlist = new ArrayList<>();
+        for (int i = 0; i < max - min + 1; i++) {
+            sortlist.add(new ArrayList<>());
+        }
         for (int i = 0; i < elementModelListOne.size(); i++) {
             TeamGroupElementModel one = elementModelListOne.get(i);
             for (int j = 0; j < elementModelListTwo.size(); j++) {
                 TeamGroupElementModel two = elementModelListTwo.get(j);
+                if (elementModelListOne.contains(two) && elementModelListTwo.contains(one) && one.getTeamModel().getSortnumber().compareTo(two.getTeamModel().getSortnumber()) >= 0) {
+                    continue;
+                }
                 if (compatible(one, two)) {
                     for (int k = 0; k < elementModelListThree.size(); k++) {
                         TeamGroupElementModel three = elementModelListThree.get(k);
+                        if (elementModelListOne.contains(three) && elementModelListThree.contains(one) && one.getTeamModel().getSortnumber().compareTo(three.getTeamModel().getSortnumber()) >= 0) {
+                            continue;
+                        }
+                        if (elementModelListTwo.contains(three) && elementModelListThree.contains(two) && two.getTeamModel().getSortnumber().compareTo(three.getTeamModel().getSortnumber()) >= 0) {
+                            continue;
+                        }
                         TeamGroupListModel teamGroupListModel = compatible(one, two, three);
                         if (teamGroupListModel != null) {
-                            int n = -1;
-                            for (int m = 0; m < list.size(); m++) {
-                                if (teamGroupListModel.getTotaldamage() > list.get(m).getTotaldamage()) {
-                                    n = m;
-                                    break;
-                                }
-                            }
-                            if (n != -1) {
-                                list.add(n, teamGroupListModel);
-                            } else {
-                                list.add(teamGroupListModel);
-                            }
-                            if (list.size() == interruptsize) {
+                            generate++;
+                            sortlist.get(teamGroupListModel.getTotaldamage() - min).add(teamGroupListModel);
+                            if (generate == interruptsize) {
                                 break;
                             }
                         }
                     }
-                    if (list.size() == interruptsize) {
+                    if (generate == interruptsize) {
                         break;
                     }
                 }
             }
-            if (list.size() == interruptsize) {
+            if (generate == interruptsize) {
                 break;
             }
         }
+        List<TeamGroupListModel> list = new ArrayList<>();
+        for (int i = sortlist.size() - 1; i >= 0; i--) {
+            List<TeamGroupListModel> childlist = sortlist.get(i);
+            for (int j = 0; j < childlist.size(); j++) {
+                TeamGroupListModel model = childlist.get(j);
+                list.add(model);
+            }
+        }
+        Utils.logD(TAG, "list:" + list.size());
         return list;
     }
 

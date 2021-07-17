@@ -230,10 +230,6 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             default:
                 break;
         }
-        if (item == null) {
-            int a = 0;
-            int b = a;
-        }
         return item;
     }
 
@@ -333,7 +329,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             TeamModel teamModel = teamListTeamModel.getTeamModel();
             List<TeamListRemarkModel> remarkModels = teamListTeamModel.getRemarkModels();
             mBoss.setText(teamModel.getBoss());
-            String title = teamModel.getNumber() + " " + teamModel.getDamage();
+            String title = teamModel.getNumber() + " " + teamModel.getEllipsisdamage() + "w";
             mTitle.setText(title);
             if (teamModel.isAuto()) {
                 mAuto.setVisibility(View.VISIBLE);
@@ -352,11 +348,11 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     SpannableString spanStr = new SpannableString("");
                     SpannableStringBuilder ssb = new SpannableStringBuilder(spanStr);
                     for (int i = 0; i < remarkModels.size(); i++) {
+                        if (i != 0) {
+                            ssb.append("\n");
+                        }
                         TeamListRemarkModel remarkModel = remarkModels.get(i);
                         String content = remarkModel.getContent();
-                        if (i != remarkModels.size() - 1) {
-                            content += "\n";
-                        }
                         String link = remarkModel.getLink();
                         ssb.append(content);
                         ssb.setSpan(new ClickableSpan() {
@@ -371,7 +367,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                                 } else {
                                     Intent intent = new Intent();
                                     intent.setAction(Intent.ACTION_SEND);
-                                    intent.putExtra(Intent.EXTRA_TEXT, link);
+                                    intent.putExtra(Intent.EXTRA_TEXT, model.getTeamModel().getNumber() + " " + content + "\n" + link);
                                     intent.putExtra(Intent.EXTRA_SUBJECT, "share");
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     intent.setType("text/plain");
@@ -401,8 +397,8 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             name = lay.findViewById(nameid);
         }
 
-        public void setData(String nickname) {
-            CharacterModel characterModel = CharacterHelper.findCharacterByNickname(nickname, characterModels);
+        public void setData(int id) {
+            CharacterModel characterModel = CharacterHelper.findCharacterById(id, characterModels);
             if (screenfunction) {
                 ScreenCharacterModel screenCharacterModel = null;
                 if (screenCharacterModels != null && characterModel != null) {
@@ -431,7 +427,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             if (characterModel == null) {
                 icon.setImageBitmap(null);
                 name.setVisibility(View.VISIBLE);
-                name.setText(nickname);
+                name.setText(id + "");
             } else {
                 ImageRequester.request(characterModel.getIconUrl(), R.drawable.ic_character_default).loadImage(icon);
                 name.setVisibility(View.INVISIBLE);
