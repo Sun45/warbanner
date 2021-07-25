@@ -1,5 +1,7 @@
 package cn.sun45.warbanner.logic.clanwar;
 
+import android.text.TextUtils;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -204,78 +206,83 @@ public class ClanwarLogic extends BaseLogic {
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                JSONArray result = null;
-                try {
-                    result = new JSONArray(response.body());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                String result = response.body();
                 logD("getTeamModelList result:" + result);
-                if (result == null) {
+                if (TextUtils.isEmpty(result)) {
                     listener.onSuccess(null);
                 } else {
-                    List<TeamModel> teamModelList = new ArrayList<>();
-                    for (int i = 0; i < result.length(); i++) {
-                        JSONObject jsonObject = result.optJSONObject(i);
-                        String boss = jsonObject.optString("boss");
-                        String id = jsonObject.optString("id");
-                        JSONArray characters = jsonObject.optJSONArray("characters");
-                        if (characters == null || characters.length() < 5) {
-                            continue;
-                        }
-                        int characteroneid = characters.optJSONObject(0).optInt("id");
-                        int charactertwoid = characters.optJSONObject(1).optInt("id");
-                        int characterthreeid = characters.optJSONObject(2).optInt("id");
-                        int characterfourid = characters.optJSONObject(3).optInt("id");
-                        int characterfveid = characters.optJSONObject(4).optInt("id");
-                        if (characteroneid == 0 || charactertwoid == 0 || characterthreeid == 0 || characterfourid == 0 || characterfveid == 0) {
-                            continue;
-                        }
-                        JSONArray comments = jsonObject.optJSONArray("comments");
-                        JSONArray labels = jsonObject.optJSONArray("labels");
-                        int damage = jsonObject.optInt("standard_damage");
-                        JSONArray sources = jsonObject.optJSONArray("sources");
-                        TeamModel teamModel = new TeamModel();
-                        teamModel.setDate(date);
-                        teamModel.setStage(stage);
-                        teamModel.setNumber(id);
-                        teamModel.setSortnumber(i + "");
-                        teamModel.setBoss(boss);
-                        teamModel.setDamage(damage);
-                        teamModel.setEllipsisdamage(damage / 10000);
-                        teamModel.setAuto(boss.contains("t"));
-                        teamModel.setCharacterone(characteroneid * 100 + 1);
-                        teamModel.setCharactertwo(charactertwoid * 100 + 1);
-                        teamModel.setCharacterthree(characterthreeid * 100 + 1);
-                        teamModel.setCharacterfour(characterfourid * 100 + 1);
-                        teamModel.setCharacterfive(characterfveid * 100 + 1);
-                        if (comments != null) {
-                            teamModel.setSketch(comments.toString());
-                        }
-                        if (sources != null) {
-                            try {
-                                JSONArray remarks = new JSONArray();
-                                for (int j = 0; j < sources.length(); j++) {
-                                    JSONObject source = sources.optJSONObject(j);
-                                    String description = source.optString("description");
-                                    JSONArray links = source.optJSONArray("links");
-                                    JSONArray images = source.optJSONArray("images");
-                                    JSONObject remark = new JSONObject();
-                                    remark.put("content", description);
-                                    if (links != null && links.length() > 0) {
-                                        remark.put("link", links.getString(0));
-                                    }
-                                    remark.put("images", images);
-                                    remarks.put(remark);
-                                }
-                                teamModel.setRemarks(remarks.toString());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        teamModelList.add(teamModel);
+                    JSONArray array = null;
+                    try {
+                        array = new JSONArray(result);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    listener.onSuccess(teamModelList);
+                    if (array == null) {
+                        listener.onSuccess(null);
+                    } else {
+                        List<TeamModel> teamModelList = new ArrayList<>();
+                        for (int i = 0; i < array.length(); i++) {
+                            JSONObject jsonObject = array.optJSONObject(i);
+                            String boss = jsonObject.optString("boss");
+                            String id = jsonObject.optString("id");
+                            JSONArray characters = jsonObject.optJSONArray("characters");
+                            if (characters == null || characters.length() < 5) {
+                                continue;
+                            }
+                            int characteroneid = characters.optJSONObject(0).optInt("id");
+                            int charactertwoid = characters.optJSONObject(1).optInt("id");
+                            int characterthreeid = characters.optJSONObject(2).optInt("id");
+                            int characterfourid = characters.optJSONObject(3).optInt("id");
+                            int characterfveid = characters.optJSONObject(4).optInt("id");
+                            if (characteroneid == 0 || charactertwoid == 0 || characterthreeid == 0 || characterfourid == 0 || characterfveid == 0) {
+                                continue;
+                            }
+                            JSONArray comments = jsonObject.optJSONArray("comments");
+                            JSONArray labels = jsonObject.optJSONArray("labels");
+                            int damage = jsonObject.optInt("standard_damage");
+                            JSONArray sources = jsonObject.optJSONArray("sources");
+                            TeamModel teamModel = new TeamModel();
+                            teamModel.setDate(date);
+                            teamModel.setStage(stage);
+                            teamModel.setNumber(id);
+                            teamModel.setSortnumber(i + "");
+                            teamModel.setBoss(boss);
+                            teamModel.setDamage(damage);
+                            teamModel.setEllipsisdamage(damage / 10000);
+                            teamModel.setAuto(id.contains("t"));
+                            teamModel.setCharacterone(characteroneid * 100 + 1);
+                            teamModel.setCharactertwo(charactertwoid * 100 + 1);
+                            teamModel.setCharacterthree(characterthreeid * 100 + 1);
+                            teamModel.setCharacterfour(characterfourid * 100 + 1);
+                            teamModel.setCharacterfive(characterfveid * 100 + 1);
+                            if (comments != null) {
+                                teamModel.setSketch(comments.toString());
+                            }
+                            if (sources != null) {
+                                try {
+                                    JSONArray remarks = new JSONArray();
+                                    for (int j = 0; j < sources.length(); j++) {
+                                        JSONObject source = sources.optJSONObject(j);
+                                        String description = source.optString("description");
+                                        JSONArray links = source.optJSONArray("links");
+                                        JSONArray images = source.optJSONArray("images");
+                                        JSONObject remark = new JSONObject();
+                                        remark.put("content", description);
+                                        if (links != null && links.length() > 0) {
+                                            remark.put("link", links.getString(0));
+                                        }
+                                        remark.put("images", images);
+                                        remarks.put(remark);
+                                    }
+                                    teamModel.setRemarks(remarks.toString());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            teamModelList.add(teamModel);
+                        }
+                        listener.onSuccess(teamModelList);
+                    }
                 }
             }
 

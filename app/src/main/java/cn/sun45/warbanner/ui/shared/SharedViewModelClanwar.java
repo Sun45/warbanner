@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.sun45.warbanner.clanwar.ClanwarHelper;
+import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamGroupCollectionModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.framework.MyApplication;
@@ -24,14 +25,20 @@ import cn.sun45.warbanner.util.Utils;
  * 会战数据
  */
 public class SharedViewModelClanwar extends ViewModel {
+    public MutableLiveData<List<TeamCustomizeModel>> teamCustomizeList = new MutableLiveData<>();
     public MutableLiveData<List<TeamGroupCollectionModel>> teamGroupCollectionList = new MutableLiveData<>();
     public MutableLiveData<List<TeamModel>> teamList = new MutableLiveData<>();
 
     public void loadData() {
-        boolean succeeded = true;
-        List<TeamGroupCollectionModel> collectionlist = DbHelper.query(MyApplication.application, TeamGroupCollectionModel.class);
-        teamGroupCollectionList.postValue(collectionlist);
         String date = ClanwarHelper.getCurrentClanWarDate();
+
+        List<TeamCustomizeModel> customizeList = DbHelper.query(MyApplication.application, TeamCustomizeModel.class, "date", date);
+        teamCustomizeList.postValue(customizeList);
+
+        List<TeamGroupCollectionModel> collectionlist = DbHelper.query(MyApplication.application, TeamGroupCollectionModel.class, "date", date);
+        teamGroupCollectionList.postValue(collectionlist);
+
+        boolean succeeded = true;
         List<TeamModel> teamModelList = null;
         if (!TextUtils.isEmpty(date)) {
             teamModelList = DbHelper.query(MyApplication.application, TeamModel.class, "date", date);

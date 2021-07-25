@@ -1,11 +1,15 @@
 package cn.sun45.warbanner.document.db.clanwar;
 
+import android.text.TextUtils;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import cn.sun45.warbanner.framework.document.db.BaseDbTableModel;
 import cn.sun45.warbanner.framework.document.db.annotation.DbTableConfigure;
 import cn.sun45.warbanner.framework.document.db.annotation.DbTableParamConfigure;
+import cn.sun45.warbanner.util.Utils;
 
 /**
  * Created by Sun45 on 2021/5/23
@@ -209,5 +213,29 @@ public class TeamModel extends BaseDbTableModel {
             e.printStackTrace();
         }
         return jsonObject;
+    }
+
+    public String getShare() {
+        String share = number + " " + ellipsisdamage + "w";
+        try {
+            JSONArray sketchArray = new JSONArray(sketch);
+            for (int i = 0; i < sketchArray.length(); i++) {
+                share += "\n" + sketchArray.get(i);
+            }
+            JSONArray remarkarray = new JSONArray(remarks);
+            for (int i = 0; i < remarkarray.length(); i++) {
+                JSONObject object = remarkarray.optJSONObject(i);
+                String content = object.optString("content");
+                content = Utils.replaceBlank(content);
+                String link = object.optString("link");
+                if (!TextUtils.isEmpty(content) && !TextUtils.isEmpty(link)) {
+                    share += "\n" + content;
+                    share += "\n" + link;
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return share;
     }
 }

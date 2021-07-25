@@ -18,17 +18,23 @@ import cn.sun45.warbanner.util.Utils;
  */
 public class TeamListTeamModel {
     private TeamModel teamModel;
+    private int borrowindex;
     private List<TeamListRemarkModel> remarkModels;
 
     public TeamListTeamModel(TeamModel teamModel) {
+        this(teamModel, -1);
+    }
+
+    public TeamListTeamModel(TeamModel teamModel, int borrowindex) {
         this.teamModel = teamModel;
+        this.borrowindex = borrowindex;
         remarkModels = new ArrayList<>();
         try {
             JSONArray remarkarray = new JSONArray(teamModel.getRemarks());
             for (int i = 0; i < remarkarray.length(); i++) {
                 JSONObject object = remarkarray.optJSONObject(i);
                 String content = object.optString("content");
-                content= Utils.replaceBlank(content);
+                content = Utils.replaceBlank(content);
                 String link = object.optString("link");
                 if (!TextUtils.isEmpty(content) && !TextUtils.isEmpty(link)) {
                     TeamListRemarkModel remarkModel = new TeamListRemarkModel();
@@ -44,6 +50,10 @@ public class TeamListTeamModel {
 
     public TeamModel getTeamModel() {
         return teamModel;
+    }
+
+    public int getBorrowindex() {
+        return borrowindex;
     }
 
     public List<TeamListRemarkModel> getRemarkModels() {

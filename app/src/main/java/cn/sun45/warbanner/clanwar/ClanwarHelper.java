@@ -2,8 +2,10 @@ package cn.sun45.warbanner.clanwar;
 
 import java.util.List;
 
+import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamGroupCollectionModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamGroupScreenModel;
+import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.document.db.source.ClanWarModel;
 import cn.sun45.warbanner.framework.MyApplication;
 import cn.sun45.warbanner.framework.document.db.DbHelper;
@@ -28,6 +30,86 @@ public class ClanwarHelper {
             date = current.getStartdate().substring(0, 7).replace("/", "");
         }
         return date;
+    }
+
+    /**
+     * 查找阵容自定义信息
+     *
+     * @param teamModel
+     * @param teamCustomizeModels
+     */
+    public static TeamCustomizeModel getCustomizeModel(TeamModel teamModel, List<TeamCustomizeModel> teamCustomizeModels) {
+        TeamCustomizeModel teamCustomizeModel = null;
+        if (teamCustomizeModels != null) {
+            for (TeamCustomizeModel model : teamCustomizeModels) {
+                if (model.getDate().equals(teamModel.getDate()) && model.getNumber().equals(teamModel.getNumber())) {
+                    teamCustomizeModel = model;
+                    break;
+                }
+            }
+        }
+        return teamCustomizeModel;
+    }
+
+    /**
+     * 获取阵容自定义信息
+     *
+     * @param teamModel
+     */
+    public static TeamCustomizeModel getCustomizeModel(TeamModel teamModel) {
+        List<TeamCustomizeModel> teamCustomizeList = DbHelper.query(MyApplication.application, TeamCustomizeModel.class,
+                new String[]{"date", "number"}, new String[]{teamModel.getDate(), teamModel.getNumber()});
+        TeamCustomizeModel teamCustomizeModel = null;
+        if (teamCustomizeList != null && !teamCustomizeList.isEmpty()) {
+            teamCustomizeModel = teamCustomizeList.get(0);
+        }
+        return teamCustomizeModel;
+    }
+
+    /**
+     * 构建阵容自定义信息
+     *
+     * @param teamModel
+     * @param ellipsisdamage
+     */
+    public static TeamCustomizeModel buildCustomizeModelAndSave(TeamModel teamModel, int ellipsisdamage) {
+        TeamCustomizeModel teamCustomizeModel = new TeamCustomizeModel();
+        teamCustomizeModel.setDate(teamModel.getDate());
+        teamCustomizeModel.setNumber(teamModel.getNumber());
+        teamCustomizeModel.setEllipsisdamage(ellipsisdamage);
+        saveTeamCustomizeModel(teamCustomizeModel);
+        return teamCustomizeModel;
+    }
+
+    /**
+     * 修改阵容自定义信息
+     *
+     * @param teamCustomizeModel
+     * @param ellipsisdamage
+     */
+    public static void editCustomizeModelAndSave(TeamCustomizeModel teamCustomizeModel, int ellipsisdamage) {
+        teamCustomizeModel.setEllipsisdamage(ellipsisdamage);
+        saveTeamCustomizeModel(teamCustomizeModel);
+    }
+
+    /**
+     * 删除阵容自定义信息
+     *
+     * @param teamCustomizeModel
+     */
+    public static void deleteCustomizeModel(TeamCustomizeModel teamCustomizeModel) {
+        DbHelper.delete(MyApplication.application, TeamCustomizeModel.class,
+                new String[]{"date", "number"}, new String[]{teamCustomizeModel.getDate(), teamCustomizeModel.getNumber()});
+    }
+
+    /**
+     * 保存阵容自定义信息
+     *
+     * @param teamCustomizeModel
+     */
+    private static void saveTeamCustomizeModel(TeamCustomizeModel teamCustomizeModel) {
+        deleteCustomizeModel(teamCustomizeModel);
+        DbHelper.insert(MyApplication.application, teamCustomizeModel);
     }
 
     /**

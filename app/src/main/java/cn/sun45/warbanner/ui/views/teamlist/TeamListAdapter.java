@@ -3,11 +3,13 @@ package cn.sun45.warbanner.ui.views.teamlist;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +26,8 @@ import java.util.List;
 
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.character.CharacterHelper;
+import cn.sun45.warbanner.clanwar.ClanwarHelper;
+import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.document.db.setup.ScreenCharacterModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
@@ -53,9 +57,14 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private int autoScreen;
     private int showtype;
 
+    private List<TeamListTeamModel> list;
+
     private List<Object> onelist;
     private List<Object> twolist;
     private List<Object> threelist;
+
+    //阵容自定义信息
+    private List<TeamCustomizeModel> teamCustomizeModels;
 
     //角色信息
     private List<CharacterModel> characterModels;
@@ -84,10 +93,18 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.showtype = showtype;
     }
 
+    public void setList(List<TeamListTeamModel> list) {
+        this.list = list;
+    }
+
     public void setList(List<Object> onelist, List<Object> twolist, List<Object> threelist) {
         this.onelist = onelist;
         this.twolist = twolist;
         this.threelist = threelist;
+    }
+
+    public void setTeamCustomizeModels(List<TeamCustomizeModel> teamCustomizeModels) {
+        this.teamCustomizeModels = teamCustomizeModels;
     }
 
     public void setCharacterModels(List<CharacterModel> characterModels) {
@@ -137,33 +154,37 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() {
-        int count = 0;
-        switch (showtype) {
-            case SHOW_TYPE_ALL:
-                if (onelist != null) {
-                    count += countList(onelist);
-                }
-                if (twolist != null) {
-                    count += countList(twolist);
-                }
-                if (threelist != null) {
-                    count += countList(threelist);
-                }
-                break;
-            case SHOW_TYPE_ONE:
-                count = countList(onelist);
-                break;
-            case SHOW_TYPE_TWO:
-                count = countList(twolist);
-                break;
-            case SHOW_TYPE_THREE:
-                count = countList(threelist);
-                break;
-            default:
-                break;
+        if (list != null) {
+            return list.size();
+        } else {
+            int count = 0;
+            switch (showtype) {
+                case SHOW_TYPE_ALL:
+                    if (onelist != null) {
+                        count += countList(onelist);
+                    }
+                    if (twolist != null) {
+                        count += countList(twolist);
+                    }
+                    if (threelist != null) {
+                        count += countList(threelist);
+                    }
+                    break;
+                case SHOW_TYPE_ONE:
+                    count = countList(onelist);
+                    break;
+                case SHOW_TYPE_TWO:
+                    count = countList(twolist);
+                    break;
+                case SHOW_TYPE_THREE:
+                    count = countList(threelist);
+                    break;
+                default:
+                    break;
+            }
+            Utils.logD(TAG, "getItemCount count:" + count);
+            return count;
         }
-        Utils.logD(TAG, "getItemCount count:" + count);
-        return count;
     }
 
     private int countList(List<Object> list) {
@@ -200,37 +221,41 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private Object getItem(int position) {
-        Object item = null;
-        switch (showtype) {
-            case SHOW_TYPE_ALL:
-                int p = position;
-                int onelistcount = countList(onelist);
-                if (onelist != null && onelistcount > p) {
-                    item = getItemFromList(onelist, p);
-                } else {
-                    p -= onelistcount;
-                    int twolistcount = countList(twolist);
-                    if (twolist != null && twolistcount > p) {
-                        item = getItemFromList(twolist, p);
+        if (list != null) {
+            return list.get(position);
+        } else {
+            Object item = null;
+            switch (showtype) {
+                case SHOW_TYPE_ALL:
+                    int p = position;
+                    int onelistcount = countList(onelist);
+                    if (onelist != null && onelistcount > p) {
+                        item = getItemFromList(onelist, p);
                     } else {
-                        p -= twolistcount;
-                        item = getItemFromList(threelist, p);
+                        p -= onelistcount;
+                        int twolistcount = countList(twolist);
+                        if (twolist != null && twolistcount > p) {
+                            item = getItemFromList(twolist, p);
+                        } else {
+                            p -= twolistcount;
+                            item = getItemFromList(threelist, p);
+                        }
                     }
-                }
-                break;
-            case SHOW_TYPE_ONE:
-                item = getItemFromList(onelist, position);
-                break;
-            case SHOW_TYPE_TWO:
-                item = getItemFromList(twolist, position);
-                break;
-            case SHOW_TYPE_THREE:
-                item = getItemFromList(threelist, position);
-                break;
-            default:
-                break;
+                    break;
+                case SHOW_TYPE_ONE:
+                    item = getItemFromList(onelist, position);
+                    break;
+                case SHOW_TYPE_TWO:
+                    item = getItemFromList(twolist, position);
+                    break;
+                case SHOW_TYPE_THREE:
+                    item = getItemFromList(threelist, position);
+                    break;
+                default:
+                    break;
+            }
+            return item;
         }
-        return item;
     }
 
     private Object getItemFromList(List<Object> list, int position) {
@@ -327,20 +352,39 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public void setData(TeamListTeamModel teamListTeamModel) {
             model = teamListTeamModel;
             TeamModel teamModel = teamListTeamModel.getTeamModel();
+            int borrowindex = teamListTeamModel.getBorrowindex();
             List<TeamListRemarkModel> remarkModels = teamListTeamModel.getRemarkModels();
             mBoss.setText(teamModel.getBoss());
-            String title = teamModel.getNumber() + " " + teamModel.getEllipsisdamage() + "w";
-            mTitle.setText(title);
+            TeamCustomizeModel teamCustomizeModel = ClanwarHelper.getCustomizeModel(teamModel, teamCustomizeModels);
+            if (teamCustomizeModel == null) {
+                String title = teamModel.getNumber() + " " + teamModel.getEllipsisdamage() + "w";
+                mTitle.setText(title);
+            } else {
+                String str = teamModel.getNumber() + " ";
+                int start = str.length();
+                str += teamCustomizeModel.getEllipsisdamage() + "w";
+                SpannableStringBuilder builder = new SpannableStringBuilder(str);
+                builder.setSpan(new ForegroundColorSpan(Utils.getAttrColor(context, R.attr.colorSecondary)), start, str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                mTitle.setText(builder);
+            }
             if (teamModel.isAuto()) {
                 mAuto.setVisibility(View.VISIBLE);
             } else {
                 mAuto.setVisibility(View.INVISIBLE);
             }
-            mCharacterone.setData(teamModel.getCharacterone());
-            mCharactertwo.setData(teamModel.getCharactertwo());
-            mCharacterthree.setData(teamModel.getCharacterthree());
-            mCharacterfour.setData(teamModel.getCharacterfour());
-            mCharacterfive.setData(teamModel.getCharacterfive());
+            if (borrowindex == -1) {
+                mCharacterone.setData(teamModel.getCharacterone());
+                mCharactertwo.setData(teamModel.getCharactertwo());
+                mCharacterthree.setData(teamModel.getCharacterthree());
+                mCharacterfour.setData(teamModel.getCharacterfour());
+                mCharacterfive.setData(teamModel.getCharacterfive());
+            } else {
+                mCharacterone.setData(teamModel.getCharacterone(), borrowindex == 0);
+                mCharactertwo.setData(teamModel.getCharactertwo(), borrowindex == 1);
+                mCharacterthree.setData(teamModel.getCharacterthree(), borrowindex == 2);
+                mCharacterfour.setData(teamModel.getCharacterfour(), borrowindex == 3);
+                mCharacterfive.setData(teamModel.getCharacterfive(), borrowindex == 4);
+            }
             if (showlink) {
                 if (remarkModels.isEmpty()) {
                     mRemarks.setVisibility(View.GONE);
@@ -421,6 +465,24 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 } else {
                     lay.setCardBackgroundColor(Utils.getColor(R.color.gray));
                 }
+            } else {
+                lay.setCardBackgroundColor(Utils.getColor(R.color.gray));
+            }
+            if (characterModel == null) {
+                icon.setImageBitmap(null);
+                name.setVisibility(View.VISIBLE);
+                name.setText(id + "");
+            } else {
+                ImageRequester.request(characterModel.getIconUrl(), R.drawable.ic_character_default).loadImage(icon);
+                name.setVisibility(View.INVISIBLE);
+                name.setText("");
+            }
+        }
+
+        public void setData(int id, boolean borrow) {
+            CharacterModel characterModel = CharacterHelper.findCharacterById(id, characterModels);
+            if (borrow) {
+                lay.setCardBackgroundColor(Utils.getAttrColor(context, R.attr.colorPrimary));
             } else {
                 lay.setCardBackgroundColor(Utils.getColor(R.color.gray));
             }

@@ -11,11 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.document.db.setup.ScreenCharacterModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
 import cn.sun45.warbanner.document.db.source.ClanWarModel;
 import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListListener;
+import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListModel;
 
 /**
  * Created by Sun45 on 2021/5/20
@@ -39,12 +41,14 @@ public class TeamList extends RecyclerView {
         adapter.setListener(listener);
     }
 
-    public void setData(List<TeamModel> list, boolean showlink) {
-        setData(list, null, showlink, 0, TeamListAdapter.SHOW_TYPE_ALL);
-    }
-
-    public void setData(List<TeamModel> list, boolean showlink, int autoScreen, int showtype) {
-        setData(list, null, showlink, autoScreen, showtype);
+    public void setData(TeamGroupListModel teamGroupListModel) {
+        List<TeamListTeamModel> list = new ArrayList<>();
+        list.add(new TeamListTeamModel(teamGroupListModel.getTeamone(), teamGroupListModel.getBorrowindexone()));
+        list.add(new TeamListTeamModel(teamGroupListModel.getTeamtwo(), teamGroupListModel.getBorrowindextwo()));
+        list.add(new TeamListTeamModel(teamGroupListModel.getTeamthree(), teamGroupListModel.getBorrowindexthree()));
+        adapter.setList(list);
+        adapter.setShowlink(true);
+        adapter.notifyDataSetChanged();
     }
 
     public void setData(List<TeamModel> list, ClanWarModel clanWarModel, boolean showlink, int autoScreen, int showtype) {
@@ -175,6 +179,11 @@ public class TeamList extends RecyclerView {
     public void notifyShowtype(int showtype) {
         scrollToPosition(0);
         adapter.setShowtype(showtype);
+        adapter.notifyDataSetChanged();
+    }
+
+    public void notifyCustomize(List<TeamCustomizeModel> teamCustomizeModels) {
+        adapter.setTeamCustomizeModels(teamCustomizeModels);
         adapter.notifyDataSetChanged();
     }
 

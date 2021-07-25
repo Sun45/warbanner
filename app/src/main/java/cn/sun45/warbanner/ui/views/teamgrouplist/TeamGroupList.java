@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
 
 /**
@@ -43,6 +44,11 @@ public class TeamGroupList extends RecyclerView {
     public void setData(List<TeamGroupListModel> list) {
         scrollToPosition(0);
         adapter.setList(list);
+        adapter.notifyDataSetChanged();
+    }
+
+    public void notifyCustomize(List<TeamCustomizeModel> teamCustomizeModels) {
+        adapter.setTeamCustomizeModels(teamCustomizeModels);
         adapter.notifyDataSetChanged();
     }
 }

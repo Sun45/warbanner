@@ -1,6 +1,9 @@
 package cn.sun45.warbanner.ui.views.teamgrouplist;
 
 import android.content.Context;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +22,7 @@ import java.util.List;
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.character.CharacterHelper;
 import cn.sun45.warbanner.clanwar.ClanwarHelper;
+import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
 import cn.sun45.warbanner.framework.image.ImageRequester;
@@ -39,6 +43,9 @@ public class TeamGroupListAdapter extends RecyclerView.Adapter<TeamGroupListAdap
 
     private List<TeamGroupListModel> list;
 
+    //阵容自定义信息
+    private List<TeamCustomizeModel> teamCustomizeModels;
+
     public TeamGroupListAdapter(Context context) {
         this.context = context;
     }
@@ -53,6 +60,10 @@ public class TeamGroupListAdapter extends RecyclerView.Adapter<TeamGroupListAdap
 
     public void setList(List<TeamGroupListModel> list) {
         this.list = list;
+    }
+
+    public void setTeamCustomizeModels(List<TeamCustomizeModel> teamCustomizeModels) {
+        this.teamCustomizeModels = teamCustomizeModels;
     }
 
     @NotNull
@@ -115,12 +126,26 @@ public class TeamGroupListAdapter extends RecyclerView.Adapter<TeamGroupListAdap
             TeamModel teamone = teamGroupListModel.getTeamone();
             TeamModel teamtwo = teamGroupListModel.getTeamtwo();
             TeamModel teamthree = teamGroupListModel.getTeamthree();
-            String title = teamGroupListModel.getTotaldamage() + "w" + " " + teamone.getBoss() + " " + teamtwo.getBoss() + " " + teamthree.getBoss();
-            mTitle.setText(title);
+            TeamCustomizeModel teamCustomizeone = ClanwarHelper.getCustomizeModel(teamone, teamCustomizeModels);
+            TeamCustomizeModel teamCustomizetwo = ClanwarHelper.getCustomizeModel(teamtwo, teamCustomizeModels);
+            TeamCustomizeModel teamCustomizethree = ClanwarHelper.getCustomizeModel(teamthree, teamCustomizeModels);
+            if (teamCustomizeone != null || teamCustomizetwo != null || teamCustomizethree != null) {
+                String title = (teamCustomizeone != null ? teamCustomizeone.getEllipsisdamage() : teamone.getEllipsisdamage())
+                        + (teamCustomizetwo != null ? teamCustomizetwo.getEllipsisdamage() : teamtwo.getEllipsisdamage())
+                        + (teamCustomizethree != null ? teamCustomizethree.getEllipsisdamage() : teamthree.getEllipsisdamage()) + "w";
+                int length = title.length();
+                title += " " + teamone.getBoss() + " " + teamtwo.getBoss() + " " + teamthree.getBoss();
+                SpannableStringBuilder builder = new SpannableStringBuilder(title);
+                builder.setSpan(new ForegroundColorSpan(Utils.getAttrColor(context, R.attr.colorSecondary)), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                mTitle.setText(builder);
+            } else {
+                String title = teamone.getEllipsisdamage() + teamtwo.getEllipsisdamage() + teamthree.getEllipsisdamage() + "w" + " " + teamone.getBoss() + " " + teamtwo.getBoss() + " " + teamthree.getBoss();
+                mTitle.setText(title);
+            }
             showCollection();
-            mTeamOne.setdata(teamGroupListModel.getTeamone(), teamGroupListModel.getIdlistone(), teamGroupListModel.getBorrowindexone());
-            mTeamTwo.setdata(teamGroupListModel.getTeamtwo(), teamGroupListModel.getIdlisttwo(), teamGroupListModel.getBorrowindextwo());
-            mTeamThree.setdata(teamGroupListModel.getTeamthree(), teamGroupListModel.getIdlistthree(), teamGroupListModel.getBorrowindexthree());
+            mTeamOne.setdata(teamone, teamCustomizeone, teamGroupListModel.getIdlistone(), teamGroupListModel.getBorrowindexone());
+            mTeamTwo.setdata(teamtwo, teamCustomizetwo, teamGroupListModel.getIdlisttwo(), teamGroupListModel.getBorrowindextwo());
+            mTeamThree.setdata(teamthree, teamCustomizethree, teamGroupListModel.getIdlistthree(), teamGroupListModel.getBorrowindexthree());
         }
 
         private void showCollection() {
@@ -152,8 +177,18 @@ public class TeamGroupListAdapter extends RecyclerView.Adapter<TeamGroupListAdap
             mCharacterfive = new CharacterHolder(lay.findViewById(R.id.characterfive_lay), R.id.characterfive_icon, R.id.characterfive_name);
         }
 
-        public void setdata(TeamModel teamModel, List<Integer> idlist, int borrowindex) {
-            mTitle.setText(teamModel.getNumber() + " " + teamModel.getEllipsisdamage() + "w");
+        public void setdata(TeamModel teamModel, TeamCustomizeModel teamCustomizeModel, List<Integer> idlist, int borrowindex) {
+            if (teamCustomizeModel == null) {
+                String title = teamModel.getNumber() + " " + teamModel.getEllipsisdamage() + "w";
+                mTitle.setText(title);
+            } else {
+                String str = teamModel.getNumber() + " ";
+                int start = str.length();
+                str += teamCustomizeModel.getEllipsisdamage() + "w";
+                SpannableStringBuilder builder = new SpannableStringBuilder(str);
+                builder.setSpan(new ForegroundColorSpan(Utils.getAttrColor(context, R.attr.colorSecondary)), start, str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                mTitle.setText(builder);
+            }
             if (teamModel.isAuto()) {
                 mAuto.setVisibility(View.VISIBLE);
             } else {

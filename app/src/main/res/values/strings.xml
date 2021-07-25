@@ -80,18 +80,6 @@
     <string name="menu_link_open_type_dialog_confirm">确定</string>
     <string name="menu_record">日志</string>
 
-    <string name="user_manager_title">本地用户管理</string>
-    <string name="user_manager_menu_delete">删除</string>
-    <string name="user_manager_menu_delete_default_hint">默认用户不可删除</string>
-    <string name="user_manager_menu_delete_hint">删除用户%1$s</string>
-    <string name="user_manager_add_dialog_title">本地用户添加</string>
-    <string name="user_manager_add_dialog_hint">输入用户名</string>
-    <string name="user_manager_add_dialog_confirm">确定</string>
-
-    <string name="character_screen_title">角色筛选</string>
-    <string name="character_screen_lack">表示角色缺失但可以借</string>
-    <string name="character_screen_skip">表示角色不会参与分刀</string>
-
     <string name="teamgroup_title">分刀</string>
     <string name="teamgroup_state_start">点击生成分刀</string>
     <string name="teamgroup_state_progressing">分刀生成中。。。</string>
@@ -152,6 +140,24 @@
     <string name="teamselect_menu_three">三阶段</string>
 
     <string name="teamgroup_detail_title">分刀详情</string>
+    <string name="teamgroup_detail_menu_share">分享</string>
+
+    <string name="team_detail_title">阵容详情</string>
+    <string name="team_detail_menu_share">分享</string>
+    <string name="team_detail_damage_dialog_title">自定轴伤</string>
+    <string name="team_detail_damage_dialog_hint">自定义阵容伤害(%1$s)</string>
+
+    <string name="user_manager_title">本地用户管理</string>
+    <string name="user_manager_menu_delete">删除</string>
+    <string name="user_manager_menu_delete_default_hint">默认用户不可删除</string>
+    <string name="user_manager_menu_delete_hint">删除用户%1$s</string>
+    <string name="user_manager_add_dialog_title">本地用户添加</string>
+    <string name="user_manager_add_dialog_hint">输入用户名</string>
+    <string name="user_manager_add_dialog_confirm">确定</string>
+
+    <string name="character_screen_title">角色筛选</string>
+    <string name="character_screen_lack">表示角色缺失但可以借</string>
+    <string name="character_screen_skip">表示角色不会参与分刀</string>
 
     <string name="record_title">日志</string>
     <string name="record_clean_dialog_title">日志</string>

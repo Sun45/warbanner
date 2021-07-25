@@ -2,6 +2,7 @@ package cn.sun45.warbanner.teamgroup;
 
 import java.util.List;
 
+import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 
 /**
@@ -12,6 +13,7 @@ public class TeamGroupElementModel {
     private List<Integer> idlist;
     private int screencharacter;
     private TeamModel teamModel;
+    private TeamCustomizeModel teamCustomizeModel;
 
     public List<Integer> getIdlist() {
         return idlist;
@@ -35,5 +37,21 @@ public class TeamGroupElementModel {
 
     public void setTeamModel(TeamModel teamModel) {
         this.teamModel = teamModel;
+    }
+
+    public TeamCustomizeModel getTeamCustomizeModel() {
+        return teamCustomizeModel;
+    }
+
+    public void setTeamCustomizeModel(TeamCustomizeModel teamCustomizeModel) {
+        this.teamCustomizeModel = teamCustomizeModel;
+    }
+
+    public int getDamage() {
+        if (teamCustomizeModel != null) {
+            return teamCustomizeModel.getEllipsisdamage();
+        } else {
+            return teamModel.getEllipsisdamage();
+        }
     }
 }

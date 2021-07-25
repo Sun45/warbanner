@@ -23,6 +23,7 @@ import java.util.List;
 
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.character.CharacterHelper;
+import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamGroupScreenModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
@@ -92,12 +93,23 @@ public class TeamSelectFragment extends BaseFragment implements TeamListListener
         sharedClanwar.teamList.observe(requireActivity(), new Observer<List<TeamModel>>() {
             @Override
             public void onChanged(List<TeamModel> teamModels) {
-                mTeamList.setData(teamModels, false, new ClanwarPreference().getTeamlistautoscreen(), new ClanwarPreference().getTeamlistshowtype());
-                sharedSource.characterlist.observe(requireActivity(), new Observer<List<CharacterModel>>() {
+                sharedSource.clanWarlist.observe(requireActivity(), new Observer<List<ClanWarModel>>() {
                     @Override
-                    public void onChanged(List<CharacterModel> characterModels) {
-                        mTeamList.notifyCharacter(characterModels);
-                        mTeamList.notifyScreenCharacter(new SetupPreference().isCharacterscreenenable(), CharacterHelper.getScreenCharacterList());
+                    public void onChanged(List<ClanWarModel> clanWarModels) {
+                        mTeamList.setData(teamModels, clanWarModels.get(0), false, new ClanwarPreference().getTeamlistautoscreen(), new ClanwarPreference().getTeamlistshowtype());
+                        sharedClanwar.teamCustomizeList.observe(requireActivity(), new Observer<List<TeamCustomizeModel>>() {
+                            @Override
+                            public void onChanged(List<TeamCustomizeModel> teamCustomizeModels) {
+                                mTeamList.notifyCustomize(teamCustomizeModels);
+                            }
+                        });
+                        sharedSource.characterlist.observe(requireActivity(), new Observer<List<CharacterModel>>() {
+                            @Override
+                            public void onChanged(List<CharacterModel> characterModels) {
+                                mTeamList.notifyCharacter(characterModels);
+                                mTeamList.notifyScreenCharacter(new SetupPreference().isCharacterscreenenable(), CharacterHelper.getScreenCharacterList());
+                            }
+                        });
                     }
                 });
             }
@@ -210,7 +222,9 @@ public class TeamSelectFragment extends BaseFragment implements TeamListListener
     @Override
     public void onDestroy() {
         super.onDestroy();
-        sharedSource.characterlist.removeObservers(requireActivity());
         sharedClanwar.teamList.removeObservers(requireActivity());
+        sharedSource.clanWarlist.removeObservers(requireActivity());
+        sharedClanwar.teamCustomizeList.removeObservers(requireActivity());
+        sharedSource.characterlist.removeObservers(requireActivity());
     }
 }

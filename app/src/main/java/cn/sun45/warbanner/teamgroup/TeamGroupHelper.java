@@ -5,6 +5,7 @@ import java.util.List;
 
 import cn.sun45.warbanner.character.CharacterHelper;
 import cn.sun45.warbanner.clanwar.ClanwarHelper;
+import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamGroupScreenModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.document.db.setup.ScreenCharacterModel;
@@ -22,7 +23,7 @@ public class TeamGroupHelper {
     private static final String TAG = "TeamGroupHelper";
 
     //分刀中断阈值
-    public static final int interruptsize = 10 * 10000;
+    public static final int interruptsize = 10_0000;
 
     private boolean characterscreenenable;
 
@@ -30,15 +31,15 @@ public class TeamGroupHelper {
         this.characterscreenenable = characterscreenenable;
     }
 
-    public List<TeamGroupListModel> build(List<ScreenCharacterModel> screenCharacterModelList, List<TeamModel> teamModels, List<CharacterModel> characterModels) {
+    public List<TeamGroupListModel> build(List<ScreenCharacterModel> screenCharacterModelList, List<TeamModel> teamModels, List<TeamCustomizeModel> teamCustomizeModels) {
         TeamGroupScreenModel teamGroupScreenModel = ClanwarHelper.getScreenModel();
-        return buildElementList(screenCharacterModelList, teamModels, characterModels, teamGroupScreenModel);
+        return buildElementList(screenCharacterModelList, teamModels, teamCustomizeModels, teamGroupScreenModel);
     }
 
     /**
      * 构建分刀元素列表
      */
-    private List<TeamGroupListModel> buildElementList(List<ScreenCharacterModel> screenCharacterModelList, List<TeamModel> teamModels, List<CharacterModel> characterModels, TeamGroupScreenModel teamGroupScreenModel) {
+    private List<TeamGroupListModel> buildElementList(List<ScreenCharacterModel> screenCharacterModelList, List<TeamModel> teamModels, List<TeamCustomizeModel> teamCustomizeModels, TeamGroupScreenModel teamGroupScreenModel) {
         Utils.logD(TAG, "buildElementList");
         List<TeamGroupElementModel> elementModels = new ArrayList<>();
         for (TeamModel teamModel : teamModels) {
@@ -85,6 +86,7 @@ public class TeamGroupHelper {
             elementModel.setIdlist(idlist);
             elementModel.setScreencharacter(screencharacter);
             elementModel.setTeamModel(teamModel);
+            elementModel.setTeamCustomizeModel(ClanwarHelper.getCustomizeModel(teamModel, teamCustomizeModels));
             elementModels.add(elementModel);
         }
         if (elementModels.isEmpty()) {
@@ -111,11 +113,11 @@ public class TeamGroupHelper {
         if (elementModelListOne.isEmpty() || elementModelListTwo.isEmpty() || elementModelListThree.isEmpty()) {
             return null;
         }
-        int min = elementModels.get(0).getTeamModel().getEllipsisdamage();
+        int min = elementModels.get(0).getDamage();
         int max = min;
         for (int i = 0; i < elementModels.size(); i++) {
             TeamGroupElementModel teamGroupElementModel = elementModels.get(i);
-            int damage = teamGroupElementModel.getTeamModel().getEllipsisdamage();
+            int damage = teamGroupElementModel.getDamage();
             if (damage < min) {
                 min = damage;
             }

@@ -121,12 +121,12 @@ public class MainActivity extends BaseActivity implements PermissionRequestListe
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (sourceManager.checkDbFile()) {
-                    sharedSource.loadData();
-                    clanWarLoad();
-                } else {
-                    sourceManager.checkDatabaseVersion(true);
-                }
+//                if (sourceManager.checkDbFile()) {
+//                    sharedSource.loadData();
+//                    clanWarLoad();
+//                } else {
+                sourceManager.checkDatabaseVersion(true);
+//                }
             }
         });
     }
@@ -162,8 +162,8 @@ public class MainActivity extends BaseActivity implements PermissionRequestListe
     }
 
     @Override
-    public void sourceUpdateFinished(boolean dataGain, boolean autocheck) {
-        if (dataGain) {
+    public void sourceUpdateFinished(boolean needload, boolean autocheck) {
+        if (needload) {
             sharedSource.clearData();
             sharedSource.loadData();
         }

@@ -1,6 +1,5 @@
 package cn.sun45.warbanner.datamanager.source;
 
-import android.app.Activity;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -120,10 +119,12 @@ public class SourceManager {
                     hintUpdate(autocheck);
                 } else {
                     if (iActivityCallBack != null) {
-                        if (!autocheck) {
+                        if (autocheck) {
+                            iActivityCallBack.sourceUpdateFinished(true, autocheck);
+                        } else {
                             iActivityCallBack.showSnackBar(R.string.db_update_check_noneed);
+                            iActivityCallBack.sourceUpdateFinished(false, autocheck);
                         }
-                        iActivityCallBack.sourceUpdateFinished(false, autocheck);
                     }
                 }
             }
@@ -281,6 +282,6 @@ public class SourceManager {
     public interface IActivityCallBack {
         void showSnackBar(@StringRes int messageRes);
 
-        void sourceUpdateFinished(boolean dataGain, boolean autocheck);
+        void sourceUpdateFinished(boolean needload, boolean autocheck);
     }
 }

@@ -16,6 +16,7 @@ import java.util.List;
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.character.CharacterHelper;
 import cn.sun45.warbanner.clanwar.ClanwarHelper;
+import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamGroupCollectionModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
@@ -117,6 +118,12 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
                     }
                 }
                 mTeamGroupList.setData(list);
+                sharedClanwar.teamCustomizeList.observe(requireActivity(), new Observer<List<TeamCustomizeModel>>() {
+                    @Override
+                    public void onChanged(List<TeamCustomizeModel> teamCustomizeModels) {
+                        mTeamGroupList.notifyCustomize(teamCustomizeModels);
+                    }
+                });
             }
         });
     }
@@ -158,5 +165,6 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
         super.onDestroy();
         sharedSource.characterlist.removeObservers(requireActivity());
         sharedClanwar.teamGroupCollectionList.removeObservers(requireActivity());
+        sharedClanwar.teamCustomizeList.removeObservers(requireActivity());
     }
 }
