@@ -28,6 +28,8 @@ import cn.sun45.warbanner.framework.ui.BaseActivity;
 import cn.sun45.warbanner.framework.ui.BaseFragment;
 import cn.sun45.warbanner.ui.shared.SharedViewModelSource;
 import cn.sun45.warbanner.ui.shared.SharedViewModelTeamScreenTeam;
+import cn.sun45.warbanner.ui.views.selectgroup.SelectGroup;
+import cn.sun45.warbanner.ui.views.selectgroup.SelectGroupListener;
 import cn.sun45.warbanner.util.Utils;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function3;
@@ -97,6 +99,7 @@ public class TeamGroupScreenFragment extends BaseFragment {
                     teamGroupScreenModel.setTeamonecharacterfourid(teamModel.getCharacterfour());
                     teamGroupScreenModel.setTeamonecharacterfiveid(teamModel.getCharacterfive());
                     mTeamOne.setData();
+                    sharedTeamScreenTeam.teamOne.postValue(null);
                 }
             }
         });
@@ -116,6 +119,7 @@ public class TeamGroupScreenFragment extends BaseFragment {
                     teamGroupScreenModel.setTeamtwocharacterfourid(teamModel.getCharacterfour());
                     teamGroupScreenModel.setTeamtwocharacterfiveid(teamModel.getCharacterfive());
                     mTeamTwo.setData();
+                    sharedTeamScreenTeam.teamTwo.postValue(null);
                 }
             }
         });
@@ -135,6 +139,7 @@ public class TeamGroupScreenFragment extends BaseFragment {
                     teamGroupScreenModel.setTeamthreecharacterfourid(teamModel.getCharacterfour());
                     teamGroupScreenModel.setTeamthreecharacterfiveid(teamModel.getCharacterfive());
                     mTeamThree.setData();
+                    sharedTeamScreenTeam.teamThree.postValue(null);
                 }
             }
         });
@@ -150,9 +155,9 @@ public class TeamGroupScreenFragment extends BaseFragment {
 
     private class TeamHolder {
         private int team;
-        private TextView mStage;
-        private TextView mBoss;
-        private TextView mAuto;
+        private SelectGroup mStage;
+        private SelectGroup mBoss;
+        private SelectGroup mAuto;
         private ViewGroup mCharacterLay;
         private CharacterHolder mCharacterone;
         private CharacterHolder mCharactertwo;
@@ -176,55 +181,22 @@ public class TeamGroupScreenFragment extends BaseFragment {
             mClean = lay.findViewById(R.id.clean);
             mSetting = lay.findViewById(R.id.setting);
 
-            mStage.setOnClickListener(new View.OnClickListener() {
+            mStage.setListener(new SelectGroupListener() {
                 @Override
-                public void onClick(View v) {
-                    MaterialDialog dialog = new MaterialDialog(getContext(), MaterialDialog.getDEFAULT_BEHAVIOR());
-                    dialog.title(R.string.teamgroup_screen_stage_dialog_title, null);
-                    int selection = getStage();
-                    DialogSingleChoiceExtKt.listItemsSingleChoice(dialog, R.array.teamgroup_screen_stage_dialog_options, null, null, selection, true, 0, 0, new Function3<MaterialDialog, Integer, CharSequence, Unit>() {
-                        @Override
-                        public Unit invoke(MaterialDialog materialDialog, Integer integer, CharSequence charSequence) {
-                            setStage(integer);
-                            return null;
-                        }
-                    });
-                    dialog.positiveButton(R.string.teamgroup_screen_stage_dialog_confirm, null, null);
-                    dialog.show();
+                public void select(int position) {
+                    setStage(position);
                 }
             });
-            mBoss.setOnClickListener(new View.OnClickListener() {
+            mBoss.setListener(new SelectGroupListener() {
                 @Override
-                public void onClick(View v) {
-                    MaterialDialog dialog = new MaterialDialog(getContext(), MaterialDialog.getDEFAULT_BEHAVIOR());
-                    dialog.title(R.string.teamgroup_screen_boss_dialog_title, null);
-                    int selection = getBoss();
-                    DialogSingleChoiceExtKt.listItemsSingleChoice(dialog, R.array.teamgroup_screen_boss_dialog_options, null, null, selection, true, 0, 0, new Function3<MaterialDialog, Integer, CharSequence, Unit>() {
-                        @Override
-                        public Unit invoke(MaterialDialog materialDialog, Integer integer, CharSequence charSequence) {
-                            setBoss(integer);
-                            return null;
-                        }
-                    });
-                    dialog.positiveButton(R.string.teamgroup_screen_boss_dialog_confirm, null, null);
-                    dialog.show();
+                public void select(int position) {
+                    setBoss(position);
                 }
             });
-            mAuto.setOnClickListener(new View.OnClickListener() {
+            mAuto.setListener(new SelectGroupListener() {
                 @Override
-                public void onClick(View v) {
-                    MaterialDialog dialog = new MaterialDialog(getContext(), MaterialDialog.getDEFAULT_BEHAVIOR());
-                    dialog.title(R.string.teamgroup_screen_auto_dialog_title, null);
-                    int selection = getAuto();
-                    DialogSingleChoiceExtKt.listItemsSingleChoice(dialog, R.array.teamgroup_screen_auto_dialog_options, null, null, selection, true, 0, 0, new Function3<MaterialDialog, Integer, CharSequence, Unit>() {
-                        @Override
-                        public Unit invoke(MaterialDialog materialDialog, Integer integer, CharSequence charSequence) {
-                            setAuto(integer);
-                            return null;
-                        }
-                    });
-                    dialog.positiveButton(R.string.teamgroup_screen_auto_dialog_confirm, null, null);
-                    dialog.show();
+                public void select(int position) {
+                    setAuto(position);
                 }
             });
             mCharacterLay.setOnClickListener(new View.OnClickListener() {
@@ -276,9 +248,9 @@ public class TeamGroupScreenFragment extends BaseFragment {
         }
 
         public void setData() {
-            mStage.setText(Utils.getStringArray(R.array.teamgroup_screen_stage_dialog_options).get(getStage()));
-            mBoss.setText(Utils.getStringArray(R.array.teamgroup_screen_boss_dialog_options).get(getBoss()));
-            mAuto.setText(Utils.getStringArray(R.array.teamgroup_screen_auto_dialog_options).get(getAuto()));
+            mStage.setData(Utils.getStringArray(R.array.teamgroup_screen_stage_options), getStage());
+            mBoss.setData(Utils.getStringArray(R.array.teamgroup_screen_boss_options), getBoss());
+            mAuto.setData(Utils.getStringArray(R.array.teamgroup_screen_auto_options), getAuto());
             setCharacterData();
         }
 
@@ -340,7 +312,6 @@ public class TeamGroupScreenFragment extends BaseFragment {
                 default:
                     break;
             }
-            mStage.setText(Utils.getStringArray(R.array.teamgroup_screen_stage_dialog_options).get(stage));
         }
 
         private int getBoss() {
@@ -375,7 +346,6 @@ public class TeamGroupScreenFragment extends BaseFragment {
                 default:
                     break;
             }
-            mBoss.setText(Utils.getStringArray(R.array.teamgroup_screen_boss_dialog_options).get(boss));
         }
 
         private int getAuto() {
@@ -410,7 +380,6 @@ public class TeamGroupScreenFragment extends BaseFragment {
                 default:
                     break;
             }
-            mAuto.setText(Utils.getStringArray(R.array.teamgroup_screen_auto_dialog_options).get(auto));
         }
     }
 

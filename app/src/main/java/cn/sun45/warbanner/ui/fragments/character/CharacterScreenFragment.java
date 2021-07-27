@@ -1,6 +1,7 @@
 package cn.sun45.warbanner.ui.fragments.character;
 
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -29,6 +30,7 @@ public class CharacterScreenFragment extends BaseFragment implements CharacterLi
     private SharedViewModelSource sharedSource;
 
     private CharacterList mCharacterList;
+    private TextView mEmptyHint;
 
     @Override
     protected int getContentViewId() {
@@ -50,6 +52,7 @@ public class CharacterScreenFragment extends BaseFragment implements CharacterLi
         });
         mCharacterList = mRoot.findViewById(R.id.characterlist);
         mCharacterList.setListener(this);
+        mEmptyHint = mRoot.findViewById(R.id.empty_hint);
     }
 
     @Override
@@ -70,6 +73,9 @@ public class CharacterScreenFragment extends BaseFragment implements CharacterLi
                     list.add(new CharacterListModel(characterModel, type));
                 }
                 mCharacterList.setData(list);
+                if (list != null && !list.isEmpty()) {
+                    mEmptyHint.setVisibility(View.INVISIBLE);
+                }
             }
         });
     }

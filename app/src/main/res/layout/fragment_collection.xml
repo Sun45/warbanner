@@ -20,14 +20,28 @@
             app:title="@string/title_collection" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupList
-        android:id="@+id/teamgrouplist"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appbar" />
+        app:layout_constraintTop_toBottomOf="@id/appbar">
+
+        <cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupList
+            android:id="@+id/teamgrouplist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/empty_hint"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.2"
+            android:textColor="@color/white_50"
+            android:textSize="24sp" />
+    </FrameLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floating_button"

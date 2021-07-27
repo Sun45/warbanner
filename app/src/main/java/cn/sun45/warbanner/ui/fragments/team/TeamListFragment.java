@@ -2,9 +2,12 @@ package cn.sun45.warbanner.ui.fragments.team;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
@@ -19,11 +22,14 @@ import com.google.android.material.appbar.MaterialToolbar;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.character.CharacterHelper;
+import cn.sun45.warbanner.clanwar.ClanwarHelper;
 import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
@@ -37,6 +43,7 @@ import cn.sun45.warbanner.ui.shared.SharedViewModelSource;
 import cn.sun45.warbanner.ui.views.teamlist.TeamList;
 import cn.sun45.warbanner.ui.views.teamlist.TeamListAdapter;
 import cn.sun45.warbanner.ui.views.teamlist.TeamListListener;
+import cn.sun45.warbanner.util.Utils;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function3;
@@ -50,6 +57,7 @@ public class TeamListFragment extends BaseFragment implements TeamListListener {
     private SharedViewModelClanwar sharedClanwar;
 
     private TeamList mTeamList;
+    private TextView mEmptyHint;
 
     private SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
         @Override
@@ -75,6 +83,7 @@ public class TeamListFragment extends BaseFragment implements TeamListListener {
         MaterialToolbar toolbar = mRoot.findViewById(R.id.drop_toolbar);
         ((BaseActivity) getActivity()).setSupportActionBar(toolbar);
         mTeamList = mRoot.findViewById(R.id.teamlist);
+        mEmptyHint = mRoot.findViewById(R.id.empty_hint);
 
         mTeamList.setListener(this);
     }
@@ -84,6 +93,17 @@ public class TeamListFragment extends BaseFragment implements TeamListListener {
         logD("dataRequest");
         sharedSource = new ViewModelProvider(requireActivity()).get(SharedViewModelSource.class);
         sharedClanwar = new ViewModelProvider(requireActivity()).get(SharedViewModelClanwar.class);
+        String emptyhint;
+        String date = ClanwarHelper.getCurrentClanWarDate();
+        if (!TextUtils.isEmpty(date) && date.length() == 6) {
+            String year = date.substring(0, 4);
+            String month = date.substring(4, 6);
+            date = year + "年" + month + "月";
+            emptyhint = Utils.getStringWithPlaceHolder(R.string.teamlist_empty_hint, date);
+        } else {
+            emptyhint = Utils.getStringWithPlaceHolder(R.string.teamlist_empty_hint, "");
+        }
+        mEmptyHint.setText(emptyhint);
 
         sharedClanwar.teamList.observe(requireActivity(), new Observer<List<TeamModel>>() {
             @Override
@@ -92,25 +112,30 @@ public class TeamListFragment extends BaseFragment implements TeamListListener {
 //                for (TeamModel teamModel : teamModels) {
 //                    logD(teamModel.toString());
 //                }
-                sharedSource.clanWarlist.observe(requireActivity(), new Observer<List<ClanWarModel>>() {
-                    @Override
-                    public void onChanged(List<ClanWarModel> clanWarModels) {
-                        mTeamList.setData(teamModels, clanWarModels.get(0), new ClanwarPreference().isLinkshow(), new ClanwarPreference().getTeamlistautoscreen(), new ClanwarPreference().getTeamlistshowtype());
-                        sharedClanwar.teamCustomizeList.observe(requireActivity(), new Observer<List<TeamCustomizeModel>>() {
-                            @Override
-                            public void onChanged(List<TeamCustomizeModel> teamCustomizeModels) {
-                                mTeamList.notifyCustomize(teamCustomizeModels);
+                if (teamModels != null && !teamModels.isEmpty()) {
+                    sharedSource.clanWarlist.observe(requireActivity(), new Observer<List<ClanWarModel>>() {
+                        @Override
+                        public void onChanged(List<ClanWarModel> clanWarModels) {
+                            mTeamList.setData(teamModels, clanWarModels.get(0), new ClanwarPreference().isLinkshow(), new ClanwarPreference().getTeamlistautoscreen(), new ClanwarPreference().getTeamlistshowtype());
+                            if (teamModels != null && !teamModels.isEmpty()) {
+                                mEmptyHint.setVisibility(View.INVISIBLE);
                             }
-                        });
-                        sharedSource.characterlist.observe(requireActivity(), new Observer<List<CharacterModel>>() {
-                            @Override
-                            public void onChanged(List<CharacterModel> characterModels) {
-                                mTeamList.notifyCharacter(characterModels);
-                                mTeamList.notifyScreenCharacter(new SetupPreference().isCharacterscreenenable(), CharacterHelper.getScreenCharacterList());
-                            }
-                        });
-                    }
-                });
+                            sharedClanwar.teamCustomizeList.observe(requireActivity(), new Observer<List<TeamCustomizeModel>>() {
+                                @Override
+                                public void onChanged(List<TeamCustomizeModel> teamCustomizeModels) {
+                                    mTeamList.notifyCustomize(teamCustomizeModels);
+                                }
+                            });
+                            sharedSource.characterlist.observe(requireActivity(), new Observer<List<CharacterModel>>() {
+                                @Override
+                                public void onChanged(List<CharacterModel> characterModels) {
+                                    mTeamList.notifyCharacter(characterModels);
+                                    mTeamList.notifyScreenCharacter(new SetupPreference().isCharacterscreenenable(), CharacterHelper.getScreenCharacterList());
+                                }
+                            });
+                        }
+                    });
+                }
             }
         });
         new SetupPreference().registListener(listener);

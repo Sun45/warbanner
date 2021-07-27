@@ -40,14 +40,15 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
     private static final String TAG = "MenuPreferecefragment";
 
     private Preference clanware;
-    private Preference db;
-    private Preference app;
-    private Preference user;
 
+    private Preference user;
     private Preference characterScreen;
     private SwitchPreferenceCompat characterScreenEnable;
-
     private Preference link;
+
+    private Preference db;
+    private Preference app;
+
     private Preference record;
 
     private SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
@@ -72,26 +73,6 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
             @Override
             public boolean onPreferenceClick(Preference preference) {
                 ClanWarManager.getInstance().showConfirmDialog(false);
-                btnRestore(preference);
-                return true;
-            }
-        });
-
-        db = findPreference("db_version");
-        db.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                SourceManager.getInstance().checkDatabaseVersion(false);
-                btnRestore(preference);
-                return true;
-            }
-        });
-
-        app = findPreference("app_version");
-        app.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                UpdateManager.getInstance().checkAppVersion(false);
                 btnRestore(preference);
                 return true;
             }
@@ -146,6 +127,26 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
             }
         });
 
+        db = findPreference("db_version");
+        db.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                SourceManager.getInstance().checkDatabaseVersion(false);
+                btnRestore(preference);
+                return true;
+            }
+        });
+
+        app = findPreference("app_version");
+        app.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                UpdateManager.getInstance().checkAppVersion(false);
+                btnRestore(preference);
+                return true;
+            }
+        });
+
         record = findPreference("record");
         record.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -189,9 +190,9 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
         Utils.logD(TAG, "onResume");
         super.onResume();
         clanware.setSummary(ClanWarManager.getInstance().getUpdateInfo());
+        user.setSummary(UserManager.getInstance().getCurrentUserName());
         db.setSummary(SourceManager.getInstance().getDbVersion() + "");
         app.setSummary(Utils.getVersionName());
-        user.setSummary(UserManager.getInstance().getCurrentUserName());
     }
 
     @Override

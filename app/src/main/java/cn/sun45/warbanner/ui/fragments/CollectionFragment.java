@@ -1,7 +1,15 @@
 package cn.sun45.warbanner.ui.fragments;
 
+import android.graphics.ColorFilter;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.VectorDrawable;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.ImageSpan;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -27,6 +35,7 @@ import cn.sun45.warbanner.ui.shared.SharedViewModelSource;
 import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupList;
 import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListListener;
 import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListModel;
+import cn.sun45.warbanner.util.Utils;
 
 /**
  * Created by Sun45 on 2021/5/22
@@ -37,9 +46,9 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
     private SharedViewModelClanwar sharedClanwar;
 
     private TeamGroupList mTeamGroupList;
-    private FloatingActionButton mFloatingButton;
+    private TextView mEmptyHint;
 
-    private List<CharacterModel> characterModels;
+    private FloatingActionButton mFloatingButton;
 
     @Override
     protected int getContentViewId() {
@@ -54,8 +63,10 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
     @Override
     protected void initView() {
         mTeamGroupList = mRoot.findViewById(R.id.teamgrouplist);
-        mTeamGroupList.setListener(this);
+        mEmptyHint = mRoot.findViewById(R.id.empty_hint);
         mFloatingButton = mRoot.findViewById(R.id.floating_button);
+
+        mTeamGroupList.setListener(this);
     }
 
     @Override
@@ -63,6 +74,10 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
         logD("dataRequest");
         sharedSource = new ViewModelProvider(requireActivity()).get(SharedViewModelSource.class);
         sharedClanwar = new ViewModelProvider(requireActivity()).get(SharedViewModelClanwar.class);
+        String str = Utils.getString(R.string.collection_empty_hint);
+        SpannableStringBuilder builder = new SpannableStringBuilder(str);
+        builder.setSpan(new ImageSpan(getContext(),R.drawable.ic_baseline_search_24), 12, 14, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mEmptyHint.setText(builder);
 
         sharedSource.characterlist.observe(requireActivity(), new Observer<List<CharacterModel>>() {
             @Override
@@ -74,56 +89,65 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
                         controller.navigate(R.id.action_nav_main_to_nav_teamgroup);
                     }
                 });
-                CollectionFragment.this.characterModels = characterModels;
                 mTeamGroupList.setCharacterModels(characterModels);
             }
         });
         sharedClanwar.teamGroupCollectionList.observe(requireActivity(), new Observer<List<TeamGroupCollectionModel>>() {
             @Override
             public void onChanged(List<TeamGroupCollectionModel> teamGroupCollectionModels) {
-                List<TeamGroupListModel> list = new ArrayList<>();
-                String date = ClanwarHelper.getCurrentClanWarDate();
-                for (int i = teamGroupCollectionModels.size() - 1; i >= 0; i--) {
-                    TeamGroupCollectionModel teamGroupCollectionModel = teamGroupCollectionModels.get(i);
-                    if (ClanwarHelper.isCollect(teamGroupCollectionModel)) {
-                        List<TeamModel> listone = DbHelper.query(getContext(), TeamModel.class, new String[]{"date", "number"}, new String[]{date, teamGroupCollectionModel.getTeamone()});
-                        TeamModel teamone = null;
-                        if (listone != null && !listone.isEmpty()) {
-                            teamone = listone.get(0);
+                if (teamGroupCollectionModels != null && !teamGroupCollectionModels.isEmpty()) {
+                    List<TeamGroupListModel> list = new ArrayList<>();
+                    String date = ClanwarHelper.getCurrentClanWarDate();
+                    for (int i = teamGroupCollectionModels.size() - 1; i >= 0; i--) {
+                        TeamGroupCollectionModel teamGroupCollectionModel = teamGroupCollectionModels.get(i);
+                        if (ClanwarHelper.isCollect(teamGroupCollectionModel)) {
+                            List<TeamModel> listone = DbHelper.query(getContext(), TeamModel.class, new String[]{"date", "number"}, new String[]{date, teamGroupCollectionModel.getTeamone()});
+                            TeamModel teamone = null;
+                            if (listone != null && !listone.isEmpty()) {
+                                teamone = listone.get(0);
+                            }
+                            if (teamone == null) {
+                                continue;
+                            }
+                            List<TeamModel> listtwo = DbHelper.query(getContext(), TeamModel.class, new String[]{"date", "number"}, new String[]{date, teamGroupCollectionModel.getTeamtwo()});
+                            TeamModel teamtwo = null;
+                            if (listtwo != null && !listtwo.isEmpty()) {
+                                teamtwo = listtwo.get(0);
+                            }
+                            if (teamtwo == null) {
+                                continue;
+                            }
+                            List<TeamModel> listthree = DbHelper.query(getContext(), TeamModel.class, new String[]{"date", "number"}, new String[]{date, teamGroupCollectionModel.getTeamthree()});
+                            TeamModel teamthree = null;
+                            if (listthree != null && !listthree.isEmpty()) {
+                                teamthree = listthree.get(0);
+                            }
+                            if (teamthree == null) {
+                                continue;
+                            }
+                            TeamGroupListModel teamGroupListModel = new TeamGroupListModel(
+                                    teamone, buildIdlist(teamone), teamGroupCollectionModel.getBorrowindexone(),
+                                    teamtwo, buildIdlist(teamtwo), teamGroupCollectionModel.getBorrowindextwo(),
+                                    teamthree, buildIdlist(teamthree), teamGroupCollectionModel.getBorrowindexthree());
+                            list.add(teamGroupListModel);
                         }
-                        if (teamone == null) {
-                            continue;
-                        }
-                        List<TeamModel> listtwo = DbHelper.query(getContext(), TeamModel.class, new String[]{"date", "number"}, new String[]{date, teamGroupCollectionModel.getTeamtwo()});
-                        TeamModel teamtwo = null;
-                        if (listtwo != null && !listtwo.isEmpty()) {
-                            teamtwo = listtwo.get(0);
-                        }
-                        if (teamtwo == null) {
-                            continue;
-                        }
-                        List<TeamModel> listthree = DbHelper.query(getContext(), TeamModel.class, new String[]{"date", "number"}, new String[]{date, teamGroupCollectionModel.getTeamthree()});
-                        TeamModel teamthree = null;
-                        if (listthree != null && !listthree.isEmpty()) {
-                            teamthree = listthree.get(0);
-                        }
-                        if (teamthree == null) {
-                            continue;
-                        }
-                        TeamGroupListModel teamGroupListModel = new TeamGroupListModel(
-                                teamone, buildIdlist(teamone), teamGroupCollectionModel.getBorrowindexone(),
-                                teamtwo, buildIdlist(teamtwo), teamGroupCollectionModel.getBorrowindextwo(),
-                                teamthree, buildIdlist(teamthree), teamGroupCollectionModel.getBorrowindexthree());
-                        list.add(teamGroupListModel);
                     }
+                    mTeamGroupList.setData(list);
+                    if (list != null && !list.isEmpty()) {
+                        mEmptyHint.setVisibility(View.INVISIBLE);
+                    } else {
+                        mEmptyHint.setVisibility(View.VISIBLE);
+                    }
+                    sharedClanwar.teamCustomizeList.observe(requireActivity(), new Observer<List<TeamCustomizeModel>>() {
+                        @Override
+                        public void onChanged(List<TeamCustomizeModel> teamCustomizeModels) {
+                            mTeamGroupList.notifyCustomize(teamCustomizeModels);
+                        }
+                    });
+                } else {
+                    mTeamGroupList.setData(null);
+                    mEmptyHint.setVisibility(View.VISIBLE);
                 }
-                mTeamGroupList.setData(list);
-                sharedClanwar.teamCustomizeList.observe(requireActivity(), new Observer<List<TeamCustomizeModel>>() {
-                    @Override
-                    public void onChanged(List<TeamCustomizeModel> teamCustomizeModels) {
-                        mTeamGroupList.notifyCustomize(teamCustomizeModels);
-                    }
-                });
             }
         });
     }

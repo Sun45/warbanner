@@ -22,12 +22,26 @@
             app:title="@string/teamselect_title" />
     </com.google.android.material.appbar.AppBarLayout>
 
-    <cn.sun45.warbanner.ui.views.teamlist.TeamList
-        android:id="@+id/teamlist"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/appbar" />
+        app:layout_constraintTop_toBottomOf="@id/appbar">
+
+        <cn.sun45.warbanner.ui.views.teamlist.TeamList
+            android:id="@+id/teamlist"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/empty_hint"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:lineSpacingMultiplier="1.2"
+            android:textColor="@color/white_50"
+            android:textSize="24sp" />
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,32 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <PreferenceCategory
         android:theme="@style/AppTheme"
-        app:key="system_category"
-        app:title="@string/menu_system">
+        app:key="clanwar_category"
+        app:title="@string/menu_clanwar">
         <Preference
             app:icon="@drawable/ic_baseline_format_align_justify_24"
             app:key="clanwar_update"
             app:title="@string/menu_clanwar_update" />
-        <Preference
-            app:icon="@drawable/ic_baseline_source_24"
-            app:key="db_version"
-            app:title="@string/menu_db_version" />
-        <Preference
-            app:icon="@drawable/ic_baseline_adb_24"
-            app:key="app_version"
-            app:title="@string/menu_app_version" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:theme="@style/AppTheme"
+        app:key="setting_category"
+        app:title="@string/menu_setting">
         <Preference
             app:icon="@drawable/ic_baseline_account_circle_24"
             app:key="user"
             app:title="@string/menu_user" />
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:theme="@style/AppTheme"
-        app:key="screen_category"
-        app:title="@string/menu_screen">
         <Preference
             app:icon="@drawable/ic_baseline_view_comfy_24"
             app:key="character_screen"
@@ -36,15 +27,28 @@
             app:icon="@drawable/ic_baseline_view_comfy_24"
             app:key="character_screen_enable"
             app:title="@string/menu_character_screen_enable" />
+        <Preference
+            app:icon="@drawable/ic_baseline_link_24"
+            app:key="link_open_type"
+            app:title="@string/menu_link_open_type" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:theme="@style/AppTheme"
+        app:key="system_category"
+        app:title="@string/menu_system">
+        <Preference
+            app:icon="@drawable/ic_baseline_source_24"
+            app:key="db_version"
+            app:title="@string/menu_db_version" />
+        <Preference
+            app:icon="@drawable/ic_baseline_adb_24"
+            app:key="app_version"
+            app:title="@string/menu_app_version" />
     </PreferenceCategory>
     <PreferenceCategory
         android:theme="@style/AppTheme"
         app:key="others_category"
         app:title="@string/menu_others">
-        <Preference
-            app:icon="@drawable/ic_baseline_link_24"
-            app:key="link_open_type"
-            app:title="@string/menu_link_open_type" />
         <Preference
             app:icon="@drawable/ic_baseline_text_snippet_24"
             app:key="record"

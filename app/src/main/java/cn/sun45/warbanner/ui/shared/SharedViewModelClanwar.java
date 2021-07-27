@@ -32,16 +32,20 @@ public class SharedViewModelClanwar extends ViewModel {
     public void loadData() {
         String date = ClanwarHelper.getCurrentClanWarDate();
 
-        List<TeamCustomizeModel> customizeList = DbHelper.query(MyApplication.application, TeamCustomizeModel.class, "date", date);
-        teamCustomizeList.postValue(customizeList);
-
-        List<TeamGroupCollectionModel> collectionlist = DbHelper.query(MyApplication.application, TeamGroupCollectionModel.class, "date", date);
-        teamGroupCollectionList.postValue(collectionlist);
-
         boolean succeeded = true;
+        List<TeamCustomizeModel> customizeList = null;
+        List<TeamGroupCollectionModel> collectionlist = null;
         List<TeamModel> teamModelList = null;
         if (!TextUtils.isEmpty(date)) {
+            customizeList = DbHelper.query(MyApplication.application, TeamCustomizeModel.class, "date", date);
+            collectionlist = DbHelper.query(MyApplication.application, TeamGroupCollectionModel.class, "date", date);
             teamModelList = DbHelper.query(MyApplication.application, TeamModel.class, "date", date);
+        }
+        if (customizeList == null || customizeList.isEmpty()) {
+            succeeded = false;
+        }
+        if (collectionlist == null || collectionlist.isEmpty()) {
+            succeeded = false;
         }
 //        if (teamModelList == null || teamModelList.size() <= 3) {
 //            try {
@@ -72,9 +76,10 @@ public class SharedViewModelClanwar extends ViewModel {
 //        }
         if (teamModelList == null || teamModelList.isEmpty()) {
             succeeded = false;
-        } else {
-            teamList.postValue(teamModelList);
         }
+        teamCustomizeList.postValue(customizeList);
+        teamGroupCollectionList.postValue(collectionlist);
+        teamList.postValue(teamModelList);
     }
 
     public void clearData() {

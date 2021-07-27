@@ -1,6 +1,6 @@
 {
-  "versionCode": "15",
-  "versionName": "1.0.4",
+  "versionCode": "16",
+  "versionName": "1.0.5",
   "fource": "false",
-  "content": "1.优化分刀详情页展示2.添加阵容详情界面3.添加自定轴伤功能"
+  "content": "1.调整菜单界面2.添加列表数据为空的提示3.调整分刀筛选界面"
 }
