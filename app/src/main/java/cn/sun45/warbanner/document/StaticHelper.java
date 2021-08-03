@@ -6,8 +6,8 @@ package cn.sun45.warbanner.document;
  */
 public class StaticHelper {
     //  App URL
-    public static final String APP_RAW_BASE = "https://raw.githubusercontent.com";
-    public static final String APP_RAW = "https://raw.githubusercontent.com/Sun45/warbanner/master";
+    public static final String APP_RAW_BASE = "https://cdn.jsdelivr.net/gh/";
+    public static final String APP_RAW = "https://cdn.jsdelivr.net/gh/Sun45/warbanner@master";
     public static final String APP_UPDATE_LOG = APP_RAW + "/update_log.json";
     public static final String APP_PACKAGE = "https://github.com/Sun45/warbanner/releases/latest/download/warbanner-release.apk";
     public static final String APK_NAME = "update.apk";
@@ -31,7 +31,7 @@ public class StaticHelper {
     public static final String UNKNOWN_ICON = API_URL + "/icon/equipment/999999.webp";
 
     //ClanWar
-    public static final String CLANWAR_BASE = "https://gitee.com/acaly/PcrGuildLibrary/raw/master/data/";
+    public static final String CLANWAR_BASE = "https://cdn.jsdelivr.net/gh/acaly/PcrGuildLibrary@master/data/";
     public static final String CLANWAR_ONE_NAME="/A.json";
     public static final String CLANWAR_TWO_NAME="/B.json";
     public static final String CLANWAR_THREE_NAME="/C.json";

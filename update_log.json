@@ -1,6 +1,6 @@
 {
-  "versionCode": "16",
-  "versionName": "1.0.5",
+  "versionCode": "17",
+  "versionName": "1.0.6",
   "fource": "false",
-  "content": "1.调整菜单界面2.添加列表数据为空的提示3.调整分刀筛选界面"
+  "content": "1.作业下载链接更新数据获取链接调整为通过jsdelivr连github"
 }
