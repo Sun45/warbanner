@@ -154,6 +154,10 @@ public class ClanWarModel extends BaseDbTableModel {
         return SourceProvider.class;
     }
 
+    public String getDate() {
+        return startdate.substring(0, 7).replace("/", "");
+    }
+
     @Override
     public String toString() {
         return "ClanWarModel{" +

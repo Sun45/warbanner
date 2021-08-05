@@ -1,6 +1,6 @@
 {
-  "versionCode": "17",
-  "versionName": "1.0.6",
+  "versionCode": "18",
+  "versionName": "1.0.7",
   "fource": "false",
-  "content": "1.作业下载链接更新数据获取链接调整为通过jsdelivr连github"
+  "content": "1.应用更新数据获取链接还原2.设置作业下载请求和应用更新数据获取请求为不缓存"
 }

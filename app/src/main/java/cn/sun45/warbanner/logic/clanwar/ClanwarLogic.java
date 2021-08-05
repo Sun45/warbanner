@@ -17,6 +17,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.Url;
 
 /**
@@ -32,6 +33,7 @@ public class ClanwarLogic extends BaseLogic {
 
     //镜像库
     interface Library {
+        @Headers("Cache-Control: no-store")
         @GET
         Call<String> getJson(@Url String url);
     }

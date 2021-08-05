@@ -27,9 +27,23 @@ public class ClanwarHelper {
         List<ClanWarModel> clanWarModelList = DbHelper.query(MyApplication.application, ClanWarModel.class);
         if (clanWarModelList != null && !clanWarModelList.isEmpty()) {
             ClanWarModel current = clanWarModelList.get(0);
-            date = current.getStartdate().substring(0, 7).replace("/", "");
+            date = current.getDate();
         }
         return date;
+    }
+
+    /**
+     * 获取当期会战信息
+     *
+     * @return
+     */
+    public static ClanWarModel getCurrentClanWarModel() {
+        ClanWarModel model = null;
+        List<ClanWarModel> clanWarModelList = DbHelper.query(MyApplication.application, ClanWarModel.class);
+        if (clanWarModelList != null && !clanWarModelList.isEmpty()) {
+            model = clanWarModelList.get(0);
+        }
+        return model;
     }
 
     /**
