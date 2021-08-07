@@ -2,7 +2,6 @@ package cn.sun45.warbanner.ui.views.teamdetail;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -25,6 +24,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 
+import com.wanglu.photoviewerlibrary.PhotoViewer;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,9 +35,8 @@ import java.util.List;
 
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
-import cn.sun45.warbanner.document.preference.SetupPreference;
+import cn.sun45.warbanner.framework.MyApplication;
 import cn.sun45.warbanner.framework.image.ImageRequester;
-import cn.sun45.warbanner.ui.views.teamlist.TeamListRemarkModel;
 import cn.sun45.warbanner.util.Utils;
 
 /**
@@ -85,13 +85,16 @@ public class TeamDetailScroll extends ScrollView {
                 content = Utils.replaceBlank(content);
                 String link = remark.optString("link");
                 JSONArray images = remark.optJSONArray("images");
-                List<String> imageList = new ArrayList<>();
-                if (images != null) {
-                    for (int j = 0; j < images.length(); j++) {
-                        imageList.add(images.optString(j));
+                JSONArray comments = remark.optJSONArray("comments");
+                String image = null;
+                if (images != null && images.length() > 0) {
+                    if (comments != null && comments.length() > 0) {
+                        content = comments.getString(0);
+                        content = content.replace("←", "");
                     }
+                    image = images.getString(0);
                 }
-                RemarkHolder remarkHolder = new RemarkHolder(content, link, imageList);
+                RemarkHolder remarkHolder = new RemarkHolder(content, link, image);
                 layList.add(remarkHolder.getLay());
                 remarkHolderList.add(remarkHolder);
             }
@@ -130,7 +133,7 @@ public class TeamDetailScroll extends ScrollView {
     private class RemarkHolder {
         private FrameLayout lay;
 
-        public RemarkHolder(String content, String link, List<String> imageList) {
+        public RemarkHolder(String content, String link, String image) {
             lay = new FrameLayout(getContext());
             lay.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             LinearLayout contentlay = new LinearLayout(getContext());
@@ -141,28 +144,41 @@ public class TeamDetailScroll extends ScrollView {
             contenttext.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
             contenttext.setText(content);
             contentlay.addView(contenttext);
-            TextView linktext = new TextView(getContext());
-            linktext.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            linktext.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-            SpannableStringBuilder builder = new SpannableStringBuilder(link);
-            builder.setSpan(new ForegroundColorSpan(Utils.getAttrColor(getContext(), R.attr.colorSecondary)), 0, link.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            builder.setSpan(new ClickableSpan() {
-                @Override
-                public void onClick(@NonNull View widget) {
-                    Uri uri = Uri.parse(link);
-                    Intent intent = new Intent();
-                    intent.setAction("android.intent.action.VIEW");
-                    intent.setData(uri);
-                    getContext().startActivity(intent);
-                }
-            }, 0, link.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            linktext.setMovementMethod(LinkMovementMethod.getInstance());
-            linktext.setText(builder, TextView.BufferType.SPANNABLE);
-            contentlay.addView(linktext);
-            for (String image : imageList) {
-                ImageView imageView=new ImageView(getContext());
+            if (!TextUtils.isEmpty(link)) {
+                TextView linktext = new TextView(getContext());
+                linktext.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                linktext.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                SpannableStringBuilder builder = new SpannableStringBuilder(link);
+                builder.setSpan(new ForegroundColorSpan(Utils.getAttrColor(getContext(), R.attr.colorSecondary)), 0, link.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                builder.setSpan(new ClickableSpan() {
+                    @Override
+                    public void onClick(@NonNull View widget) {
+                        Uri uri = Uri.parse(link);
+                        Intent intent = new Intent();
+                        intent.setAction("android.intent.action.VIEW");
+                        intent.setData(uri);
+                        getContext().startActivity(intent);
+                    }
+                }, 0, link.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                linktext.setMovementMethod(LinkMovementMethod.getInstance());
+                linktext.setText(builder, TextView.BufferType.SPANNABLE);
+                contentlay.addView(linktext);
+            }
+            if (!TextUtils.isEmpty(image)) {
+                ImageView imageView = new ImageView(getContext());
                 imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                ImageRequester.request(image).loadImage(imageView);
+                ImageRequester.request(image, R.drawable.ic_baseline_image_24).loadImage(imageView);
+                imageView.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        PhotoViewer.INSTANCE.setClickSingleImg(image, imageView).setShowImageViewInterface(new PhotoViewer.ShowImageViewInterface() {
+                            @Override
+                            public void show(@NonNull ImageView imageView, @NonNull String url) {
+                                ImageRequester.request(url, R.drawable.ic_baseline_image_24).loadImage(imageView);
+                            }
+                        }).start(MyApplication.getCurrentActivity());
+                    }
+                });
                 contentlay.addView(imageView);
             }
             AppCompatImageView share = new AppCompatImageView(getContext());
@@ -174,7 +190,14 @@ public class TeamDetailScroll extends ScrollView {
                 public void onClick(View v) {
                     Intent intent = new Intent();
                     intent.setAction(Intent.ACTION_SEND);
-                    intent.putExtra(Intent.EXTRA_TEXT, teamModel.getNumber() + " " + content + "\n" + link);
+                    String str = teamModel.getNumber() + " " + content;
+                    if (!TextUtils.isEmpty(link)) {
+                        str += "\n" + link;
+                    }
+                    if (!TextUtils.isEmpty(image)) {
+                        str += "\n" + image;
+                    }
+                    intent.putExtra(Intent.EXTRA_TEXT, str);
                     intent.putExtra(Intent.EXTRA_SUBJECT, "share");
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.setType("text/plain");

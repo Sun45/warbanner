@@ -1,6 +1,6 @@
 {
-  "versionCode": "18",
-  "versionName": "1.0.7",
+  "versionCode": "19",
+  "versionName": "1.0.8",
   "fource": "false",
-  "content": "1.应用更新数据获取链接还原2.设置作业下载请求和应用更新数据获取请求为不缓存"
+  "content": "1.应用更新数据获取链接和安装包下载链接调整为通过jsdelivr连github2.调整图轴文字注释展示3.添加图轴加载图4.添加图轴预览及分享"
 }

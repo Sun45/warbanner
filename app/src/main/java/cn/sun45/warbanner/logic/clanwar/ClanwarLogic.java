@@ -265,15 +265,17 @@ public class ClanwarLogic extends BaseLogic {
                                     JSONArray remarks = new JSONArray();
                                     for (int j = 0; j < sources.length(); j++) {
                                         JSONObject source = sources.optJSONObject(j);
-                                        String description = source.optString("description");
-                                        JSONArray links = source.optJSONArray("links");
-                                        JSONArray images = source.optJSONArray("images");
+                                        String sourcedescription = source.optString("description");
+                                        JSONArray sourcelinks = source.optJSONArray("links");
+                                        JSONArray sourceimages = source.optJSONArray("images");
+                                        JSONArray sourcecomments = source.optJSONArray("comments");
                                         JSONObject remark = new JSONObject();
-                                        remark.put("content", description);
-                                        if (links != null && links.length() > 0) {
-                                            remark.put("link", links.getString(0));
+                                        remark.put("content", sourcedescription);
+                                        if (sourcelinks != null && sourcelinks.length() > 0) {
+                                            remark.put("link", sourcelinks.getString(0));
                                         }
-                                        remark.put("images", images);
+                                        remark.put("images", sourceimages);
+                                        remark.put("comments", sourcecomments);
                                         remarks.put(remark);
                                     }
                                     teamModel.setRemarks(remarks.toString());

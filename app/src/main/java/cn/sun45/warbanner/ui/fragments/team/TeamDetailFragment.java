@@ -194,8 +194,7 @@ public class TeamDetailFragment extends BaseFragment {
             case R.id.menu_share:
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_SEND);
-                String share = teamModel.getShare();
-                intent.putExtra(Intent.EXTRA_TEXT, share);
+                intent.putExtra(Intent.EXTRA_TEXT, teamModel.getShare());
                 intent.putExtra(Intent.EXTRA_SUBJECT, "share");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setType("text/plain");

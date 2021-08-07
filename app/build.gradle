@@ -8,8 +8,8 @@ android {
         applicationId "cn.sun45.warbanner"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 18
-        versionName "1.0.7"
+        versionCode 19
+        versionName "1.0.8"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -66,4 +66,6 @@ dependencies {
     implementation 'com.afollestad.material-dialogs:input:3.3.0'
 
     implementation files('libs/commons-compress-1.19.jar')
+
+    implementation 'com.github.wanglu1209:PhotoViewer:0.50'
 }

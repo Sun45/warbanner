@@ -228,9 +228,19 @@ public class TeamModel extends BaseDbTableModel {
                 String content = object.optString("content");
                 content = Utils.replaceBlank(content);
                 String link = object.optString("link");
-                if (!TextUtils.isEmpty(content) && !TextUtils.isEmpty(link)) {
+                JSONArray comments = object.optJSONArray("comments");
+                JSONArray images = object.optJSONArray("images");
+                if (!TextUtils.isEmpty(content)) {
                     share += "\n" + content;
+                }
+                if (!TextUtils.isEmpty(link)) {
                     share += "\n" + link;
+                }
+                if (comments != null && comments.length() > 0) {
+                    share += "\n" + comments.getString(0);
+                }
+                if (images != null && images.length() > 0) {
+                    share += "\n" + images.getString(0);
                 }
             }
         } catch (JSONException e) {
