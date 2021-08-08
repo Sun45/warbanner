@@ -24,10 +24,9 @@ public class ClanwarHelper {
      */
     public static String getCurrentClanWarDate() {
         String date = null;
-        List<ClanWarModel> clanWarModelList = DbHelper.query(MyApplication.application, ClanWarModel.class);
-        if (clanWarModelList != null && !clanWarModelList.isEmpty()) {
-            ClanWarModel current = clanWarModelList.get(0);
-            date = current.getDate();
+        ClanWarModel clanWarModel = getCurrentClanWarModel();
+        if (clanWarModel != null) {
+            date = clanWarModel.getDate();
         }
         return date;
     }
@@ -52,7 +51,7 @@ public class ClanwarHelper {
      * @param teamModel
      * @param teamCustomizeModels
      */
-    public static TeamCustomizeModel getCustomizeModel(TeamModel teamModel, List<TeamCustomizeModel> teamCustomizeModels) {
+    public static TeamCustomizeModel findCustomizeModel(TeamModel teamModel, List<TeamCustomizeModel> teamCustomizeModels) {
         TeamCustomizeModel teamCustomizeModel = null;
         if (teamCustomizeModels != null) {
             for (TeamCustomizeModel model : teamCustomizeModels) {
@@ -81,29 +80,61 @@ public class ClanwarHelper {
     }
 
     /**
-     * 构建阵容自定义信息
+     * 阵容屏蔽定制
      *
      * @param teamModel
-     * @param ellipsisdamage
+     * @param teamCustomizeModel
      */
-    public static TeamCustomizeModel buildCustomizeModelAndSave(TeamModel teamModel, int ellipsisdamage) {
-        TeamCustomizeModel teamCustomizeModel = new TeamCustomizeModel();
-        teamCustomizeModel.setDate(teamModel.getDate());
-        teamCustomizeModel.setNumber(teamModel.getNumber());
-        teamCustomizeModel.setEllipsisdamage(ellipsisdamage);
-        saveTeamCustomizeModel(teamCustomizeModel);
-        return teamCustomizeModel;
+    public static TeamCustomizeModel customizeTeamBlock(TeamModel teamModel, TeamCustomizeModel teamCustomizeModel) {
+        if (teamCustomizeModel == null) {
+            teamCustomizeModel = new TeamCustomizeModel();
+            teamCustomizeModel.setDate(teamModel.getDate());
+            teamCustomizeModel.setNumber(teamModel.getNumber());
+            teamCustomizeModel.setBlock(!teamCustomizeModel.isBlock());
+            return saveTeamCustomizeModel(teamCustomizeModel);
+        } else {
+            teamCustomizeModel.setBlock(!teamCustomizeModel.isBlock());
+            return saveTeamCustomizeModel(teamCustomizeModel);
+        }
     }
 
     /**
-     * 修改阵容自定义信息
+     * 阵容伤害定制
+     *
+     * @param teamModel
+     * @param teamCustomizeModel
+     * @param damage
+     */
+    public static TeamCustomizeModel customizeTeamDamage(TeamModel teamModel, TeamCustomizeModel teamCustomizeModel, int damage) {
+        if (teamCustomizeModel == null) {
+            teamCustomizeModel = new TeamCustomizeModel();
+            teamCustomizeModel.setDate(teamModel.getDate());
+            teamCustomizeModel.setNumber(teamModel.getNumber());
+            teamCustomizeModel.setEllipsisdamage(damage);
+            return saveTeamCustomizeModel(teamCustomizeModel);
+        } else {
+            teamCustomizeModel.setEllipsisdamage(damage);
+            return saveTeamCustomizeModel(teamCustomizeModel);
+        }
+    }
+
+    /**
+     * 移除阵容伤害定制
      *
      * @param teamCustomizeModel
-     * @param ellipsisdamage
      */
-    public static void editCustomizeModelAndSave(TeamCustomizeModel teamCustomizeModel, int ellipsisdamage) {
-        teamCustomizeModel.setEllipsisdamage(ellipsisdamage);
-        saveTeamCustomizeModel(teamCustomizeModel);
+    public static TeamCustomizeModel removeCustomizeTeamDamage(TeamCustomizeModel teamCustomizeModel) {
+        teamCustomizeModel.setEllipsisdamage(-1);
+        return saveTeamCustomizeModel(teamCustomizeModel);
+    }
+
+    /**
+     * 阵容定制有效
+     *
+     * @param teamCustomizeModel
+     */
+    private static boolean customizeEffective(TeamCustomizeModel teamCustomizeModel) {
+        return teamCustomizeModel.isBlock() || teamCustomizeModel.damageEffective();
     }
 
     /**
@@ -111,7 +142,7 @@ public class ClanwarHelper {
      *
      * @param teamCustomizeModel
      */
-    public static void deleteCustomizeModel(TeamCustomizeModel teamCustomizeModel) {
+    private static void deleteCustomizeModel(TeamCustomizeModel teamCustomizeModel) {
         DbHelper.delete(MyApplication.application, TeamCustomizeModel.class,
                 new String[]{"date", "number"}, new String[]{teamCustomizeModel.getDate(), teamCustomizeModel.getNumber()});
     }
@@ -121,9 +152,14 @@ public class ClanwarHelper {
      *
      * @param teamCustomizeModel
      */
-    private static void saveTeamCustomizeModel(TeamCustomizeModel teamCustomizeModel) {
+    private static TeamCustomizeModel saveTeamCustomizeModel(TeamCustomizeModel teamCustomizeModel) {
         deleteCustomizeModel(teamCustomizeModel);
-        DbHelper.insert(MyApplication.application, teamCustomizeModel);
+        if (customizeEffective(teamCustomizeModel)) {
+            DbHelper.insert(MyApplication.application, teamCustomizeModel);
+            return teamCustomizeModel;
+        } else {
+            return null;
+        }
     }
 
     /**

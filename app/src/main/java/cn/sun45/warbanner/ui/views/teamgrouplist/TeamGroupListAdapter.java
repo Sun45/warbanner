@@ -4,6 +4,7 @@ import android.content.Context;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.StrikethroughSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -126,13 +127,13 @@ public class TeamGroupListAdapter extends RecyclerView.Adapter<TeamGroupListAdap
             TeamModel teamone = teamGroupListModel.getTeamone();
             TeamModel teamtwo = teamGroupListModel.getTeamtwo();
             TeamModel teamthree = teamGroupListModel.getTeamthree();
-            TeamCustomizeModel teamCustomizeone = ClanwarHelper.getCustomizeModel(teamone, teamCustomizeModels);
-            TeamCustomizeModel teamCustomizetwo = ClanwarHelper.getCustomizeModel(teamtwo, teamCustomizeModels);
-            TeamCustomizeModel teamCustomizethree = ClanwarHelper.getCustomizeModel(teamthree, teamCustomizeModels);
-            if (teamCustomizeone != null || teamCustomizetwo != null || teamCustomizethree != null) {
-                String title = (teamCustomizeone != null ? teamCustomizeone.getEllipsisdamage() : teamone.getEllipsisdamage())
-                        + (teamCustomizetwo != null ? teamCustomizetwo.getEllipsisdamage() : teamtwo.getEllipsisdamage())
-                        + (teamCustomizethree != null ? teamCustomizethree.getEllipsisdamage() : teamthree.getEllipsisdamage()) + "w";
+            TeamCustomizeModel teamCustomizeone = ClanwarHelper.findCustomizeModel(teamone, teamCustomizeModels);
+            TeamCustomizeModel teamCustomizetwo = ClanwarHelper.findCustomizeModel(teamtwo, teamCustomizeModels);
+            TeamCustomizeModel teamCustomizethree = ClanwarHelper.findCustomizeModel(teamthree, teamCustomizeModels);
+            if ((teamCustomizeone != null && teamCustomizeone.damageEffective()) || (teamCustomizetwo != null && teamCustomizetwo.damageEffective()) || (teamCustomizethree != null && teamCustomizethree.damageEffective())) {
+                String title = ((teamCustomizeone != null && teamCustomizeone.damageEffective()) ? teamCustomizeone.getEllipsisdamage() : teamone.getEllipsisdamage())
+                        + ((teamCustomizetwo != null && teamCustomizetwo.damageEffective()) ? teamCustomizetwo.getEllipsisdamage() : teamtwo.getEllipsisdamage())
+                        + ((teamCustomizethree != null && teamCustomizethree.damageEffective()) ? teamCustomizethree.getEllipsisdamage() : teamthree.getEllipsisdamage()) + "w";
                 int length = title.length();
                 title += " " + teamone.getBoss() + " " + teamtwo.getBoss() + " " + teamthree.getBoss();
                 SpannableStringBuilder builder = new SpannableStringBuilder(title);
@@ -182,11 +183,20 @@ public class TeamGroupListAdapter extends RecyclerView.Adapter<TeamGroupListAdap
                 String title = teamModel.getNumber() + " " + teamModel.getEllipsisdamage() + "w";
                 mTitle.setText(title);
             } else {
-                String str = teamModel.getNumber() + " ";
-                int start = str.length();
-                str += teamCustomizeModel.getEllipsisdamage() + "w";
+                String str = teamModel.getNumber();
                 SpannableStringBuilder builder = new SpannableStringBuilder(str);
-                builder.setSpan(new ForegroundColorSpan(Utils.getAttrColor(context, R.attr.colorSecondary)), start, str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if (teamCustomizeModel.isBlock()) {
+                    builder.setSpan(new StrikethroughSpan(), 0, str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    builder.setSpan(new ForegroundColorSpan(Utils.getColor(R.color.red_500)), 0, str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                builder.append(" ");
+                int start = builder.length();
+                if (teamCustomizeModel.damageEffective()) {
+                    builder.append(teamCustomizeModel.getEllipsisdamage() + "w");
+                    builder.setSpan(new ForegroundColorSpan(Utils.getAttrColor(context, R.attr.colorSecondary)), start, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                } else {
+                    builder.append(teamModel.getEllipsisdamage() + "w");
+                }
                 mTitle.setText(builder);
             }
             if (teamModel.isAuto()) {

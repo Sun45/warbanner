@@ -1,6 +1,6 @@
 {
-  "versionCode": "19",
-  "versionName": "1.0.8",
+  "versionCode": "20",
+  "versionName": "1.7.0",
   "fource": "false",
-  "content": "1.应用更新数据获取链接和安装包下载链接调整为通过jsdelivr连github2.调整图轴文字注释展示3.添加图轴加载图4.添加图轴预览及分享"
+  "content": "1.修改版本号规则，以后以会战期数做开头前两位2.添加阵容屏蔽功能"
 }

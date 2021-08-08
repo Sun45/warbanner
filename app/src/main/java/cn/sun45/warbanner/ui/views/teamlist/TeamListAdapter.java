@@ -10,6 +10,7 @@ import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
+import android.text.style.StrikethroughSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,6 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 
-import java.util.Arrays;
 import java.util.List;
 
 import cn.sun45.warbanner.R;
@@ -33,8 +33,6 @@ import cn.sun45.warbanner.document.db.setup.ScreenCharacterModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
 import cn.sun45.warbanner.document.preference.SetupPreference;
 import cn.sun45.warbanner.framework.image.ImageRequester;
-import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListListener;
-import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListModel;
 import cn.sun45.warbanner.util.Utils;
 
 /**
@@ -355,16 +353,25 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             int borrowindex = teamListTeamModel.getBorrowindex();
             List<TeamListRemarkModel> remarkModels = teamListTeamModel.getRemarkModels();
             mBoss.setText(teamModel.getBoss());
-            TeamCustomizeModel teamCustomizeModel = ClanwarHelper.getCustomizeModel(teamModel, teamCustomizeModels);
+            TeamCustomizeModel teamCustomizeModel = ClanwarHelper.findCustomizeModel(teamModel, teamCustomizeModels);
             if (teamCustomizeModel == null) {
                 String title = teamModel.getNumber() + " " + teamModel.getEllipsisdamage() + "w";
                 mTitle.setText(title);
             } else {
-                String str = teamModel.getNumber() + " ";
-                int start = str.length();
-                str += teamCustomizeModel.getEllipsisdamage() + "w";
+                String str = teamModel.getNumber();
                 SpannableStringBuilder builder = new SpannableStringBuilder(str);
-                builder.setSpan(new ForegroundColorSpan(Utils.getAttrColor(context, R.attr.colorSecondary)), start, str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                if (teamCustomizeModel.isBlock()) {
+                    builder.setSpan(new StrikethroughSpan(), 0, str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    builder.setSpan(new ForegroundColorSpan(Utils.getColor(R.color.red_500)), 0, str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                builder.append(" ");
+                int start = builder.length();
+                if (teamCustomizeModel.damageEffective()) {
+                    builder.append(teamCustomizeModel.getEllipsisdamage() + "w");
+                    builder.setSpan(new ForegroundColorSpan(Utils.getAttrColor(context, R.attr.colorSecondary)), start, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                } else {
+                    builder.append(teamModel.getEllipsisdamage() + "w");
+                }
                 mTitle.setText(builder);
             }
             if (teamModel.isAuto()) {

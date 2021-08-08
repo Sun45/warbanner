@@ -142,6 +142,7 @@
     <string name="teamgroup_detail_menu_share">分享</string>
 
     <string name="team_detail_title">阵容详情</string>
+    <string name="team_detail_menu_block">屏蔽</string>
     <string name="team_detail_menu_share">分享</string>
     <string name="team_detail_damage_dialog_title">自定轴伤</string>
     <string name="team_detail_damage_dialog_hint">自定义阵容伤害(%1$s)</string>

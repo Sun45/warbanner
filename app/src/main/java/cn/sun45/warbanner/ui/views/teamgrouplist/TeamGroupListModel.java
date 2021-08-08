@@ -46,9 +46,9 @@ public class TeamGroupListModel implements Serializable {
         teamCustomizethree = elementthree.getTeamCustomizeModel();
         idlistthree = elementthree.getIdlist();
         borrowindexthree = idlistthree.indexOf((Object) idthree);
-        totaldamage = (teamCustomizeone != null ? teamCustomizeone.getEllipsisdamage() : teamone.getEllipsisdamage())
-                + (teamCustomizetwo != null ? teamCustomizetwo.getEllipsisdamage() : teamtwo.getEllipsisdamage())
-                + (teamCustomizethree != null ? teamCustomizethree.getEllipsisdamage() : teamthree.getEllipsisdamage());
+        totaldamage = ((teamCustomizeone != null && teamCustomizeone.damageEffective()) ? teamCustomizeone.getEllipsisdamage() : teamone.getEllipsisdamage())
+                + ((teamCustomizetwo != null && teamCustomizetwo.damageEffective()) ? teamCustomizetwo.getEllipsisdamage() : teamtwo.getEllipsisdamage())
+                + ((teamCustomizethree != null && teamCustomizethree.damageEffective()) ? teamCustomizethree.getEllipsisdamage() : teamthree.getEllipsisdamage());
     }
 
     public TeamGroupListModel(TeamModel teamone, List<Integer> idlistone, int borrowindexone, TeamModel teamtwo, List<Integer> idlisttwo, int borrowindextwo, TeamModel teamthree, List<Integer> idlistthree, int borrowindexthree) {

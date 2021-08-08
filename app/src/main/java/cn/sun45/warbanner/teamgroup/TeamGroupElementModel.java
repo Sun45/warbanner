@@ -48,7 +48,7 @@ public class TeamGroupElementModel {
     }
 
     public int getDamage() {
-        if (teamCustomizeModel != null) {
+        if (teamCustomizeModel != null && teamCustomizeModel.damageEffective()) {
             return teamCustomizeModel.getEllipsisdamage();
         } else {
             return teamModel.getEllipsisdamage();

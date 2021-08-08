@@ -3,14 +3,11 @@ package cn.sun45.warbanner.teamgroup;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.sun45.warbanner.character.CharacterHelper;
 import cn.sun45.warbanner.clanwar.ClanwarHelper;
 import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamGroupScreenModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.document.db.setup.ScreenCharacterModel;
-import cn.sun45.warbanner.document.db.source.CharacterModel;
-import cn.sun45.warbanner.document.preference.SetupPreference;
 import cn.sun45.warbanner.framework.MyApplication;
 import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListModel;
 import cn.sun45.warbanner.util.Utils;
@@ -43,6 +40,10 @@ public class TeamGroupHelper {
         Utils.logD(TAG, "buildElementList");
         List<TeamGroupElementModel> elementModels = new ArrayList<>();
         for (TeamModel teamModel : teamModels) {
+            TeamCustomizeModel teamCustomizeModel = ClanwarHelper.findCustomizeModel(teamModel, teamCustomizeModels);
+            if (teamCustomizeModel != null && teamCustomizeModel.isBlock()) {
+                continue;
+            }
             List<Integer> idlist = new ArrayList<>();
             idlist.add(teamModel.getCharacterone());
             idlist.add(teamModel.getCharactertwo());
@@ -86,7 +87,7 @@ public class TeamGroupHelper {
             elementModel.setIdlist(idlist);
             elementModel.setScreencharacter(screencharacter);
             elementModel.setTeamModel(teamModel);
-            elementModel.setTeamCustomizeModel(ClanwarHelper.getCustomizeModel(teamModel, teamCustomizeModels));
+            elementModel.setTeamCustomizeModel(teamCustomizeModel);
             elementModels.add(elementModel);
         }
         if (elementModels.isEmpty()) {

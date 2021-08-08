@@ -17,9 +17,18 @@ public class TeamCustomizeModel extends BaseDbTableModel {
     @DbTableParamConfigure
     private String number;
 
-    //伤害省略数值(550)
+    //阵容屏蔽
+    @DbTableParamConfigure
+    private boolean block;
+
+    //自定轴伤 伤害省略数值(550)
     @DbTableParamConfigure
     private int ellipsisdamage;
+
+    public TeamCustomizeModel() {
+        block = false;
+        ellipsisdamage = -1;
+    }
 
     public String getDate() {
         return date;
@@ -35,6 +44,19 @@ public class TeamCustomizeModel extends BaseDbTableModel {
 
     public void setNumber(String number) {
         this.number = number;
+    }
+
+    public boolean isBlock() {
+        return block;
+    }
+
+    public void setBlock(boolean block) {
+        this.block = block;
+    }
+
+    //自定轴伤生效
+    public boolean damageEffective() {
+        return ellipsisdamage != -1;
     }
 
     public int getEllipsisdamage() {
