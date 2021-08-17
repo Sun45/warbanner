@@ -33,7 +33,10 @@ public class FileRequester {
      * @return 下载任务
      */
     public static DownloadTask buildTask(String url, String path, String name, boolean downloadevenexit) {
-        DownloadTask task = new DownloadTask.Builder(url, path, name).setPassIfAlreadyCompleted(!downloadevenexit).build();
+        DownloadTask task = new DownloadTask.Builder(url, path, name)
+                .setConnectionCount(1)
+                .setPassIfAlreadyCompleted(!downloadevenexit)
+                .build();
         return task;
     }
 
@@ -83,9 +86,6 @@ public class FileRequester {
                     float percent = (float) currentOffset / (float) totalLength;
                     int progress = Math.round(percent * 100);
                     ((FileRequestListenerWithProgress) listener).progress(currentOffset, totalLength, percent, progress);
-                }
-                if (currentOffset == totalLength) {
-                    taskEnd(task,EndCause.COMPLETED,null, (SpeedCalculator) null);
                 }
             }
 

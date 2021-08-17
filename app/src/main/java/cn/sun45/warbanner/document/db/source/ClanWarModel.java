@@ -21,6 +21,9 @@ public class ClanWarModel extends BaseDbTableModel {
     private String enddate;
 
     @DbTableParamConfigure
+    private String date;
+
+    @DbTableParamConfigure
     private String bossonename;
     @DbTableParamConfigure
     private String bossoneiconurl;
@@ -67,6 +70,14 @@ public class ClanWarModel extends BaseDbTableModel {
 
     public void setEnddate(String enddate) {
         this.enddate = enddate;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 
     public String getBossonename() {
@@ -154,14 +165,11 @@ public class ClanWarModel extends BaseDbTableModel {
         return SourceProvider.class;
     }
 
-    public String getDate() {
-        return startdate.substring(0, 7).replace("/", "");
-    }
-
     @Override
     public String toString() {
         return "ClanWarModel{" +
                 "id=" + id +
+                ", date='" + date + '\'' +
                 ", startdate='" + startdate + '\'' +
                 ", enddate='" + enddate + '\'' +
                 ", bossonename='" + bossonename + '\'' +

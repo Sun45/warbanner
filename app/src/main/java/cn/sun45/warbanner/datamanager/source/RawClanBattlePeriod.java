@@ -1,5 +1,9 @@
 package cn.sun45.warbanner.datamanager.source;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import cn.sun45.warbanner.document.db.source.ClanWarModel;
 
 public class RawClanBattlePeriod {
@@ -21,5 +25,15 @@ public class RawClanBattlePeriod {
         model.setId(clan_battle_id);
         model.setStartdate(start_time);
         model.setEnddate(end_time);
+        Calendar calendar = Calendar.getInstance();
+        try {
+            calendar.setTime(new SimpleDateFormat("yyyy/MM/dd").parse(start_time));
+            calendar.add(Calendar.DATE, 3);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH) + 1;
+        model.setDate(year + ((month < 10 ? "0" : "") + month));
     }
 }

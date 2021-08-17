@@ -11,7 +11,7 @@ import cn.sun45.warbanner.framework.document.db.annotation.ProviderConfigure;
  * Created by Sun45 on 2021/5/23
  * 数据源数据库数据提供器
  */
-@ProviderConfigure(version = 1, dbname = "source")
+@ProviderConfigure(version = 2, dbname = "source")
 public class SourceProvider extends BaseProvider {
     @Override
     protected List<BaseDbTableModel> getTableClassList() {
