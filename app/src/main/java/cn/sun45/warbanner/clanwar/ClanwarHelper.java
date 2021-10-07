@@ -26,7 +26,8 @@ public class ClanwarHelper {
         String date = null;
         ClanWarModel clanWarModel = getCurrentClanWarModel();
         if (clanWarModel != null) {
-            date = clanWarModel.getDate();
+            String startdate = clanWarModel.getStartdate();
+            date = startdate.substring(0, 10).replace("/", "");
         }
         return date;
     }

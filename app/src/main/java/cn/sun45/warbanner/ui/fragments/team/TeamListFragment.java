@@ -95,10 +95,11 @@ public class TeamListFragment extends BaseFragment implements TeamListListener {
         sharedClanwar = new ViewModelProvider(requireActivity()).get(SharedViewModelClanwar.class);
         String emptyhint;
         String date = ClanwarHelper.getCurrentClanWarDate();
-        if (!TextUtils.isEmpty(date) && date.length() == 6) {
+        if (!TextUtils.isEmpty(date) && date.length() == 8) {
             String year = date.substring(0, 4);
             String month = date.substring(4, 6);
-            date = year + "年" + month + "月";
+            String day = date.substring(6, 8);
+            date = year + "年" + month + "月" + day + "日";
             emptyhint = Utils.getStringWithPlaceHolder(R.string.teamlist_empty_hint, date);
         } else {
             emptyhint = Utils.getStringWithPlaceHolder(R.string.teamlist_empty_hint, "");

@@ -1,6 +1,6 @@
 {
-  "versionCode": "21",
-  "versionName": "1.8.0",
+  "versionCode": "22",
+  "versionName": "2.0.0",
   "fource": "false",
-  "content": "1.调整会战日期计算方式2.优化文件下载"
+  "content": "1.调整会战排期判断方式，改为用会战开始日期判断"
 }
