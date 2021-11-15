@@ -68,6 +68,14 @@
 
     <string name="menu_clanwar">作业</string>
     <string name="menu_clanwar_update">作业更新</string>
+    <string name="menu_clanwar_way">作业下载方式</string>
+    <string-array name="menu_clanwar_way_dialog_options">
+        <item>Github Page(据说有些运营商会无法使用)</item>
+        <item>cloudflare(每日有全体100,000调用上限)</item>
+        <item>JsDeliver(有4-5小时的更新延迟)</item>
+        <item>Github Raw(需要翻墙)</item>
+    </string-array>
+    <string name="menu_clanwar_way_dialog_confirm">确定</string>
     <string name="menu_setting">设置</string>
     <string name="menu_user">本地用户</string>
     <string name="menu_character_screen">角色筛选</string>

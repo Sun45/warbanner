@@ -5,8 +5,6 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
-import java.util.HashMap;
-
 import cn.sun45.warbanner.datamanager.source.SourceDataProcessHelper;
 import cn.sun45.warbanner.document.preference.AppPreference;
 import cn.sun45.warbanner.framework.image.ImageRequester;

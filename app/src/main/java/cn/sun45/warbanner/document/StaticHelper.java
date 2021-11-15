@@ -31,10 +31,12 @@ public class StaticHelper {
     public static final String UNKNOWN_ICON = API_URL + "/icon/equipment/999999.webp";
 
     //ClanWar
-    public static final String CLANWAR_BASE = "https://cdn.jsdelivr.net/gh/acaly/PcrGuildLibrary@master/data/";
-    public static final String CLANWAR_ONE_NAME="/A.json";
-    public static final String CLANWAR_TWO_NAME="/B.json";
-    public static final String CLANWAR_THREE_NAME="/C.json";
+    public static final String CLANWAR_OWNER="acaly";
+    public static final String CLANWAR_REPOSITORY="PcrGuildLibrary";
+    public static final String CLANWAR_PATH_BASE = "data/";
+    public static final String CLANWAR_PATH_ONE="/A.json";
+    public static final String CLANWAR_PATH_TWO="/B.json";
+    public static final String CLANWAR_PATH_THREE="/C.json";
 
     //昵称数据获取地址
     public static final String NICKNAME_URL = "https://github.com/pcrbot/pcr-nickname/blob/master/nicknames_zh-cn.csv";

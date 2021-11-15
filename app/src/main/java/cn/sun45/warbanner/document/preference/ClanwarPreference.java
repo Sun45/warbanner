@@ -10,6 +10,9 @@ public class ClanwarPreference extends BasePreference {
     //上次更新时间
     private long lastupdate;
 
+    //作业下载方式
+    private int way = 0;
+
     //链接展示
     private boolean linkshow = true;
 
@@ -25,6 +28,14 @@ public class ClanwarPreference extends BasePreference {
 
     public void setLastupdate(long lastupdate) {
         save("lastupdate", lastupdate);
+    }
+
+    public int getWay() {
+        return load("way");
+    }
+
+    public void setWay(int way) {
+        save("way", way);
     }
 
     public boolean isLinkshow() {

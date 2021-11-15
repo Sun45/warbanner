@@ -1,6 +1,6 @@
 {
-  "versionCode": "22",
-  "versionName": "2.0.0",
+  "versionCode": "23",
+  "versionName": "2.1.0",
   "fource": "false",
-  "content": "1.调整会战排期判断方式，改为用会战开始日期判断"
+  "content": "1.加入作业下载方式设置(1)Github Page(据说有些运营商会无法使用)(2)cloudflare(每日有全体100,000调用上限)(3)JsDeliver(有4-5小时的更新延迟)(4)Github Raw(需要翻墙)"
 }

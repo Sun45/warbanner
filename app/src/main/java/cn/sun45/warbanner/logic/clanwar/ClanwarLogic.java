@@ -9,10 +9,13 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.sun45.warbanner.clanwar.ClanwarHelper;
 import cn.sun45.warbanner.document.StaticHelper;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
+import cn.sun45.warbanner.document.preference.ClanwarPreference;
 import cn.sun45.warbanner.framework.logic.BaseLogic;
 import cn.sun45.warbanner.framework.logic.RequestListener;
+import cn.sun45.warbanner.util.GithubUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -190,21 +193,22 @@ public class ClanwarLogic extends BaseLogic {
      * @param stage 阶段 1,2,3
      */
     public Call<String> getTeamModelList(String date, int stage, final RequestListener<List<TeamModel>> listener) {
-        String url = StaticHelper.CLANWAR_BASE + date;
+        String path = StaticHelper.CLANWAR_PATH_BASE + date;
         switch (stage) {
             case 1:
-                url += StaticHelper.CLANWAR_ONE_NAME;
+                path += StaticHelper.CLANWAR_PATH_ONE;
                 break;
             case 2:
-                url += StaticHelper.CLANWAR_TWO_NAME;
+                path += StaticHelper.CLANWAR_PATH_TWO;
                 break;
             case 3:
-                url += StaticHelper.CLANWAR_THREE_NAME;
+                path += StaticHelper.CLANWAR_PATH_THREE;
                 break;
             default:
                 break;
         }
-        Call call = retrofit(StaticHelper.CLANWAR_BASE).create(Library.class).getJson(url);
+        String url = GithubUtils.getFileUrl(new ClanwarPreference().getWay(), StaticHelper.CLANWAR_OWNER, StaticHelper.CLANWAR_REPOSITORY, path);
+        Call call = retrofit(url).create(Library.class).getJson(url);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {

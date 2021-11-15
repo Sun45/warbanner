@@ -50,6 +50,12 @@ public class BaseLogic {
      * @return
      */
     protected Retrofit retrofit(String baseUrl) {
+        if (!baseUrl.endsWith("/") && baseUrl.contains("/")) {
+            String str = baseUrl.substring(0, baseUrl.lastIndexOf("/") + 1);
+            if (!(str.equals("http://") || str.equals("https://"))) {
+                baseUrl = str;
+            }
+        }
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .client(mOkHttpClient)
