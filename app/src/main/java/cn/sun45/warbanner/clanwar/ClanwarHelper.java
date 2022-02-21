@@ -41,7 +41,7 @@ public class ClanwarHelper {
         ClanWarModel model = null;
         List<ClanWarModel> clanWarModelList = DbHelper.query(MyApplication.application, ClanWarModel.class);
         if (clanWarModelList != null && !clanWarModelList.isEmpty()) {
-            model = clanWarModelList.get(1);
+            model = clanWarModelList.get(0);
         }
         return model;
     }
