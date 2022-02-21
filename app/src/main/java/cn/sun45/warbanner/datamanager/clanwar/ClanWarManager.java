@@ -147,29 +147,23 @@ public class ClanWarManager {
                     .cancelable(false)
                     .show();
             new ClanwarPreference().setLastupdate(System.currentTimeMillis());
-            loadDataAndSave(date, 1, new ClanWarRequestListener() {
-                @Override
-                public void loadFinish() {
-                    progressDialog.message(R.string.clanwar_update_progress_text_two, null, null);
-                    loadDataAndSave(date, 2, new ClanWarRequestListener() {
-                        @Override
-                        public void loadFinish() {
-                            progressDialog.message(R.string.clanwar_update_progress_text_three, null, null);
-                            loadDataAndSave(date, 3, new ClanWarRequestListener() {
-                                @Override
-                                public void loadFinish() {
-                                    if (iActivityCallBack != null) {
-                                        iActivityCallBack.showSnackBar(R.string.clanwar_update_finished_text);
-                                        iActivityCallBack.ClanWarReady(autocheck);
-                                    }
-                                    if (progressDialog != null) {
-                                        progressDialog.cancel();
-                                    }
-                                }
-                            }, 0);
-                        }
+            loadDataAndSave(date, 1, () -> {
+                progressDialog.message(R.string.clanwar_update_progress_text_two, null, null);
+                loadDataAndSave(date, 2, () -> {
+                    progressDialog.message(R.string.clanwar_update_progress_text_three, null, null);
+                    loadDataAndSave(date, 3, () -> {
+                        progressDialog.message(R.string.clanwar_update_progress_text_four, null, null);
+                        loadDataAndSave(date, 4, () -> {
+                            if (iActivityCallBack != null) {
+                                iActivityCallBack.showSnackBar(R.string.clanwar_update_finished_text);
+                                iActivityCallBack.ClanWarReady(autocheck);
+                            }
+                            if (progressDialog != null) {
+                                progressDialog.cancel();
+                            }
+                        }, 0);
                     }, 0);
-                }
+                }, 0);
             }, 0);
         }
     }
@@ -178,7 +172,7 @@ public class ClanWarManager {
      * 读取数据并存库
      *
      * @param date     会战日期 202107
-     * @param stage    阶段 1,2,3
+     * @param stage    阶段 1,2,3,4
      * @param listener 数据请求监听
      * @param retry    重试次数
      */

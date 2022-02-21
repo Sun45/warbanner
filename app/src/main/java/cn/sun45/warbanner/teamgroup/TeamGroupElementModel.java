@@ -54,4 +54,12 @@ public class TeamGroupElementModel {
             return teamModel.getEllipsisdamage();
         }
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "idlist=" + idlist +
+                ", screencharacter=" + screencharacter +
+                '}';
+    }
 }

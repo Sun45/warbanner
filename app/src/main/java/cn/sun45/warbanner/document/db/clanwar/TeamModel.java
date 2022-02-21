@@ -20,7 +20,7 @@ public class TeamModel extends BaseDbTableModel {
     //会战日期 202107
     @DbTableParamConfigure
     private String date;
-    //阶段 1,2,3
+    //阶段 1,2,3,4
     @DbTableParamConfigure
     private int stage;
 

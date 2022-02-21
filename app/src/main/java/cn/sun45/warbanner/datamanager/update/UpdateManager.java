@@ -19,6 +19,7 @@ import java.io.File;
 
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.document.StaticHelper;
+import cn.sun45.warbanner.document.preference.SetupPreference;
 import cn.sun45.warbanner.framework.MyApplication;
 import cn.sun45.warbanner.framework.file.FileRequestListenerWithProgress;
 import cn.sun45.warbanner.framework.file.FileRequester;
@@ -76,7 +77,11 @@ public class UpdateManager {
      * @param autocheck 自动检查
      */
     public void checkAppVersion(boolean autocheck) {
-        Utils.logD(TAG, "checkAppVersion");
+        Utils.logD(TAG, "checkAppVersion autocheck:" + autocheck);
+        if (autocheck && !new SetupPreference().isAutoupdate()) {
+            Utils.logD(TAG, "自动更新未开启");
+            return;
+        }
         handler = new Handler(MyApplication.getCurrentActivity().getMainLooper()) {
             @Override
             public void handleMessage(@NonNull Message msg) {

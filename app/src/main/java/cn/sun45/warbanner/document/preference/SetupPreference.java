@@ -7,8 +7,14 @@ import cn.sun45.warbanner.framework.document.preference.BasePreference;
  * 设置信息
  */
 public class SetupPreference extends BasePreference {
+    //自动连点启用
+    private boolean autoclick = false;
+
     //角色筛选生效
     private boolean characterscreenenable = false;
+
+    //自动更新开启
+    private boolean autoupdate = true;
 
     //BOSS筛选
     private boolean bossonescreen = true;
@@ -24,12 +30,28 @@ public class SetupPreference extends BasePreference {
     //链接打开方式
     private int linkopentype;
 
+    public boolean isAutoclick() {
+        return load("autoclick");
+    }
+
+    public void setAutoclick(boolean autoclick) {
+        save("autoclick", autoclick);
+    }
+
     public boolean isCharacterscreenenable() {
         return load("characterscreenenable");
     }
 
     public void setCharacterscreenenable(boolean characterscreenenable) {
         save("characterscreenenable", characterscreenenable);
+    }
+
+    public boolean isAutoupdate() {
+        return load("autoupdate");
+    }
+
+    public void setAutoupdate(boolean autoupdate) {
+        save("autoupdate", autoupdate);
     }
 
     public boolean isBossonescreen() {

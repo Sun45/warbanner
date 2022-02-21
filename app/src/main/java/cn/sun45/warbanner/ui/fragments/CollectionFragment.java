@@ -1,12 +1,8 @@
 package cn.sun45.warbanner.ui.fragments;
 
-import android.graphics.ColorFilter;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.VectorDrawable;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
 import android.text.style.ImageSpan;
 import android.view.View;
 import android.widget.TextView;
@@ -22,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.sun45.warbanner.R;
-import cn.sun45.warbanner.character.CharacterHelper;
 import cn.sun45.warbanner.clanwar.ClanwarHelper;
 import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamGroupCollectionModel;

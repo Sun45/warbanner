@@ -1,17 +1,11 @@
 package cn.sun45.warbanner.ui.views.teamgrouplist;
 
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
-
 import java.io.Serializable;
 import java.util.List;
 
-import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.teamgroup.TeamGroupElementModel;
-import cn.sun45.warbanner.util.Utils;
 
 /**
  * Created by Sun45 on 2021/5/30

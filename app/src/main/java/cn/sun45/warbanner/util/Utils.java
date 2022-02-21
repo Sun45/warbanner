@@ -117,6 +117,15 @@ public class Utils {
     }
 
     /**
+     * log
+     */
+    public static void logE(String tag, String msg) {
+        if (MyApplication.testing) {
+            Log.e(tag, msg);
+        }
+    }
+
+    /**
      * 展示提示信息
      */
     public static void tip(View view, @StringRes int resId) {
@@ -185,56 +194,6 @@ public class Utils {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         MyApplication.application.startActivity(intent);
         android.os.Process.killProcess(android.os.Process.myPid());
-    }
-
-    /**
-     * 添加到窗口
-     *
-     * @param v
-     * @param touchable
-     */
-    public static void addViewToWindow(View v, boolean touchable) {
-        boolean canDrawOverlays = true;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.canDrawOverlays(MyApplication.application)) {
-                canDrawOverlays = false;
-            }
-        }
-        if (canDrawOverlays) {
-            WindowManager windowManager = (WindowManager) MyApplication.application.getSystemService(Context.WINDOW_SERVICE);
-            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-            lp.width = Utils.getScreenwidth();
-            lp.height = Utils.getScreenheight();
-            lp.type = (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT <= 24) ? WindowManager.LayoutParams.TYPE_TOAST : Build.VERSION.SDK_INT < 26 ? WindowManager.LayoutParams.TYPE_PHONE : WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-            lp.format = PixelFormat.TRANSLUCENT;
-            lp.windowAnimations = android.R.style.Animation_Toast;
-            if (!touchable) {
-                lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
-                lp.flags = 17368856;
-            } else {
-                lp.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
-                lp.flags = 17368840;
-            }
-            lp.dimAmount = -1f;
-            lp.gravity = 8388659;
-//        lp.buttonBrightness = BRIGHTNESS_OVERRIDE_OFF;
-//        lp.systemUiVisibility = SYSTEM_UI_FLAG_LOW_PROFILE;
-            windowManager.addView(v, lp);
-        }
-    }
-
-    /**
-     * 从窗口移除
-     *
-     * @param v
-     */
-    public static void removeViewFromWindow(View v) {
-        if (v.isAttachedToWindow()) {
-            WindowManager windowManager = (WindowManager) MyApplication.application.getSystemService(Context.WINDOW_SERVICE);
-            if (v != null) {
-                windowManager.removeView(v);
-            }
-        }
     }
 
     /**
@@ -734,7 +693,7 @@ public class Utils {
      * @param res 资源id
      * @return 数值
      */
-    public static int getAttrColor(Context context,@AttrRes int res) {
+    public static int getAttrColor(Context context, @AttrRes int res) {
         int[] attribute = new int[]{res};
         TypedArray array = context.getTheme().obtainStyledAttributes(attribute);
         int color = array.getColor(0, Color.TRANSPARENT);

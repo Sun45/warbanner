@@ -46,6 +46,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public static final int SHOW_TYPE_ONE = 1;
     public static final int SHOW_TYPE_TWO = 2;
     public static final int SHOW_TYPE_THREE = 3;
+    public static final int SHOW_TYPE_FOUR = 4;
 
     private Context context;
 
@@ -60,6 +61,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private List<Object> onelist;
     private List<Object> twolist;
     private List<Object> threelist;
+    private List<Object> fourlist;
 
     //阵容自定义信息
     private List<TeamCustomizeModel> teamCustomizeModels;
@@ -95,10 +97,11 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.list = list;
     }
 
-    public void setList(List<Object> onelist, List<Object> twolist, List<Object> threelist) {
+    public void setList(List<Object> onelist, List<Object> twolist, List<Object> threelist, List<Object> fourlist) {
         this.onelist = onelist;
         this.twolist = twolist;
         this.threelist = threelist;
+        this.fourlist = fourlist;
     }
 
     public void setTeamCustomizeModels(List<TeamCustomizeModel> teamCustomizeModels) {
@@ -167,6 +170,9 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     if (threelist != null) {
                         count += countList(threelist);
                     }
+                    if (fourlist != null) {
+                        count += countList(fourlist);
+                    }
                     break;
                 case SHOW_TYPE_ONE:
                     count = countList(onelist);
@@ -176,6 +182,9 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     break;
                 case SHOW_TYPE_THREE:
                     count = countList(threelist);
+                    break;
+                case SHOW_TYPE_FOUR:
+                    count = countList(fourlist);
                     break;
                 default:
                     break;
@@ -236,7 +245,13 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                             item = getItemFromList(twolist, p);
                         } else {
                             p -= twolistcount;
-                            item = getItemFromList(threelist, p);
+                            int threelistcount = countList(threelist);
+                            if (threelist != null && threelistcount > p) {
+                                item = getItemFromList(threelist, p);
+                            } else {
+                                p -= threelistcount;
+                                item = getItemFromList(fourlist, p);
+                            }
                         }
                     }
                     break;
@@ -248,6 +263,9 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     break;
                 case SHOW_TYPE_THREE:
                     item = getItemFromList(threelist, position);
+                    break;
+                case SHOW_TYPE_FOUR:
+                    item = getItemFromList(fourlist, position);
                     break;
                 default:
                     break;
@@ -396,8 +414,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 if (remarkModels.isEmpty()) {
                     mRemarks.setVisibility(View.GONE);
                 } else {
-                    SpannableString spanStr = new SpannableString("");
-                    SpannableStringBuilder ssb = new SpannableStringBuilder(spanStr);
+                    SpannableStringBuilder ssb = new SpannableStringBuilder();
                     for (int i = 0; i < remarkModels.size(); i++) {
                         if (i != 0) {
                             ssb.append("\n");

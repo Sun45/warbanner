@@ -190,7 +190,7 @@ public class ClanwarLogic extends BaseLogic {
      * 获取作业数据列表
      *
      * @param date  会战日期 202107
-     * @param stage 阶段 1,2,3
+     * @param stage 阶段 1,2,3,4
      */
     public Call<String> getTeamModelList(String date, int stage, final RequestListener<List<TeamModel>> listener) {
         String path = StaticHelper.CLANWAR_PATH_BASE + date;
@@ -203,6 +203,9 @@ public class ClanwarLogic extends BaseLogic {
                 break;
             case 3:
                 path += StaticHelper.CLANWAR_PATH_THREE;
+                break;
+            case 4:
+                path += StaticHelper.CLANWAR_PATH_ONE;
                 break;
             default:
                 break;
@@ -235,14 +238,25 @@ public class ClanwarLogic extends BaseLogic {
                             if (characters == null || characters.length() < 5) {
                                 continue;
                             }
-                            int characteroneid = characters.optJSONObject(0).optInt("id");
-                            int charactertwoid = characters.optJSONObject(1).optInt("id");
-                            int characterthreeid = characters.optJSONObject(2).optInt("id");
-                            int characterfourid = characters.optJSONObject(3).optInt("id");
-                            int characterfveid = characters.optJSONObject(4).optInt("id");
-                            if (characteroneid == 0 || charactertwoid == 0 || characterthreeid == 0 || characterfourid == 0 || characterfveid == 0) {
+                            JSONObject characterone = characters.optJSONObject(0);
+                            JSONObject charactertwo = characters.optJSONObject(1);
+                            JSONObject characterthree = characters.optJSONObject(2);
+                            JSONObject characterfour = characters.optJSONObject(3);
+                            JSONObject characterfive = characters.optJSONObject(4);
+                            int characteroneid = characterone.optInt("id");
+                            JSONArray characteronerequirements = characterone.optJSONArray("requirements");
+                            int charactertwoid = charactertwo.optInt("id");
+                            JSONArray charactertworequirements = charactertwo.optJSONArray("requirements");
+                            int characterthreeid = characterthree.optInt("id");
+                            JSONArray characterthreerequirements = characterthree.optJSONArray("requirements");
+                            int characterfourid = characterfour.optInt("id");
+                            JSONArray characterfourrequirements = characterfour.optJSONArray("requirements");
+                            int characterfiveid = characterfive.optInt("id");
+                            JSONArray characterfiverequirements = characterfive.optJSONArray("requirements");
+                            if (characteroneid == 0 || charactertwoid == 0 || characterthreeid == 0 || characterfourid == 0 || characterfiveid == 0) {
                                 continue;
                             }
+                            JSONObject time = jsonObject.optJSONObject("time");
                             JSONArray comments = jsonObject.optJSONArray("comments");
                             JSONArray labels = jsonObject.optJSONArray("labels");
                             int damage = jsonObject.optInt("standard_damage");
@@ -260,7 +274,7 @@ public class ClanwarLogic extends BaseLogic {
                             teamModel.setCharactertwo(charactertwoid * 100 + 1);
                             teamModel.setCharacterthree(characterthreeid * 100 + 1);
                             teamModel.setCharacterfour(characterfourid * 100 + 1);
-                            teamModel.setCharacterfive(characterfveid * 100 + 1);
+                            teamModel.setCharacterfive(characterfiveid * 100 + 1);
                             if (comments != null) {
                                 teamModel.setSketch(comments.toString());
                             }
@@ -270,6 +284,9 @@ public class ClanwarLogic extends BaseLogic {
                                     for (int j = 0; j < sources.length(); j++) {
                                         JSONObject source = sources.optJSONObject(j);
                                         String sourcedescription = source.optString("description");
+                                        String sourceauthor = source.optString("author");
+                                        JSONObject sourcedamage=source.optJSONObject("damage");
+                                        JSONObject sourcetime=source.optJSONObject("time");
                                         JSONArray sourcelinks = source.optJSONArray("links");
                                         JSONArray sourceimages = source.optJSONArray("images");
                                         JSONArray sourcecomments = source.optJSONArray("comments");

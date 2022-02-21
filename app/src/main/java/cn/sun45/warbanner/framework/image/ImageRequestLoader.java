@@ -5,8 +5,6 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.RectF;
-import android.graphics.Shader;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Callback;
@@ -15,9 +13,6 @@ import com.squareup.picasso.Target;
 import com.squareup.picasso.Transformation;
 
 import java.io.IOException;
-
-import cn.sun45.warbanner.R;
-import cn.sun45.warbanner.util.Utils;
 
 /**
  * Created by Sun45 on 2019/10/29.

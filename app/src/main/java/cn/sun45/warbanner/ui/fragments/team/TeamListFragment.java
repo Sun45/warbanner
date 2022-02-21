@@ -178,6 +178,10 @@ public class TeamListFragment extends BaseFragment implements TeamListListener {
                     item.setChecked(true);
                     showtype = TeamListAdapter.SHOW_TYPE_THREE;
                     break;
+                case R.id.menu_four:
+                    item.setChecked(true);
+                    showtype = TeamListAdapter.SHOW_TYPE_FOUR;
+                    break;
             }
             new ClanwarPreference().setTeamlistshowtype(showtype);
             mTeamList.notifyShowtype(showtype);

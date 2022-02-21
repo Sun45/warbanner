@@ -1,6 +1,6 @@
 {
-  "versionCode": "23",
-  "versionName": "2.1.0",
+  "versionCode": "24",
+  "versionName": "2.4.0",
   "fource": "false",
-  "content": "1.加入作业下载方式设置(1)Github Page(据说有些运营商会无法使用)(2)cloudflare(每日有全体100,000调用上限)(3)JsDeliver(有4-5小时的更新延迟)(4)Github Raw(需要翻墙)"
+  "content": "1.加入4阶段2.添加自动更新功能开启按钮3.分刀算法优化4.添加关于页面5.添加连点功能(未完成)"
 }

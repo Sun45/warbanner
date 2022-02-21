@@ -14,7 +14,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.checkbox.DialogCheckboxExtKt;
 import com.afollestad.materialdialogs.list.DialogSingleChoiceExtKt;
 import com.google.android.material.appbar.MaterialToolbar;
 
@@ -27,7 +26,6 @@ import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.character.CharacterHelper;
 import cn.sun45.warbanner.clanwar.ClanwarHelper;
 import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
-import cn.sun45.warbanner.document.db.clanwar.TeamGroupScreenModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
 import cn.sun45.warbanner.document.db.source.ClanWarModel;
@@ -41,10 +39,8 @@ import cn.sun45.warbanner.ui.shared.SharedViewModelTeamScreenTeam;
 import cn.sun45.warbanner.ui.views.teamlist.TeamList;
 import cn.sun45.warbanner.ui.views.teamlist.TeamListAdapter;
 import cn.sun45.warbanner.ui.views.teamlist.TeamListListener;
-import cn.sun45.warbanner.util.FileUtil;
 import cn.sun45.warbanner.util.Utils;
 import kotlin.Unit;
-import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function3;
 
 /**
@@ -175,6 +171,10 @@ public class TeamSelectFragment extends BaseFragment implements TeamListListener
                 case R.id.menu_three:
                     item.setChecked(true);
                     showtype = TeamListAdapter.SHOW_TYPE_THREE;
+                    break;
+                case R.id.menu_four:
+                    item.setChecked(true);
+                    showtype = TeamListAdapter.SHOW_TYPE_FOUR;
                     break;
             }
             new ClanwarPreference().setTeamlistshowtype(showtype);

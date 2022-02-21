@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="120dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/auto_click_showlay_bg"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <CheckBox
+            android:id="@+id/area_show_check"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="@string/auto_click_area_show"
+            android:textColor="@color/white_50"
+            android:textSize="12sp" />
+
+        <CheckBox
+            android:id="@+id/button_lay_show_check"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:checked="true"
+            android:text="@string/auto_click_button_area"
+            android:textColor="@color/white_50"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:id="@+id/button_lay"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/character_one"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:text="@string/auto_click_character_one"
+                android:textColor="@color/white_50" />
+
+            <TextView
+                android:id="@+id/character_two"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:text="@string/auto_click_character_two"
+                android:textColor="@color/white_50" />
+
+            <TextView
+                android:id="@+id/character_three"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:text="@string/auto_click_character_three"
+                android:textColor="@color/white_50" />
+
+            <TextView
+                android:id="@+id/character_four"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:text="@string/auto_click_character_four"
+                android:textColor="@color/white_50" />
+
+            <TextView
+                android:id="@+id/character_five"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center"
+                android:text="@string/auto_click_character_five"
+                android:textColor="@color/white_50" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

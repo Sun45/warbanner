@@ -1,7 +1,10 @@
 package cn.sun45.warbanner.teamgroup;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import cn.sun45.warbanner.clanwar.ClanwarHelper;
 import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
@@ -38,44 +41,33 @@ public class TeamGroupHelper {
      */
     private List<TeamGroupListModel> buildElementList(List<ScreenCharacterModel> screenCharacterModelList, List<TeamModel> teamModels, List<TeamCustomizeModel> teamCustomizeModels, TeamGroupScreenModel teamGroupScreenModel) {
         Utils.logD(TAG, "buildElementList");
+        Map<Integer, Integer> screenCharacterMap = new TreeMap<>();
+        for (ScreenCharacterModel screenCharacterModel : screenCharacterModelList) {
+            screenCharacterMap.put(screenCharacterModel.getCharacterId(), screenCharacterModel.getType());
+        }
         List<TeamGroupElementModel> elementModels = new ArrayList<>();
         for (TeamModel teamModel : teamModels) {
             TeamCustomizeModel teamCustomizeModel = ClanwarHelper.findCustomizeModel(teamModel, teamCustomizeModels);
             if (teamCustomizeModel != null && teamCustomizeModel.isBlock()) {
                 continue;
             }
-            List<Integer> idlist = new ArrayList<>();
-            idlist.add(teamModel.getCharacterone());
-            idlist.add(teamModel.getCharactertwo());
-            idlist.add(teamModel.getCharacterthree());
-            idlist.add(teamModel.getCharacterfour());
-            idlist.add(teamModel.getCharacterfive());
+            List<Integer> idlist = Arrays.asList(teamModel.getCharacterone(), teamModel.getCharactertwo(), teamModel.getCharacterthree(), teamModel.getCharacterfour(), teamModel.getCharacterfive());
             int screencharacter = 0;
             if (characterscreenenable) {
                 boolean notuseable = false;
                 for (int i = 0; i < idlist.size(); i++) {
                     int id = idlist.get(i);
-                    boolean find = false;
-                    for (ScreenCharacterModel screenCharacterModel : screenCharacterModelList) {
-                        if (id == screenCharacterModel.getCharacterId()) {
-                            if (screenCharacterModel.getType() == 1) {//TYPE_LACK
-                                find = true;
-                                break;
-                            } else {
+                    if (screenCharacterMap.containsKey(id)) {
+                        if (screenCharacterMap.get(id) == ScreenCharacterModel.TYPE_LACK) {
+                            if (screencharacter != 0) {
                                 notuseable = true;
                                 break;
+                            } else {
+                                screencharacter = id;
                             }
-                        }
-                    }
-                    if (notuseable) {
-                        break;
-                    }
-                    if (find) {
-                        if (screencharacter != 0) {
+                        } else {
                             notuseable = true;
                             break;
-                        } else {
-                            screencharacter = id;
                         }
                     }
                 }
@@ -165,10 +157,7 @@ public class TeamGroupHelper {
     private List<TeamGroupListModel> buildTeamGroupList(int min, int max, List<TeamGroupElementModel> elementModelListOne, List<TeamGroupElementModel> elementModelListTwo, List<TeamGroupElementModel> elementModelListThree) {
         Utils.logD(TAG, "buildTeamGroupList min:" + min + " max:" + max + " elementModelListOne:" + elementModelListOne.size() + " elementModelListTwo:" + elementModelListTwo.size() + " elementModelListThree:" + elementModelListThree.size());
         int generate = 0;
-        List<List<TeamGroupListModel>> sortlist = new ArrayList<>();
-        for (int i = 0; i < max - min + 1; i++) {
-            sortlist.add(new ArrayList<>());
-        }
+        List<TeamGroupListModel>[] sortlist = new ArrayList[max - min + 1];
         for (int i = 0; i < elementModelListOne.size(); i++) {
             TeamGroupElementModel one = elementModelListOne.get(i);
             for (int j = 0; j < elementModelListTwo.size(); j++) {
@@ -188,7 +177,12 @@ public class TeamGroupHelper {
                         TeamGroupListModel teamGroupListModel = compatible(one, two, three);
                         if (teamGroupListModel != null) {
                             generate++;
-                            sortlist.get(teamGroupListModel.getTotaldamage() - min).add(teamGroupListModel);
+                            List<TeamGroupListModel> list = sortlist[teamGroupListModel.getTotaldamage() - min];
+                            if (list == null) {
+                                list = new ArrayList<>();
+                                sortlist[teamGroupListModel.getTotaldamage() - min] = list;
+                            }
+                            list.add(teamGroupListModel);
                             if (generate == interruptsize) {
                                 break;
                             }
@@ -204,11 +198,13 @@ public class TeamGroupHelper {
             }
         }
         List<TeamGroupListModel> list = new ArrayList<>();
-        for (int i = sortlist.size() - 1; i >= 0; i--) {
-            List<TeamGroupListModel> childlist = sortlist.get(i);
-            for (int j = 0; j < childlist.size(); j++) {
-                TeamGroupListModel model = childlist.get(j);
-                list.add(model);
+        for (int i = sortlist.length - 1; i >= 0; i--) {
+            List<TeamGroupListModel> childlist = sortlist[i];
+            if (childlist != null) {
+                for (int j = 0; j < childlist.size(); j++) {
+                    TeamGroupListModel model = childlist.get(j);
+                    list.add(model);
+                }
             }
         }
         Utils.logD(TAG, "list:" + list.size());
@@ -230,8 +226,7 @@ public class TeamGroupHelper {
         return list;
     }
 
-    private boolean compatible(TeamGroupElementModel elementone, TeamGroupElementModel
-            elementtwo) {
+    private boolean compatible(TeamGroupElementModel elementone, TeamGroupElementModel elementtwo) {
         List<Integer> repeatList = getRepeatList(elementone.getIdlist(), elementtwo.getIdlist());
         if (repeatList.size() >= 3) {
             return false;
@@ -382,15 +377,12 @@ public class TeamGroupHelper {
                 if (repeatListabc.size() == 1) {
                     screencharactertwo = repeatListabc.get(0);
                     repeatListabc.remove(0);
-                    repeatListbc.add(screencharactertwo);
+                    repeatListac.add(screencharactertwo);
                 } else {
                     if (repeatListab.size() == 1) {
                         screencharactertwo = repeatListab.get(0);
                         repeatListab.remove(0);
-                    } else if (repeatListbc.size() == 2) {
-                        screencharactertwo = repeatListbc.get(0);
-                        repeatListbc.remove(0);
-                    } else if (repeatListbc.size() == 1) {
+                    } else if (repeatListbc.size() == 2 || repeatListbc.size() == 1) {
                         screencharactertwo = repeatListbc.get(0);
                         repeatListbc.remove(0);
                     } else {
@@ -411,7 +403,8 @@ public class TeamGroupHelper {
             }
             if (MyApplication.testing) {
                 if (repeatListabc.size() > 0 || repeatListab.size() > 0 || repeatListac.size() > 0 || repeatListbc.size() > 0 || screencharacterone == 0 || screencharactertwo == 0 || screencharacterthree == 0) {
-                    throw new RuntimeException("分刀计算遗漏");
+                    Utils.logE(TAG, "buildElementList");
+                    throw new RuntimeException("分刀计算遗漏 elementone:" + elementone + " elementtwo:" + elementtwo + " elementthree:" + elementthree);
                 }
             }
             return new TeamGroupListModel(elementone, screencharacterone, elementtwo, screencharactertwo, elementthree, screencharacterthree);

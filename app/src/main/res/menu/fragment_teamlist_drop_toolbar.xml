@@ -30,5 +30,9 @@
             android:id="@+id/menu_three"
             android:title="@string/teamlist_menu_three"
             app:showAsAction="never" />
+        <item
+            android:id="@+id/menu_four"
+            android:title="@string/teamlist_menu_four"
+            app:showAsAction="never" />
     </group>
 </menu>

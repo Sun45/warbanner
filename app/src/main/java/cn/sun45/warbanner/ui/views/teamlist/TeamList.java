@@ -55,6 +55,7 @@ public class TeamList extends RecyclerView {
         List<TeamListTeamModel> teamModelOnelist = new ArrayList<>();
         List<TeamListTeamModel> teamModelTwolist = new ArrayList<>();
         List<TeamListTeamModel> teamModelThreelist = new ArrayList<>();
+        List<TeamListTeamModel> teamModelFourlist = new ArrayList<>();
         for (TeamModel teamModel : list) {
             switch (teamModel.getStage()) {
                 case 1:
@@ -66,11 +67,18 @@ public class TeamList extends RecyclerView {
                 case 3:
                     teamModelThreelist.add(new TeamListTeamModel(teamModel));
                     break;
+                case 4:
+                    teamModelFourlist.add(new TeamListTeamModel(teamModel));
+                    break;
                 default:
                     break;
             }
         }
-        adapter.setList(fillList(new ArrayList<>(), clanWarModel, teamModelOnelist), fillList(new ArrayList<>(), clanWarModel, teamModelTwolist), fillList(new ArrayList<>(), clanWarModel, teamModelThreelist));
+        adapter.setList(
+                fillList(new ArrayList<>(), clanWarModel, teamModelOnelist),
+                fillList(new ArrayList<>(), clanWarModel, teamModelTwolist),
+                fillList(new ArrayList<>(), clanWarModel, teamModelThreelist),
+                fillList(new ArrayList<>(), clanWarModel, teamModelFourlist));
         adapter.setShowlink(showlink);
         adapter.setAutoScreen(autoScreen);
         adapter.setShowtype(showtype);

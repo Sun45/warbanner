@@ -37,6 +37,7 @@ public class StaticHelper {
     public static final String CLANWAR_PATH_ONE="/A.json";
     public static final String CLANWAR_PATH_TWO="/B.json";
     public static final String CLANWAR_PATH_THREE="/C.json";
+    public static final String CLANWAR_PATH_FOUR="/D.json";
 
     //昵称数据获取地址
     public static final String NICKNAME_URL = "https://github.com/pcrbot/pcr-nickname/blob/master/nicknames_zh-cn.csv";
