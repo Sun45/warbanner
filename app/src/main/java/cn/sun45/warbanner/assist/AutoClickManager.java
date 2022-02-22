@@ -162,7 +162,8 @@ public class AutoClickManager {
     private View getAreaShow() {
         if (mAreaShow == null) {
             mAreaShow = new AreaShowView(MyApplication.application, areaDataModel);
-            mAreaShow.setLayoutParams(new FrameLayout.LayoutParams(Utils.getScreenwidth(), Utils.getScreenheight()));
+            int[] screenSize = Utils.getScreenSize();
+            mAreaShow.setLayoutParams(new FrameLayout.LayoutParams(screenSize[0], screenSize[1]));
         }
         return mAreaShow;
     }
@@ -200,7 +201,8 @@ public class AutoClickManager {
         Utils.logD(TAG, "showArea");
         if (!areashow) {
             areashow = true;
-            AssistManager.addViewToWindow(getAreaShow(), Utils.getScreenwidth(), Utils.getScreenheight(), false);
+            int[] screenSize = Utils.getScreenSize();
+            AssistManager.addViewToWindow(getAreaShow(), screenSize[0], screenSize[1], false);
         }
     }
 

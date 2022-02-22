@@ -23,8 +23,9 @@ public class AreaDataModel {
     private int[] characterFivePoint;
 
     public AreaDataModel() {
-        float width = Utils.getScreenwidth();
-        float height = Utils.getScreenheight();
+        int[] screenSize = Utils.getScreenSize();
+        float width = screenSize[0];
+        float height = screenSize[1];
         float w = width;
         float h = height;
         float startx = 0;

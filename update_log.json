@@ -1,6 +1,6 @@
 {
-  "versionCode": "24",
-  "versionName": "2.4.0",
+  "versionCode": "25",
+  "versionName": "2.4.1",
   "fource": "false",
-  "content": "1.加入4阶段2.添加自动更新功能开启按钮3.分刀算法优化4.添加关于页面5.添加连点功能(未完成)"
+  "content": "1.修改D面数据调试参数（D面正式启用）2.优化屏幕尺寸获取方式"
 }

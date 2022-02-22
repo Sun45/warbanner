@@ -197,40 +197,26 @@ public class Utils {
     }
 
     /**
-     * 获取屏幕宽度
+     * 获取屏幕尺寸
      *
-     * @return
+     * @return [屏幕宽(长边)，屏幕高(短边)]
      */
-    public static int getScreenwidth() {
+    public static int[] getScreenSize() {
+        int[] screenSize = new int[2];
         WindowManager wm = (WindowManager) MyApplication.application.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        return size.x;
-    }
-
-    /**
-     * 获取屏幕高度
-     *
-     * @return
-     */
-    public static int getScreenheight() {
-        int dpi = 0;
-        WindowManager windowManager = (WindowManager) MyApplication.application.getSystemService(Context.WINDOW_SERVICE);
-        Display display = windowManager.getDefaultDisplay();
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        @SuppressWarnings("rawtypes")
+        DisplayMetrics dm = new DisplayMetrics();
         Class c;
         try {
             c = Class.forName("android.view.Display");
-            @SuppressWarnings("unchecked")
             Method method = c.getMethod("getRealMetrics", DisplayMetrics.class);
-            method.invoke(display, displayMetrics);
-            dpi = displayMetrics.heightPixels;
+            method.invoke(display, dm);
+            screenSize[0] = Math.max(dm.widthPixels, dm.heightPixels);
+            screenSize[1] = Math.min(dm.widthPixels, dm.heightPixels);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return dpi;
+        return screenSize;
     }
 
     /**

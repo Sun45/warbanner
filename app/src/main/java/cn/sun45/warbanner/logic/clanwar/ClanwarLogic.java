@@ -205,7 +205,7 @@ public class ClanwarLogic extends BaseLogic {
                 path += StaticHelper.CLANWAR_PATH_THREE;
                 break;
             case 4:
-                path += StaticHelper.CLANWAR_PATH_ONE;
+                path += StaticHelper.CLANWAR_PATH_FOUR;
                 break;
             default:
                 break;
