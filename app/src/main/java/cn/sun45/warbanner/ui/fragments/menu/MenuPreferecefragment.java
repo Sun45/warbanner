@@ -33,17 +33,26 @@ import kotlin.jvm.functions.Function3;
 public class MenuPreferecefragment extends PreferenceFragmentCompat {
     private static final String TAG = "MenuPreferecefragment";
 
-    private Preference clanware;
+    //作业
+    private Preference update;
+    private Preference way;
 
+    //辅助功能
+    private Preference permission;
+    private SwitchPreferenceCompat autoClick;
+
+    //设置
     private Preference user;
     private Preference characterScreen;
     private SwitchPreferenceCompat characterScreenEnable;
     private Preference link;
 
+    //系统
     private Preference db;
     private Preference app;
     private SwitchPreferenceCompat autoUpdate;
 
+    //其它
     private Preference record;
     private Preference about;
 
@@ -51,7 +60,7 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if (key.equals("lastupdate")) {
-                clanware.setSummary(ClanWarManager.getInstance().getUpdateInfo());
+                update.setSummary(ClanWarManager.getInstance().getUpdateInfo());
             }
             if (key.equals("dbVersion")) {
                 db.setSummary(SourceManager.getInstance().getDbVersion() + "");
@@ -64,14 +73,28 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
         Utils.logD(TAG, "onCreatePreferences");
         setPreferencesFromResource(R.xml.preference, rootKey);
 
-        clanware = findPreference("clanwar_update");
-        clanware.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                ClanWarManager.getInstance().showConfirmDialog(false);
-                btnRestore(preference);
-                return true;
-            }
+        update = findPreference("clanwar_update");
+        update.setOnPreferenceClickListener(preference -> {
+            ClanWarManager.getInstance().showConfirmDialog(false);
+            btnRestore(preference);
+            return true;
+        });
+
+        way = findPreference("clanwar_way");
+        way.setOnPreferenceClickListener(preference -> {
+            MaterialDialog dialog = new MaterialDialog(getContext(), MaterialDialog.getDEFAULT_BEHAVIOR());
+            dialog.title(R.string.menu_clanwar_way, null);
+            DialogSingleChoiceExtKt.listItemsSingleChoice(dialog, R.array.menu_clanwar_way_dialog_options, null, null, new ClanwarPreference().getWay(), true, 0, 0, new Function3<MaterialDialog, Integer, CharSequence, Unit>() {
+                @Override
+                public Unit invoke(MaterialDialog materialDialog, Integer integer, CharSequence charSequence) {
+                    new ClanwarPreference().setWay(integer);
+                    return null;
+                }
+            });
+            dialog.cancelOnTouchOutside(false);
+            dialog.positiveButton(R.string.menu_clanwar_way_dialog_confirm, null, null);
+            dialog.show();
+            return false;
         });
 
         permission = findPreference("permission");
@@ -193,7 +216,14 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
     public void onResume() {
         Utils.logD(TAG, "onResume");
         super.onResume();
-        clanware.setSummary(ClanWarManager.getInstance().getUpdateInfo());
+        update.setSummary(ClanWarManager.getInstance().getUpdateInfo());
+        if (AssistManager.hasPermission()) {
+            autoClick.setEnabled(true);
+            autoClick.setSummary(null);
+        } else {
+            autoClick.setEnabled(false);
+            autoClick.setSummary(Utils.getString(R.string.user_permission_notgranted));
+        }
         user.setSummary(UserManager.getInstance().getCurrentUserName());
         db.setSummary(SourceManager.getInstance().getDbVersion() + "");
         app.setSummary(Utils.getVersionName());
