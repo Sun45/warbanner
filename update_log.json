@@ -1,6 +1,6 @@
 {
-  "versionCode": "25",
-  "versionName": "2.4.1",
+  "versionCode": "26",
+  "versionName": "2.4.2",
   "fource": "false",
-  "content": "1.修改D面数据调试参数（D面正式启用）2.优化屏幕尺寸获取方式"
+  "content": "1.优化辅助功能弹框，重构代码"
 }

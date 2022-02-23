@@ -14,7 +14,7 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.list.DialogSingleChoiceExtKt;
 
 import cn.sun45.warbanner.R;
-import cn.sun45.warbanner.assist.AutoClickManager;
+import cn.sun45.warbanner.assist.AssistManager;
 import cn.sun45.warbanner.datamanager.clanwar.ClanWarManager;
 import cn.sun45.warbanner.datamanager.source.SourceManager;
 import cn.sun45.warbanner.datamanager.update.UpdateManager;

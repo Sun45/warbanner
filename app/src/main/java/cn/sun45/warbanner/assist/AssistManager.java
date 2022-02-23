@@ -1,147 +1,157 @@
 package cn.sun45.warbanner.assist;
 
-import android.app.ActivityManager;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.PixelFormat;
-import android.net.Uri;
-import android.os.Build;
-import android.provider.Settings;
-import android.view.View;
+import android.accessibilityservice.AccessibilityService;
+import android.accessibilityservice.GestureDescription;
+import android.graphics.Path;
+import android.view.Gravity;
 import android.view.WindowManager;
 
-import java.util.List;
-
+import cn.sun45.warbanner.datamanager.source.SourceManager;
+import cn.sun45.warbanner.document.preference.SetupPreference;
 import cn.sun45.warbanner.framework.MyApplication;
+import cn.sun45.warbanner.util.AssistUtils;
 import cn.sun45.warbanner.util.Utils;
 
 /**
- * Created by Sun45 on 2022/2/20
+ * Created by Sun45 on 2022/2/23
  * 辅助功能管理
  */
 public class AssistManager {
-    private static final String TAG = "AssistPermissionManager";
+    private static final String TAG = "AssistManager";
 
-    public static boolean canDrawOverlays() {
-        boolean canDrawOverlays = true;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.canDrawOverlays(MyApplication.application)) {
-                canDrawOverlays = false;
+    //单例对象
+    private static AssistManager instance;
+
+    public static AssistManager getInstance() {
+        if (instance == null) {
+            synchronized (SourceManager.class) {
+                if (instance == null) {
+                    instance = new AssistManager();
+                }
             }
         }
-        return canDrawOverlays;
+        return instance;
     }
 
-    public static void requestAlertWindowPermissions() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Utils.logD(TAG, ">=Build.VERSION_CODES.M");
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {//8.0以上
-                Utils.logD(TAG, "8.0以上");
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-                MyApplication.getCurrentActivity().startActivity(intent);
-            } else {//6.0-8.0
-                Utils.logD(TAG, "6.0-8.0");
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
-                intent.setData(Uri.parse("package:" + MyApplication.application.getPackageName()));
-                MyApplication.getCurrentActivity().startActivity(intent);
-            }
-        }
+    public AssistManager() {
+        init();
     }
 
     /**
-     * 添加到窗口
+     * 拥有辅助功能权限
      */
-    public static WindowManager.LayoutParams addViewToWindow(View v, int width, int height, boolean touchable) {
-        return addViewToWindow(v, width, height, 8388659, touchable);
+    public static boolean hasPermission() {
+        return AssistUtils.canDrawOverlays() && AssistUtils.isAccessibilitySettingsOn();
     }
 
-    /**
-     * 添加到窗口
-     */
-    public static WindowManager.LayoutParams addViewToWindow(View v, int width, int height, int gravity, boolean touchable) {
-        if (v.isAttachedToWindow()) {
-            return null;
+    //无障碍辅助服务
+    private CustomMyAccessibilityService service;
+
+    public void setService(CustomMyAccessibilityService service) {
+        this.service = service;
+    }
+
+    private boolean show;
+    private AssistDataModel mAssistDataModel;
+    private int[] currentTapPoint;
+
+    private AssistPanelView mPanelView;
+    private WindowManager.LayoutParams mPanelLayoutParams;
+    private AssistPanelView.AssistPanelViewListener mPanelViewListener = new AssistPanelView.AssistPanelViewListener() {
+        @Override
+        public void shrink() {
+            mPanelLayoutParams.width = mPanelView.getWidth();
+            mPanelLayoutParams.height = mPanelView.getHeight();
+            AssistUtils.updateWindow(mPanelView.getView(), mPanelLayoutParams);
         }
-        boolean canDrawOverlays = true;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!Settings.canDrawOverlays(MyApplication.application)) {
-                canDrawOverlays = false;
-            }
-        }
-        WindowManager.LayoutParams lp = null;
-        if (canDrawOverlays) {
-            WindowManager windowManager = (WindowManager) MyApplication.application.getSystemService(Context.WINDOW_SERVICE);
-            lp = new WindowManager.LayoutParams();
-            lp.width = width;
-            lp.height = height;
-            lp.type = (Build.VERSION.SDK_INT >= 19 && Build.VERSION.SDK_INT <= 24) ? WindowManager.LayoutParams.TYPE_TOAST : Build.VERSION.SDK_INT < 26 ? WindowManager.LayoutParams.TYPE_PHONE : WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-            lp.format = PixelFormat.TRANSLUCENT;
-            lp.windowAnimations = android.R.style.Animation_Toast;
-            if (!touchable) {
-                lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
-                lp.flags = 17368856;
+
+        @Override
+        public void areaShow(boolean areaShow) {
+            if (areaShow) {
+                showArea();
             } else {
-                lp.flags = WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR | WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
-                lp.flags = 17368840;
-            }
-//            lp.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
-            lp.dimAmount = -1f;
-            lp.gravity = gravity;
-//            if (sideleft) {
-//                lp.gravity = Gravity.CENTER_VERTICAL | Gravity.LEFT;
-//            } else {
-//                lp.gravity = 8388659;
-//            }
-//        lp.buttonBrightness = BRIGHTNESS_OVERRIDE_OFF;
-//        lp.systemUiVisibility = SYSTEM_UI_FLAG_LOW_PROFILE;
-            windowManager.addView(v, lp);
-        }
-        return lp;
-    }
-
-    /**
-     * 更新窗口绘制
-     */
-    public static void updateWindow(View v, WindowManager.LayoutParams lp) {
-        WindowManager windowManager = (WindowManager) MyApplication.application.getSystemService(Context.WINDOW_SERVICE);
-        windowManager.updateViewLayout(v, lp);
-    }
-
-    /**
-     * 从窗口移除
-     */
-    public static void removeViewFromWindow(View v) {
-        if (v.isAttachedToWindow()) {
-            WindowManager windowManager = (WindowManager) MyApplication.application.getSystemService(Context.WINDOW_SERVICE);
-            if (v != null) {
-                windowManager.removeView(v);
+                hideArea();
             }
         }
-    }
 
-    public static boolean isAccessibilitySettingsOn() {
-        return isAccessibilitySettingsOn(MyAccessibilityService.class.getName());
-    }
-
-    private static boolean isAccessibilitySettingsOn(String className) {
-        ActivityManager activityManager = (ActivityManager) MyApplication.application.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningServiceInfo> runningServices = activityManager.getRunningServices(100);// 获取正在运行的服务列表
-        if (runningServices.size() < 0) {
-            return false;
+        @Override
+        public void characterSelect(int characterSelection) {
+            currentTapPoint = mAssistDataModel.getTapPoint(characterSelection);
+            autoTap();
         }
-        for (int i = 0; i < runningServices.size(); i++) {
-            ComponentName service = runningServices.get(i).service;
-            if (service.getClassName().equals(className)) {
-                return true;
+    };
+
+    private AssistAreaShowView mAreaShowView;
+
+    private void init() {
+        mAssistDataModel = new AssistDataModel();
+        mPanelView = new AssistPanelView(MyApplication.application, mPanelViewListener);
+        mAreaShowView = new AssistAreaShowView(MyApplication.application);
+    }
+
+    public AssistDataModel getDataModel() {
+        return mAssistDataModel;
+    }
+
+    public void startShow() {
+        Utils.logD(TAG, "startShow");
+        if (!new SetupPreference().isAutoclick()) {
+            Utils.logD(TAG, "自动连点未启用");
+            return;
+        }
+        if (!show) {
+            show = true;
+            mPanelLayoutParams = AssistUtils.addViewToWindow(mPanelView.getView(), mPanelView.getWidth(), mPanelView.getHeight(), Gravity.CENTER_VERTICAL | Gravity.LEFT, true);
+            if (mPanelView.isAreaShow()) {
+                showArea();
             }
         }
-        return false;
     }
 
-    public static void requestAccessibilityPermissions() {
-        Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        MyApplication.getCurrentActivity().startActivity(intent);
+    public void stopShow() {
+        Utils.logD(TAG, "stopShow");
+        if (show) {
+            show = false;
+            if (mPanelView.isAreaShow()) {
+                hideArea();
+            }
+            AssistUtils.removeViewFromWindow(mPanelView.getView());
+        }
+    }
+
+    private void showArea() {
+        Utils.logD(TAG, "showArea");
+        int[] screenSize = Utils.getScreenSize();
+        AssistUtils.addViewToWindow(mAreaShowView.getView(), mAreaShowView.getWidth(), mAreaShowView.getHeight(), false);
+    }
+
+    private void hideArea() {
+        Utils.logD(TAG, "hideArea");
+        AssistUtils.removeViewFromWindow(mAreaShowView.getView());
+    }
+
+    public void autoTap() {
+        if (currentTapPoint == null) {
+            return;
+        }
+//        Utils.logD(TAG, "autoTap point:" + Arrays.toString(point));
+        Path path = new Path();
+        path.moveTo(currentTapPoint[0], currentTapPoint[1]);
+        GestureDescription.StrokeDescription sd = new GestureDescription.StrokeDescription(path, 0, 10);
+        service.dispatchGesture(new GestureDescription.Builder().addStroke(sd).build(), new AccessibilityService.GestureResultCallback() {
+            @Override
+            public void onCompleted(GestureDescription gestureDescription) {
+//                Utils.logD(TAG, "onCompleted");
+                super.onCompleted(gestureDescription);
+                autoTap();
+            }
+
+            @Override
+            public void onCancelled(GestureDescription gestureDescription) {
+                Utils.logD(TAG, "onCancelled");
+                super.onCancelled(gestureDescription);
+                mPanelView.cancelTap();
+            }
+        }, null);
     }
 }

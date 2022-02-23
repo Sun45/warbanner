@@ -8,8 +8,8 @@ import android.widget.TextView;
 import androidx.cardview.widget.CardView;
 
 import cn.sun45.warbanner.R;
-import cn.sun45.warbanner.assist.AssistManager;
 import cn.sun45.warbanner.framework.ui.BaseFragment;
+import cn.sun45.warbanner.util.AssistUtils;
 import cn.sun45.warbanner.util.Utils;
 
 /**
@@ -40,8 +40,8 @@ public class PermissionFragment extends BaseFragment {
         mAccessibilityLay = mRoot.findViewById(R.id.accessibility_lay);
         mAccessibility = mRoot.findViewById(R.id.accessibility);
 
-        mAlertWindowLay.setOnClickListener(v -> AssistManager.requestAlertWindowPermissions());
-        mAccessibilityLay.setOnClickListener(v -> AssistManager.requestAccessibilityPermissions());
+        mAlertWindowLay.setOnClickListener(v -> AssistUtils.requestAlertWindowPermissions());
+        mAccessibilityLay.setOnClickListener(v -> AssistUtils.requestAccessibilityPermissions());
     }
 
     @Override
@@ -55,7 +55,7 @@ public class PermissionFragment extends BaseFragment {
             SpannableStringBuilder builder = new SpannableStringBuilder(Utils.getString(R.string.user_permission_alert_window) + " - ");
             String granted;
             int color;
-            if (AssistManager.canDrawOverlays()) {
+            if (AssistUtils.canDrawOverlays()) {
                 granted = Utils.getString(R.string.user_permission_granted);
                 color = Utils.getColor(R.color.green_dark);
             } else {
@@ -72,7 +72,7 @@ public class PermissionFragment extends BaseFragment {
             SpannableStringBuilder builder = new SpannableStringBuilder(Utils.getString(R.string.user_permission_accessibility) + " - ");
             String granted;
             int color;
-            if (AssistManager.isAccessibilitySettingsOn()) {
+            if (AssistUtils.isAccessibilitySettingsOn()) {
                 granted = Utils.getString(R.string.user_permission_granted);
                 color = Utils.getColor(R.color.green_dark);
             } else {

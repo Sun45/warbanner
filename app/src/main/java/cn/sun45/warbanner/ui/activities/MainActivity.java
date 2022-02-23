@@ -2,7 +2,6 @@ package cn.sun45.warbanner.ui.activities;
 
 import android.Manifest;
 import android.content.SharedPreferences;
-import android.os.Handler;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -14,7 +13,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import cn.sun45.warbanner.R;
-import cn.sun45.warbanner.assist.AutoClickManager;
 import cn.sun45.warbanner.datamanager.clanwar.ClanWarManager;
 import cn.sun45.warbanner.datamanager.source.SourceManager;
 import cn.sun45.warbanner.datamanager.update.UpdateManager;

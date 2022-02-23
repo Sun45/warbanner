@@ -8,16 +8,20 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/assist_pannel_bg.xml" value="0.3215" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/auto_click_showlay_bg.xml" value="0.3185" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" value="0.3215" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_block_24.xml" value="0.38229166666666664" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_info_24.xml" value="0.2485" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_link_24.xml" value="0.2485" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_security_24.xml" value="0.3185" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.2485" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_star_yellow.xml" value="0.38229166666666664" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_sync_alt_24.xml" value="0.3215" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/selectgroup_item_center_bg.xml" value="0.3185" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/selectgroup_item_left_bg.xml" value="0.2145" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/teamgroup_auto_screen_progress_drawable.xml" value="0.3185" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/assist_pannel.xml" value="0.67" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/autoclick_lay.xml" value="0.36614583333333334" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/autoclick_showlay.xml" value="0.31666666666666665" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/fragment_about.xml" value="0.24270833333333333" />

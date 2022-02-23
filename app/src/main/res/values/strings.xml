@@ -171,8 +171,6 @@
     <string name="user_permission_granted">已授权</string>
     <string name="user_permission_notgranted">未授权</string>
 
-    <string name="auto_click_area_show">区域展示</string>
-    <string name="auto_click_button_area">按钮展示</string>
     <string name="auto_click_character_one">角色一</string>
     <string name="auto_click_character_two">角色二</string>
     <string name="auto_click_character_three">角色三</string>
