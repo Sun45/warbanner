@@ -51,8 +51,14 @@ public class AssistManager {
         this.service = service;
     }
 
+    //服务已启动
+    public boolean serviceOn() {
+        return service != null;
+    }
+
     private boolean show;
     private AssistDataModel mAssistDataModel;
+    private int tapInterval;
     private int[] currentTapPoint;
 
     private AssistPanelView mPanelView;
@@ -85,12 +91,17 @@ public class AssistManager {
 
     private void init() {
         mAssistDataModel = new AssistDataModel();
+        tapInterval = new SetupPreference().getTapinterval();
         mPanelView = new AssistPanelView(MyApplication.application, mPanelViewListener);
         mAreaShowView = new AssistAreaShowView(MyApplication.application);
     }
 
     public AssistDataModel getDataModel() {
         return mAssistDataModel;
+    }
+
+    public void setTapInterval(int tapInterval) {
+        this.tapInterval = tapInterval;
     }
 
     public void startShow() {
@@ -134,10 +145,10 @@ public class AssistManager {
         if (currentTapPoint == null) {
             return;
         }
-//        Utils.logD(TAG, "autoTap point:" + Arrays.toString(point));
         Path path = new Path();
         path.moveTo(currentTapPoint[0], currentTapPoint[1]);
-        GestureDescription.StrokeDescription sd = new GestureDescription.StrokeDescription(path, 0, 10);
+//        Utils.logD(TAG, "autoTap tapInterval:" + tapInterval);
+        GestureDescription.StrokeDescription sd = new GestureDescription.StrokeDescription(path, 0, tapInterval);
         service.dispatchGesture(new GestureDescription.Builder().addStroke(sd).build(), new AccessibilityService.GestureResultCallback() {
             @Override
             public void onCompleted(GestureDescription gestureDescription) {

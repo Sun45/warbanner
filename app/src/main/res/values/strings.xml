@@ -80,7 +80,7 @@
     <string name="menu_clanwar_way_dialog_confirm">确定</string>
     <string name="menu_assist">辅助功能</string>
     <string name="menu_permission">权限设置</string>
-    <string name="menu_auto_click">连点启用</string>
+    <string name="menu_auto_click">连点设置</string>
     <string name="menu_setting">设置</string>
     <string name="menu_user">本地用户</string>
     <string name="menu_character_screen">角色筛选</string>
@@ -170,6 +170,15 @@
     <string name="user_permission_accessibility_description">开启此服务以授权辅助功能</string>
     <string name="user_permission_granted">已授权</string>
     <string name="user_permission_notgranted">未授权</string>
+
+    <string name="auto_click_title">连点设置</string>
+    <string name="auto_click_enable">是否启用</string>
+    <string name="auto_click_enable_on">已启用</string>
+    <string name="auto_click_enable_off">未启用</string>
+    <string name="auto_click_tapinterval">连点间隔</string>
+    <string name="auto_click_tapinterval_dialog_title">连点间隔</string>
+    <string name="auto_click_tapinterval_dialog_hint">连点间隔，大于0，默认10</string>
+    <string name="auto_click_tapinterval_dialog_confirm">确定</string>
 
     <string name="auto_click_character_one">角色一</string>
     <string name="auto_click_character_two">角色二</string>

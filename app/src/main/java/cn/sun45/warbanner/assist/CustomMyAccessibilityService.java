@@ -1,16 +1,8 @@
 package cn.sun45.warbanner.assist;
 
 import android.accessibilityservice.AccessibilityService;
-import android.app.ActivityManager;
-import android.content.ComponentName;
-import android.content.Context;
-import android.view.KeyEvent;
 import android.view.accessibility.AccessibilityEvent;
-import android.view.accessibility.AccessibilityNodeInfo;
 
-import java.util.List;
-
-import cn.sun45.warbanner.framework.MyApplication;
 import cn.sun45.warbanner.util.Utils;
 
 /**
@@ -43,5 +35,6 @@ public class CustomMyAccessibilityService extends AccessibilityService {
     @Override
     public void onInterrupt() {
         Utils.logD(TAG, "onInterrupt");
+        AssistManager.getInstance().setService(null);
     }
 }

@@ -1,7 +1,5 @@
 package cn.sun45.warbanner.util;
 
-import android.app.ActivityManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -11,9 +9,7 @@ import android.provider.Settings;
 import android.view.View;
 import android.view.WindowManager;
 
-import java.util.List;
-
-import cn.sun45.warbanner.assist.CustomMyAccessibilityService;
+import cn.sun45.warbanner.assist.AssistManager;
 import cn.sun45.warbanner.framework.MyApplication;
 
 /**
@@ -24,7 +20,7 @@ public class AssistUtils {
     private static final String TAG = "AssistUtils";
 
     /**
-     * 拥有系统图弹框权限
+     * 拥有系统弹框权限
      */
     public static boolean canDrawOverlays() {
         boolean canDrawOverlays = true;
@@ -132,25 +128,7 @@ public class AssistUtils {
      * 无障碍辅助服务已启动
      */
     public static boolean isAccessibilitySettingsOn() {
-        return isAccessibilitySettingsOn(CustomMyAccessibilityService.class.getName());
-    }
-
-    /**
-     * 无障碍辅助服务已启动
-     */
-    private static boolean isAccessibilitySettingsOn(String className) {
-        ActivityManager activityManager = (ActivityManager) MyApplication.application.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningServiceInfo> runningServices = activityManager.getRunningServices(100);// 获取正在运行的服务列表
-        if (runningServices.size() < 0) {
-            return false;
-        }
-        for (int i = 0; i < runningServices.size(); i++) {
-            ComponentName service = runningServices.get(i).service;
-            if (service.getClassName().equals(className)) {
-                return true;
-            }
-        }
-        return false;
+        return AssistManager.getInstance().serviceOn();
     }
 
     /**

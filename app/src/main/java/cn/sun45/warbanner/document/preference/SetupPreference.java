@@ -7,6 +7,8 @@ import cn.sun45.warbanner.framework.document.preference.BasePreference;
  * 设置信息
  */
 public class SetupPreference extends BasePreference {
+    //连点间隔
+    private int tapinterval = 10;
     //自动连点启用
     private boolean autoclick = false;
 
@@ -29,6 +31,14 @@ public class SetupPreference extends BasePreference {
 
     //链接打开方式
     private int linkopentype;
+
+    public int getTapinterval() {
+        return load("tapinterval");
+    }
+
+    public void setTapinterval(int tapinterval) {
+        save("tapinterval", tapinterval);
+    }
 
     public boolean isAutoclick() {
         return load("autoclick");

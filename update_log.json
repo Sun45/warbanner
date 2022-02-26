@@ -1,6 +1,6 @@
 {
-  "versionCode": "26",
-  "versionName": "2.4.2",
+  "versionCode": "27",
+  "versionName": "2.4.3",
   "fource": "false",
-  "content": "1.优化辅助功能弹框，重构代码"
+  "content": "1.加入连点间隔设置2.优化无障碍服务启动判断"
 }

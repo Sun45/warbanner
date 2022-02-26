@@ -22,8 +22,7 @@
             app:icon="@drawable/ic_baseline_security_24"
             app:key="permission"
             app:title="@string/menu_permission" />
-        <SwitchPreferenceCompat
-            app:defaultValue="false"
+        <Preference
             app:icon="@drawable/ic_baseline_touch_app_24"
             app:key="auto_click"
             app:title="@string/menu_auto_click" />

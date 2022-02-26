@@ -39,7 +39,7 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
 
     //辅助功能
     private Preference permission;
-    private SwitchPreferenceCompat autoClick;
+    private Preference autoClick;
 
     //设置
     private Preference user;
@@ -105,9 +105,9 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
         });
 
         autoClick = findPreference("auto_click");
-        autoClick.setChecked(new SetupPreference().isAutoclick());
-        autoClick.setOnPreferenceChangeListener((preference, newValue) -> {
-            new SetupPreference().setAutoclick((boolean) newValue);
+        autoClick.setOnPreferenceClickListener(preference -> {
+            NavController controller = Navigation.findNavController(getView());
+            controller.navigate(R.id.action_nav_main_to_nav_autoclick);
             return true;
         });
 

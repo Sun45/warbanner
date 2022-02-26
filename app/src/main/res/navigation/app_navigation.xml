@@ -36,6 +36,13 @@
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
         <action
+            android:id="@+id/action_nav_main_to_nav_autoclick"
+            app:destination="@id/nav_autoclick"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
             android:id="@+id/action_nav_main_to_nav_usermanager"
             app:destination="@id/nav_usermanager"
             app:enterAnim="@anim/slide_in_right"
@@ -135,6 +142,10 @@
         android:id="@+id/nav_permission"
         android:name="cn.sun45.warbanner.ui.fragments.assist.PermissionFragment"
         android:label="fragment_permission" />
+    <fragment
+        android:id="@+id/nav_autoclick"
+        android:name="cn.sun45.warbanner.ui.fragments.assist.AutoClickFragment"
+        android:label="fragment_autoclick" />
     <fragment
         android:id="@+id/nav_usermanager"
         android:name="cn.sun45.warbanner.ui.fragments.user.UserManagerFragment"
