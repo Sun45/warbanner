@@ -31,14 +31,18 @@ public class StaticHelper {
     public static final String UNKNOWN_ICON = API_URL + "/icon/equipment/999999.webp";
 
     //ClanWar
-    public static final String CLANWAR_OWNER="acaly";
-    public static final String CLANWAR_REPOSITORY="PcrGuildLibrary";
+    public static final String CLANWAR_OWNER = "acaly";
+    public static final String CLANWAR_REPOSITORY = "PcrGuildLibrary";
     public static final String CLANWAR_PATH_BASE = "data/";
-    public static final String CLANWAR_PATH_ONE="/A.json";
-    public static final String CLANWAR_PATH_TWO="/B.json";
-    public static final String CLANWAR_PATH_THREE="/C.json";
-    public static final String CLANWAR_PATH_FOUR="/D.json";
+    public static final String CLANWAR_PATH_ONE = "/A.json";
+    public static final String CLANWAR_PATH_TWO = "/B.json";
+    public static final String CLANWAR_PATH_THREE = "/C.json";
+    public static final String CLANWAR_PATH_FOUR = "/D.json";
 
     //昵称数据获取地址
     public static final String NICKNAME_URL = "https://github.com/pcrbot/pcr-nickname/blob/master/nicknames_zh-cn.csv";
+
+    //踩蘑菇会战数据请求地址
+    public static final String CAIMOGU_BASE = "https://www.caimogu.cc/gzlj/";
+    public static final String CAIMOGU_CLANWAR_URL = "https://www.caimogu.cc/gzlj/data";
 }

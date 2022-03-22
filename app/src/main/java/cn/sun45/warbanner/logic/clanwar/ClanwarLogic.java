@@ -41,6 +41,13 @@ public class ClanwarLogic extends BaseLogic {
         Call<String> getJson(@Url String url);
     }
 
+    //踩蘑菇
+    interface Caimogu {
+        @Headers("x-requested-with: XMLHttpRequest")
+        @GET
+        Call<String> getData(@Url String url);
+    }
+
     /**
      * 获取单元格信息列表
      *
@@ -285,8 +292,8 @@ public class ClanwarLogic extends BaseLogic {
                                         JSONObject source = sources.optJSONObject(j);
                                         String sourcedescription = source.optString("description");
                                         String sourceauthor = source.optString("author");
-                                        JSONObject sourcedamage=source.optJSONObject("damage");
-                                        JSONObject sourcetime=source.optJSONObject("time");
+                                        JSONObject sourcedamage = source.optJSONObject("damage");
+                                        JSONObject sourcetime = source.optJSONObject("time");
                                         JSONArray sourcelinks = source.optJSONArray("links");
                                         JSONArray sourceimages = source.optJSONArray("images");
                                         JSONArray sourcecomments = source.optJSONArray("comments");
@@ -314,6 +321,123 @@ public class ClanwarLogic extends BaseLogic {
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 listener.onFailed(t.getMessage());
+            }
+        });
+        return call;
+    }
+
+    /**
+     * 获取作业数据列表
+     */
+    public Call<String> getCaimoguData(final RequestListener<List<TeamModel>> listener) {
+        Call call = retrofit(StaticHelper.CAIMOGU_BASE).create(Caimogu.class).getData(StaticHelper.CAIMOGU_CLANWAR_URL);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                String result = response.body();
+                logD("getCaimoguData result:" + result);
+                if (TextUtils.isEmpty(result)) {
+                    listener.onSuccess(null);
+                } else {
+                    JSONObject object = null;
+                    try {
+                        object = new JSONObject(result);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    if (object == null) {
+                        listener.onSuccess(null);
+                    } else {
+                        List<TeamModel> teamModelList = new ArrayList<>();
+                        JSONArray dataJsonArray = object.optJSONArray("data");
+                        for (int i = 0, allnum = 0; i < dataJsonArray.length(); i++, allnum++) {
+                            JSONObject dataJsonArrayObject = dataJsonArray.optJSONObject(i);
+                            JSONArray homeworkJsonArray = dataJsonArrayObject.optJSONArray("homework");
+                            for (int j = 0; j < homeworkJsonArray.length(); j++) {
+                                JSONObject jsonObject = homeworkJsonArray.optJSONObject(j);
+                                String id = jsonObject.optString("id");
+                                int stage = 0;
+                                switch (id.substring(0, 1)) {
+                                    case "A":
+                                    case "a":
+                                        stage = 1;
+                                        break;
+                                    case "B":
+                                    case "b":
+                                        stage = 2;
+                                        break;
+                                    case "C":
+                                    case "c":
+                                        stage = 3;
+                                        break;
+                                    case "D":
+                                    case "d":
+                                        stage = 4;
+                                        break;
+                                }
+                                String boss = id.substring(0, 1) + id.substring(id.length() - 3, id.length() - 2);
+                                JSONArray unit = jsonObject.optJSONArray("unit");
+                                if (unit == null || unit.length() < 5) {
+                                    continue;
+                                }
+                                JSONObject characterone = unit.optJSONObject(0);
+                                JSONObject charactertwo = unit.optJSONObject(1);
+                                JSONObject characterthree = unit.optJSONObject(2);
+                                JSONObject characterfour = unit.optJSONObject(3);
+                                JSONObject characterfive = unit.optJSONObject(4);
+                                int characteroneid = characterone.optInt("id");
+                                int charactertwoid = charactertwo.optInt("id");
+                                int characterthreeid = characterthree.optInt("id");
+                                int characterfourid = characterfour.optInt("id");
+                                int characterfiveid = characterfive.optInt("id");
+                                if (characteroneid == 0 || charactertwoid == 0 || characterthreeid == 0 || characterfourid == 0 || characterfiveid == 0) {
+                                    continue;
+                                }
+                                String info = jsonObject.optString("info");
+                                int damage = jsonObject.optInt("damage");
+                                JSONArray video = jsonObject.optJSONArray("video");
+                                TeamModel teamModel = new TeamModel();
+                                teamModel.setStage(stage);
+                                teamModel.setNumber(id);
+                                teamModel.setSortnumber(allnum + "");
+                                teamModel.setBoss(boss);
+                                teamModel.setDamage(damage * 10000);
+                                teamModel.setEllipsisdamage(damage);
+                                teamModel.setAuto(id.contains("t") || id.contains("T"));
+                                teamModel.setCharacterone(characteroneid * 100 + 1);
+                                teamModel.setCharactertwo(charactertwoid * 100 + 1);
+                                teamModel.setCharacterthree(characterthreeid * 100 + 1);
+                                teamModel.setCharacterfour(characterfourid * 100 + 1);
+                                teamModel.setCharacterfive(characterfiveid * 100 + 1);
+                                teamModel.setSketch(info);
+                                if (video != null) {
+                                    try {
+                                        JSONArray remarks = new JSONArray();
+                                        for (int k = 0; k < video.length(); k++) {
+                                            JSONObject source = video.optJSONObject(k);
+                                            String sourcedescription = source.optString("text");
+                                            String sourcelink = source.optString("url");
+                                            JSONObject remark = new JSONObject();
+                                            remark.put("content", sourcedescription);
+                                            remark.put("link", sourcelink);
+                                            remarks.put(remark);
+                                        }
+                                        teamModel.setRemarks(remarks.toString());
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                teamModelList.add(teamModel);
+                            }
+                        }
+                        listener.onSuccess(teamModelList);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
             }
         });
         return call;

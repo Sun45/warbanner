@@ -142,7 +142,7 @@ public class AssistManager {
     }
 
     public void autoTap() {
-        if (currentTapPoint == null) {
+        if (currentTapPoint == null || service == null) {
             return;
         }
         Path path = new Path();

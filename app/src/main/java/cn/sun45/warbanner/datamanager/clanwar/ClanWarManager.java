@@ -203,6 +203,105 @@ public class ClanWarManager {
         });
     }
 
+    /***
+     * 弹出更新确认下载数据对话框
+     *
+     * @param autocheck 自动检查
+     */
+    public void showConfirmDialogCaimogu(boolean autocheck) {
+        Utils.logD(TAG, "showConfirmDialogCaimogu");
+        new MaterialDialog(MyApplication.getCurrentActivity(), MaterialDialog.getDEFAULT_BEHAVIOR())
+                .title(R.string.clanwar_update_dialog_title, null)
+                .message(R.string.clanwar_update_dialog_text, null, null)
+                .cancelOnTouchOutside(false)
+                .positiveButton(R.string.clanwar_update_dialog_confirm, null, new Function1<MaterialDialog, Unit>() {
+                    @Override
+                    public Unit invoke(MaterialDialog materialDialog) {
+                        downloadDataCaimogu(autocheck);
+                        return null;
+                    }
+                })
+                .negativeButton(R.string.clanwar_update_dialog_cancel, null, new Function1<MaterialDialog, Unit>() {
+                    @Override
+                    public Unit invoke(MaterialDialog materialDialog) {
+                        Log.d(TAG, "Canceled");
+                        if (iActivityCallBack != null) {
+                            iActivityCallBack.ClanWarReady(autocheck);
+                        }
+                        return null;
+                    }
+                })
+                .show();
+    }
+
+    /**
+     * 下载作业数据
+     *
+     * @param autocheck 自动检查
+     */
+    private void downloadDataCaimogu(boolean autocheck) {
+        Utils.logD(TAG, "downloadDataCaimogu");
+        String date = ClanwarHelper.getCurrentClanWarDate();
+        if (TextUtils.isEmpty(date)) {
+            if (iActivityCallBack != null) {
+                iActivityCallBack.showSnackBar(R.string.clanwar_update_clanwar_empty);
+                iActivityCallBack.ClanWarReady(autocheck);
+            }
+        } else {
+            MaterialDialog progressDialog = new MaterialDialog(MyApplication.getCurrentActivity(), MaterialDialog.getDEFAULT_BEHAVIOR());
+            progressDialog.title(R.string.clanwar_update_progress_title, null)
+                    .message(R.string.clanwar_update_progress_text, null, null)
+                    .cancelable(false)
+                    .show();
+            new ClanwarPreference().setLastupdate(System.currentTimeMillis());
+            loadDataAndSaveCaimogu(date, () -> {
+                if (iActivityCallBack != null) {
+                    iActivityCallBack.showSnackBar(R.string.clanwar_update_finished_text);
+                    iActivityCallBack.ClanWarReady(autocheck);
+                }
+                if (progressDialog != null) {
+                    progressDialog.cancel();
+                }
+            }, 0);
+        }
+    }
+
+    /**
+     * 读取数据并存库
+     *
+     * @param date     会战日期 202107
+     * @param listener 数据请求监听
+     * @param retry    重试次数
+     */
+    private void loadDataAndSaveCaimogu(String date, ClanWarRequestListener listener, int retry) {
+        Utils.logD(TAG, "loadDataAndSaveCaimogu retry:" + retry);
+        new ClanwarLogic().getCaimoguData(new RequestListener<List<TeamModel>>() {
+            @Override
+            public void onSuccess(List<TeamModel> result) {
+                if (result != null && !result.isEmpty()) {
+                    DbHelper.delete(MyApplication.application, TeamModel.class, new String[]{"date"}, new String[]{date});
+                    for (TeamModel teamModel : result) {
+                        teamModel.setDate(date);
+                        DbHelper.insert(MyApplication.application, teamModel);
+                    }
+                    listener.loadFinish();
+                } else {
+                    onFailed("");
+                }
+            }
+
+            @Override
+            public void onFailed(String message) {
+                if (retry < 2) {
+                    loadDataAndSaveCaimogu(date, listener, retry + 1);
+                } else {
+                    listener.loadFinish();
+                }
+            }
+        });
+    }
+
+
     public interface ClanWarRequestListener {
         void loadFinish();
     }

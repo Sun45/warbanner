@@ -11,6 +11,7 @@
             app:title="@string/menu_clanwar_update" />
         <Preference
             app:icon="@drawable/ic_baseline_linear_scale_24"
+            app:isPreferenceVisible="false"
             app:key="clanwar_way"
             app:title="@string/menu_clanwar_way" />
     </PreferenceCategory>

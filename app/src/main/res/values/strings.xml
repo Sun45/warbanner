@@ -37,6 +37,7 @@
     <string name="clanwar_update_dialog_cancel">稍后</string>
     <string name="clanwar_update_clanwar_empty">会战排期数据为空，请更新数据库</string>
     <string name="clanwar_update_progress_title">作业下载</string>
+    <string name="clanwar_update_progress_text">作业下载中。。。</string>
     <string name="clanwar_update_progress_text_one">一阶段作业下载中。。。</string>
     <string name="clanwar_update_progress_text_two">二阶段作业下载中。。。</string>
     <string name="clanwar_update_progress_text_three">三阶段作业下载中。。。</string>

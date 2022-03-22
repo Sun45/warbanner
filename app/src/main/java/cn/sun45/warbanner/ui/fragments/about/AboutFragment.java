@@ -56,17 +56,28 @@ public class AboutFragment extends BaseFragment {
     protected void dataRequest() {
         SpannableStringBuilder builder = new SpannableStringBuilder();
         appendStr(builder, "\n作业数据来源");
+        appendStr(builder, " ");
         appendLink(builder, "花舞攻略组的在线作业文档", "https://docs.qq.com/sheet/DWkdtR2djbnFiUGRk?tab=ltc6xo");
         appendStr(builder, "\n");
+        appendStr(builder, " ");
         appendQQLink(builder, "\n花舞交流群：", "700350785");
         appendStr(builder, "\n");
+        appendStr(builder, "\n作业数据网站踩蘑菇");
+        appendStr(builder, " ");
+        appendLink(builder, "轴区网站", "https://www.caimogu.cc/gzlj.html");
+        appendStr(builder, " ");
+        appendLink(builder, "踩蘑菇社区", "https://www.caimogu.cc/");
+        appendStr(builder, "\n");
         appendStr(builder, "\n作业数据镜像站github");
+        appendStr(builder, " ");
         appendLink(builder, "PcrGuildLibrary", "https://github.com/acaly/PcrGuildLibrary");
         appendStr(builder, "\n");
         appendStr(builder, "\n启发及角色数据获取方式来自");
+        appendStr(builder, " ");
         appendLink(builder, "静流笔记", "https://github.com/MalitsPlus/ShizuruNotes");
         appendStr(builder, "\n");
         appendStr(builder, "\n数据来源干炸里脊资源站");
+        appendStr(builder, " ");
         appendLink(builder, "干炸里脊资源站", "https://redive.estertion.win/");
         appendStr(builder, "\n");
         appendLink(builder, "\n开源地址", "https://github.com/Sun45/warbanner");

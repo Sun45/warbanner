@@ -9,15 +9,17 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
+import androidx.navigation.Navigation;
 
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.input.DialogInputExtKt;
+import com.google.android.material.appbar.MaterialToolbar;
 
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.assist.AssistManager;
 import cn.sun45.warbanner.document.preference.SetupPreference;
+import cn.sun45.warbanner.framework.ui.BaseActivity;
 import cn.sun45.warbanner.framework.ui.BaseFragment;
-import cn.sun45.warbanner.util.AssistUtils;
 import cn.sun45.warbanner.util.Utils;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function2;
@@ -46,6 +48,14 @@ public class AutoClickFragment extends BaseFragment {
 
     @Override
     protected void initView() {
+        MaterialToolbar toolbar = mRoot.findViewById(R.id.drop_toolbar);
+        ((BaseActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigateUp();
+            }
+        });
         mEnableLay = mRoot.findViewById(R.id.enable_lay);
         mEnable = mRoot.findViewById(R.id.enable);
         mTapintervalLay = mRoot.findViewById(R.id.tapinterval_lay);

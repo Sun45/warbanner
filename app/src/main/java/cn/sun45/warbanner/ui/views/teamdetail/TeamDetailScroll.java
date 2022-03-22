@@ -74,7 +74,9 @@ public class TeamDetailScroll extends ScrollView {
                 sketchHolderList.add(sketchHolder);
             }
         } catch (JSONException e) {
-            e.printStackTrace();
+            SketchHolder sketchHolder = new SketchHolder(teamModel.getSketch());
+            layList.add(sketchHolder.getLay());
+            sketchHolderList.add(sketchHolder);
         }
         remarkHolderList = new ArrayList<>();
         try {

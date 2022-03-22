@@ -75,7 +75,7 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
 
         update = findPreference("clanwar_update");
         update.setOnPreferenceClickListener(preference -> {
-            ClanWarManager.getInstance().showConfirmDialog(false);
+            ClanWarManager.getInstance().showConfirmDialogCaimogu(false);
             btnRestore(preference);
             return true;
         });

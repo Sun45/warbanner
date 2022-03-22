@@ -3,11 +3,16 @@ package cn.sun45.warbanner.ui.fragments.assist;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
+import androidx.navigation.Navigation;
+
+import com.google.android.material.appbar.MaterialToolbar;
 
 import cn.sun45.warbanner.R;
+import cn.sun45.warbanner.framework.ui.BaseActivity;
 import cn.sun45.warbanner.framework.ui.BaseFragment;
 import cn.sun45.warbanner.util.AssistUtils;
 import cn.sun45.warbanner.util.Utils;
@@ -35,6 +40,14 @@ public class PermissionFragment extends BaseFragment {
 
     @Override
     protected void initView() {
+        MaterialToolbar toolbar = mRoot.findViewById(R.id.drop_toolbar);
+        ((BaseActivity) getActivity()).setSupportActionBar(toolbar);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Navigation.findNavController(v).navigateUp();
+            }
+        });
         mAlertWindowLay = mRoot.findViewById(R.id.alert_window_lay);
         mAlertWindow = mRoot.findViewById(R.id.alert_window);
         mAccessibilityLay = mRoot.findViewById(R.id.accessibility_lay);
