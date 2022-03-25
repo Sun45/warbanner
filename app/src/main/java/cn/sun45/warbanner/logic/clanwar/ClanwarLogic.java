@@ -350,12 +350,15 @@ public class ClanwarLogic extends BaseLogic {
                     } else {
                         List<TeamModel> teamModelList = new ArrayList<>();
                         JSONArray dataJsonArray = object.optJSONArray("data");
-                        for (int i = 0, allnum = 0; i < dataJsonArray.length(); i++, allnum++) {
+                        for (int i = 0, allnum = 0; i < dataJsonArray.length(); i++) {
                             JSONObject dataJsonArrayObject = dataJsonArray.optJSONObject(i);
                             JSONArray homeworkJsonArray = dataJsonArrayObject.optJSONArray("homework");
                             for (int j = 0; j < homeworkJsonArray.length(); j++) {
                                 JSONObject jsonObject = homeworkJsonArray.optJSONObject(j);
-                                String id = jsonObject.optString("id");
+                                String id = jsonObject.optString("sn");
+                                if (id.length() < 4) {
+                                    continue;
+                                }
                                 int stage = 0;
                                 switch (id.substring(0, 1)) {
                                     case "A":
@@ -428,6 +431,7 @@ public class ClanwarLogic extends BaseLogic {
                                     }
                                 }
                                 teamModelList.add(teamModel);
+                                allnum++;
                             }
                         }
                         listener.onSuccess(teamModelList);

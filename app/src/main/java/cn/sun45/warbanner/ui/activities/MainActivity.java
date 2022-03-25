@@ -136,7 +136,7 @@ public class MainActivity extends BaseActivity implements PermissionRequestListe
             @Override
             public void run() {
                 if (clanWarManager.needDataDownload()) {
-                    clanWarManager.showConfirmDialog(true);
+                    clanWarManager.showConfirmDialogCaimogu(true);
                 } else {
                     sharedClanwar.loadData();
                     checkAppVersion();

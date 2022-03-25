@@ -1,6 +1,6 @@
 {
-  "versionCode": "28",
-  "versionName": "2.5.1",
+  "versionCode": "29",
+  "versionName": "2.5.2",
   "fource": "false",
-  "content": "1.调整辅助功能界面2.调整请求数据来源为踩蘑菇"
+  "content": "1.调整自动更新数据来源为踩蘑菇2.添加6星角色判断方法3.调整踩蘑菇数据列表解析"
 }

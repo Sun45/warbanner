@@ -179,6 +179,31 @@ public class SourceDataProcessHelper extends SQLiteOpenHelper {
         }
     }
 
+    /**
+     * 获取查询到的第一列字符串
+     *
+     * @param sql
+     * @return
+     */
+    private List<String> getStringList(String sql) {
+        if (!FileUtil.checkFile(FileUtil.getDbFilePath(StaticHelper.DB_FILE_NAME))) {
+            return null;
+        }
+        Cursor cursor = getReadableDatabase().rawQuery(sql, null);
+        if (cursor == null) {
+            return null;
+        }
+        List<String> result = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            if (cursor.isBeforeFirst()) {
+                continue;
+            }
+            result.add(cursor.getString(0));
+        }
+        cursor.close();
+        return result;
+    }
+
     /***
      * 获取查询语句的第一行第一列值
      * @param sql
@@ -251,6 +276,13 @@ public class SourceDataProcessHelper extends SQLiteOpenHelper {
                 "                        WHERE ud.comment <> ''\n" +
                 "                        AND ud.unit_id < 400000\n" +
                 "                        ", RawUnitBasic.class);
+    }
+
+    /**
+     * 获取6星角色ID列表
+     */
+    public List<String> getSixRarityUnitList() {
+        return getStringList("SELECT unit_id FROM unit_rarity WHERE rarity=6");
     }
 
     /***
