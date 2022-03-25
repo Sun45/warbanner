@@ -43,6 +43,8 @@
     <string name="clanwar_update_progress_text_three">三阶段作业下载中。。。</string>
     <string name="clanwar_update_progress_text_four">四阶段作业下载中。。。</string>
     <string name="clanwar_update_finished_text">作业更新完成</string>
+    <string name="clanwar_update_finished_winth_duplicate_id">作业更新完成 存在重复ID作业:%1$s</string>
+    <string name="clanwar_update_fail">作业更新失败</string>
 
     <string name="title_collection">收藏</string>
     <string name="title_teamlist">作业</string>

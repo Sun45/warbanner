@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.sun45.warbanner.clanwar.ClanwarHelper;
 import cn.sun45.warbanner.document.StaticHelper;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.document.preference.ClanwarPreference;
@@ -441,7 +440,7 @@ public class ClanwarLogic extends BaseLogic {
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
-
+                listener.onFailed(t.getMessage());
             }
         });
         return call;

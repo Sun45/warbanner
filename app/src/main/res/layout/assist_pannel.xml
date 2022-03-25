@@ -5,7 +5,7 @@
     android:layout_height="wrap_content">
 
     <LinearLayout
-        android:layout_width="100dp"
+        android:layout_width="80dp"
         android:layout_height="235dp"
         android:background="@drawable/assist_pannel_bg"
         android:orientation="vertical"
@@ -42,6 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="35dp"
             android:layout_marginTop="20dp"
+            android:drawableRight="@drawable/ic_assist_character_hint"
             android:gravity="center"
             android:text="@string/auto_click_character_one"
             android:textColor="@color/white_50"
@@ -51,6 +52,7 @@
             android:id="@+id/character_two"
             android:layout_width="match_parent"
             android:layout_height="35dp"
+            android:drawableRight="@drawable/ic_assist_character_hint"
             android:gravity="center"
             android:text="@string/auto_click_character_two"
             android:textColor="@color/white_50"
@@ -60,6 +62,7 @@
             android:id="@+id/character_three"
             android:layout_width="match_parent"
             android:layout_height="35dp"
+            android:drawableRight="@drawable/ic_assist_character_hint"
             android:gravity="center"
             android:text="@string/auto_click_character_three"
             android:textColor="@color/white_50"
@@ -69,6 +72,7 @@
             android:id="@+id/character_four"
             android:layout_width="match_parent"
             android:layout_height="35dp"
+            android:drawableRight="@drawable/ic_assist_character_hint"
             android:gravity="center"
             android:text="@string/auto_click_character_four"
             android:textColor="@color/white_50"
@@ -78,6 +82,7 @@
             android:id="@+id/character_five"
             android:layout_width="match_parent"
             android:layout_height="35dp"
+            android:drawableRight="@drawable/ic_assist_character_hint"
             android:gravity="center"
             android:text="@string/auto_click_character_five"
             android:textColor="@color/white_50"

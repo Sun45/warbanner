@@ -112,7 +112,7 @@ public class AssistPanelView extends AssistView {
         if (shrink) {
             return Utils.dip2px(MyApplication.application, 30);
         } else {
-            return Utils.dip2px(MyApplication.application, 100);
+            return Utils.dip2px(MyApplication.application, 80);
         }
     }
 

@@ -3,6 +3,8 @@ package cn.sun45.warbanner.assist;
 import android.accessibilityservice.AccessibilityService;
 import android.view.accessibility.AccessibilityEvent;
 
+import java.util.Arrays;
+
 import cn.sun45.warbanner.util.Utils;
 
 /**
@@ -11,6 +13,17 @@ import cn.sun45.warbanner.util.Utils;
  */
 public class CustomMyAccessibilityService extends AccessibilityService {
     private static final String TAG = "CustomMyAccessibilityService";
+
+    private static final String[] PACKAGES = new String[]{
+            Utils.getPackageName(),
+            "com.android.systemui",
+            "com.bilibili.priconne",
+            "jp.co.cygames.princessconnectredive",
+            "tw.sonet.princessconnect",
+            "com.kakaogames.pcr",
+            "com.ini3.PrincessConnectTH",
+            "com.crunchyroll.princessconnectredive"
+    };
 
     @Override
     protected void onServiceConnected() {
@@ -23,10 +36,8 @@ public class CustomMyAccessibilityService extends AccessibilityService {
     public void onAccessibilityEvent(AccessibilityEvent event) {
         CharSequence packageName = event.getPackageName();
         Utils.logD(TAG, "onAccessibilityEvent packageName:" + packageName);
-        if (packageName != null && packageName.equals("com.bilibili.priconne")) {
+        if (packageName != null && Arrays.asList(PACKAGES).contains(packageName)) {
             AssistManager.getInstance().startShow();
-        } else if (packageName != null && packageName.equals(Utils.getPackageName())) {
-        } else if (packageName != null && packageName.equals("com.android.systemui")) {
         } else {
             AssistManager.getInstance().stopShow();
         }

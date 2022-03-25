@@ -162,6 +162,11 @@ public class MainActivity extends BaseActivity implements PermissionRequestListe
     }
 
     @Override
+    public void showSnackBar(String message) {
+        Utils.tip(mRoot, message);
+    }
+
+    @Override
     public void sourceUpdateFinished(boolean needload, boolean autocheck) {
         if (needload) {
             sharedSource.clearData();
