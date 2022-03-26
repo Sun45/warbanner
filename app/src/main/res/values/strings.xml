@@ -57,19 +57,28 @@
     <string name="teamlist_menu_link_screen">链接</string>
     <string name="teamlist_menu_link_show">展示作业链接</string>
     <string name="teamlist_menu_link_screen_dialog_confirm">确定</string>
-    <string name="teamlist_menu_auto">AUTO</string>
-    <string name="teamlist_menu_auto_screen">AUTO筛选</string>
-    <string-array name="teamlist_menu_auto_screen_dialog_options">
+    <string name="teamlist_menu_screen">筛选</string>
+    <string-array name="teamlist_screen_stage_options">
         <item>全部</item>
+        <item>一阶段</item>
+        <item>二阶段</item>
+        <item>三阶段</item>
+        <item>四阶段</item>
+    </string-array>
+    <string-array name="teamlist_screen_boss_options">
+        <item>全部</item>
+        <item>一王</item>
+        <item>二王</item>
+        <item>三王</item>
+        <item>四王</item>
+        <item>五王</item>
+    </string-array>
+    <string-array name="teamlist_screen_type_options">
+        <item>不限</item>
         <item>AUTO</item>
         <item>非AUTO</item>
+        <item>尾刀</item>
     </string-array>
-    <string name="teamlist_menu_auto_screen_dialog_confirm">确定</string>
-    <string name="teamlist_menu_all">全部</string>
-    <string name="teamlist_menu_one">一阶段</string>
-    <string name="teamlist_menu_two">二阶段</string>
-    <string name="teamlist_menu_three">三阶段</string>
-    <string name="teamlist_menu_four">四阶段</string>
 
     <string name="menu_clanwar">作业</string>
     <string name="menu_clanwar_update">作业更新</string>
@@ -108,19 +117,6 @@
     <string name="teamgroup_state_interrupt_finish">生成%1$d个分刀,分刀结果太多提前中断生成，请添加分刀筛选条件</string>
     <string name="teamgroup_state_finish">生成%1$d个分刀</string>
     <string name="teamgroup_menu_screen">筛选</string>
-    <string-array name="teamgroup_menu_boss_screen_dialog_options">
-        <item>一王</item>
-        <item>二王</item>
-        <item>三王</item>
-        <item>四王</item>
-        <item>五王</item>
-    </string-array>
-    <string name="teamgroup_menu_boss_screen_dialog_confirm">确定</string>
-    <string name="teamgroup_menu_auto">AUTO</string>
-    <string name="teamgroup_menu_auto_screen">AUTO筛选</string>
-    <string name="teamgroup_menu_auto_screen_autocount">AUTO刀%1$d</string>
-    <string name="teamgroup_menu_auto_screen_notautocount">非AUTO刀%1$d</string>
-    <string name="teamgroup_menu_auto_screen_use">启用auto筛选</string>
 
     <string name="teamgroup_screen_title">分刀筛选</string>
     <string-array name="teamgroup_screen_stage_options">
@@ -144,19 +140,6 @@
 
     <string name="teamselect_title">阵容选择</string>
     <string name="teamselect_empty_hint">%1$s作业为空\n请更新作业或等待会战开始</string>
-    <string name="teamselect_menu_auto">AUTO</string>
-    <string name="teamselect_menu_auto_screen">AUTO筛选</string>
-    <string-array name="teamselect_menu_auto_screen_dialog_options">
-        <item>全部</item>
-        <item>AUTO</item>
-        <item>非AUTO</item>
-    </string-array>
-    <string name="teamselect_menu_auto_screen_dialog_confirm">确定</string>
-    <string name="teamselect_menu_all">全部</string>
-    <string name="teamselect_menu_one">一阶段</string>
-    <string name="teamselect_menu_two">二阶段</string>
-    <string name="teamselect_menu_three">三阶段</string>
-    <string name="teamselect_menu_four">四阶段</string>
 
     <string name="teamgroup_detail_title">分刀详情</string>
     <string name="teamgroup_detail_menu_share">分享</string>

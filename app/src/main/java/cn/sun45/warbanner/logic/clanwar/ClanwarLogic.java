@@ -406,6 +406,7 @@ public class ClanwarLogic extends BaseLogic {
                                 teamModel.setDamage(damage * 10000);
                                 teamModel.setEllipsisdamage(damage);
                                 teamModel.setAuto(id.contains("t") || id.contains("T"));
+                                teamModel.setFinish(id.contains("w") || id.contains("W"));
                                 teamModel.setCharacterone(characteroneid * 100 + 1);
                                 teamModel.setCharactertwo(charactertwoid * 100 + 1);
                                 teamModel.setCharacterthree(characterthreeid * 100 + 1);

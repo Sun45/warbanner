@@ -3,32 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <group android:checkableBehavior="none">
         <item
-            android:id="@+id/menu_auto"
-            android:title="@string/teamselect_menu_auto"
+            android:id="@+id/menu_screen"
+            android:title="@string/teamlist_menu_screen"
             app:showAsAction="always" />
-    </group>
-    <group
-        android:id="@+id/stage"
-        android:checkableBehavior="single">
-        <item
-            android:id="@+id/menu_all"
-            android:title="@string/teamselect_menu_all"
-            app:showAsAction="never" />
-        <item
-            android:id="@+id/menu_one"
-            android:title="@string/teamselect_menu_one"
-            app:showAsAction="never" />
-        <item
-            android:id="@+id/menu_two"
-            android:title="@string/teamselect_menu_two"
-            app:showAsAction="never" />
-        <item
-            android:id="@+id/menu_three"
-            android:title="@string/teamselect_menu_three"
-            app:showAsAction="never" />
-        <item
-            android:id="@+id/menu_four"
-            android:title="@string/teamselect_menu_four"
-            app:showAsAction="never" />
     </group>
 </menu>

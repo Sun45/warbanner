@@ -11,12 +11,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.sun45.warbanner.document.StaticHelper;
 import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.document.db.setup.ScreenCharacterModel;
 import cn.sun45.warbanner.document.db.source.CharacterModel;
 import cn.sun45.warbanner.document.db.source.ClanWarModel;
-import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListListener;
 import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListModel;
 
 /**
@@ -51,127 +51,64 @@ public class TeamList extends RecyclerView {
         adapter.notifyDataSetChanged();
     }
 
-    public void setData(List<TeamModel> list, ClanWarModel clanWarModel, boolean showlink, int autoScreen, int showtype) {
-        List<TeamListTeamModel> teamModelOnelist = new ArrayList<>();
-        List<TeamListTeamModel> teamModelTwolist = new ArrayList<>();
-        List<TeamListTeamModel> teamModelThreelist = new ArrayList<>();
-        List<TeamListTeamModel> teamModelFourlist = new ArrayList<>();
-        for (TeamModel teamModel : list) {
-            switch (teamModel.getStage()) {
-                case 1:
-                    teamModelOnelist.add(new TeamListTeamModel(teamModel));
-                    break;
-                case 2:
-                    teamModelTwolist.add(new TeamListTeamModel(teamModel));
-                    break;
-                case 3:
-                    teamModelThreelist.add(new TeamListTeamModel(teamModel));
-                    break;
-                case 4:
-                    teamModelFourlist.add(new TeamListTeamModel(teamModel));
-                    break;
-                default:
-                    break;
+    public void setData(List<TeamModel> list, ClanWarModel clanWarModel, boolean showlink, int stageSelection, int bossSelection, int typeSelection) {
+        List<TeamListBossModel> teamWithBossList = new ArrayList<>();
+        for (int stage = 1; stage <= StaticHelper.STAGE_COUNT; stage++) {
+            for (int boss = 1; boss <= StaticHelper.BOSS_COUNT; boss++) {
+                String name = null;
+                String iconUrl = null;
+                switch (boss) {
+                    case 1:
+                        name = clanWarModel.getBossonename();
+                        iconUrl = clanWarModel.getBossoneiconurl();
+                        break;
+                    case 2:
+                        name = clanWarModel.getBosstwoname();
+                        iconUrl = clanWarModel.getBosstwoiconurl();
+                        break;
+                    case 3:
+                        name = clanWarModel.getBossthreename();
+                        iconUrl = clanWarModel.getBossthreeiconurl();
+                        break;
+                    case 4:
+                        name = clanWarModel.getBossfourname();
+                        iconUrl = clanWarModel.getBossfouriconurl();
+                        break;
+                    case 5:
+                        name = clanWarModel.getBossfivename();
+                        iconUrl = clanWarModel.getBossfiveiconurl();
+                        break;
+                }
+                teamWithBossList.add(fillBossModel(new TeamListBossModel(stage, boss, name, iconUrl), list, stage, boss));
             }
         }
-        adapter.setList(
-                fillList(new ArrayList<>(), clanWarModel, teamModelOnelist),
-                fillList(new ArrayList<>(), clanWarModel, teamModelTwolist),
-                fillList(new ArrayList<>(), clanWarModel, teamModelThreelist),
-                fillList(new ArrayList<>(), clanWarModel, teamModelFourlist));
+        adapter.setTeamWithBossList(teamWithBossList);
         adapter.setShowlink(showlink);
-        adapter.setAutoScreen(autoScreen);
-        adapter.setShowtype(showtype);
+        adapter.setStageSelection(stageSelection);
+        adapter.setBossSelection(bossSelection);
+        adapter.setTypeSelection(typeSelection);
         adapter.notifyDataSetChanged();
     }
 
-    private List<Object> fillList(List<Object> list, ClanWarModel clanWarModel, List<TeamListTeamModel> teamModellist) {
-        if (clanWarModel != null) {
-            list.add(new TeamListBossModel(clanWarModel.getBossonename(), clanWarModel.getBossoneiconurl()));
-        }
-        for (TeamListTeamModel teamListTeamModel : teamModellist) {
-            String boss = teamListTeamModel.getTeamModel().getBoss().substring(1, 2);
-            boolean auto = teamListTeamModel.getTeamModel().isAuto();
-            if (boss.equals("1") && !auto) {
-                list.add(teamListTeamModel);
+    public TeamListBossModel fillBossModel(TeamListBossModel teamListBossModel, List<TeamModel> list, int stage, int boss) {
+        List<TeamListTeamModel> teamModels = new ArrayList<>();
+        for (TeamModel teamModel : list) {
+            if (teamModel.getStage() == stage && teamModel.getBoss().substring(1, 2).equals(boss + "") && teamModel.getType() == 1) {
+                teamModels.add(new TeamListTeamModel(teamModel));
             }
         }
-        for (TeamListTeamModel teamListTeamModel : teamModellist) {
-            String boss = teamListTeamModel.getTeamModel().getBoss().substring(1, 2);
-            boolean auto = teamListTeamModel.getTeamModel().isAuto();
-            if (boss.equals("1") && auto) {
-                list.add(teamListTeamModel);
+        for (TeamModel teamModel : list) {
+            if (teamModel.getStage() == stage && teamModel.getBoss().substring(1, 2).equals(boss + "") && teamModel.getType() == 2) {
+                teamModels.add(new TeamListTeamModel(teamModel));
             }
         }
-        if (clanWarModel != null) {
-            list.add(new TeamListBossModel(clanWarModel.getBosstwoname(), clanWarModel.getBosstwoiconurl()));
-        }
-        for (TeamListTeamModel teamListTeamModel : teamModellist) {
-            String boss = teamListTeamModel.getTeamModel().getBoss().substring(1, 2);
-            boolean auto = teamListTeamModel.getTeamModel().isAuto();
-            if (boss.equals("2") && !auto) {
-                list.add(teamListTeamModel);
+        for (TeamModel teamModel : list) {
+            if (teamModel.getStage() == stage && teamModel.getBoss().substring(1, 2).equals(boss + "") && teamModel.getType() == 3) {
+                teamModels.add(new TeamListTeamModel(teamModel));
             }
         }
-        for (TeamListTeamModel teamListTeamModel : teamModellist) {
-            String boss = teamListTeamModel.getTeamModel().getBoss().substring(1, 2);
-            boolean auto = teamListTeamModel.getTeamModel().isAuto();
-            if (boss.equals("2") && auto) {
-                list.add(teamListTeamModel);
-            }
-        }
-        if (clanWarModel != null) {
-            list.add(new TeamListBossModel(clanWarModel.getBossthreename(), clanWarModel.getBossthreeiconurl()));
-        }
-        for (TeamListTeamModel teamListTeamModel : teamModellist) {
-            String boss = teamListTeamModel.getTeamModel().getBoss().substring(1, 2);
-            boolean auto = teamListTeamModel.getTeamModel().isAuto();
-            if (boss.equals("3") && !auto) {
-                list.add(teamListTeamModel);
-            }
-        }
-        for (TeamListTeamModel teamListTeamModel : teamModellist) {
-            String boss = teamListTeamModel.getTeamModel().getBoss().substring(1, 2);
-            boolean auto = teamListTeamModel.getTeamModel().isAuto();
-            if (boss.equals("3") && auto) {
-                list.add(teamListTeamModel);
-            }
-        }
-        if (clanWarModel != null) {
-            list.add(new TeamListBossModel(clanWarModel.getBossfourname(), clanWarModel.getBossfouriconurl()));
-        }
-        for (TeamListTeamModel teamListTeamModel : teamModellist) {
-            String boss = teamListTeamModel.getTeamModel().getBoss().substring(1, 2);
-            boolean auto = teamListTeamModel.getTeamModel().isAuto();
-            if (boss.equals("4") && !auto) {
-                list.add(teamListTeamModel);
-            }
-        }
-        for (TeamListTeamModel teamListTeamModel : teamModellist) {
-            String boss = teamListTeamModel.getTeamModel().getBoss().substring(1, 2);
-            boolean auto = teamListTeamModel.getTeamModel().isAuto();
-            if (boss.equals("4") && auto) {
-                list.add(teamListTeamModel);
-            }
-        }
-        if (clanWarModel != null) {
-            list.add(new TeamListBossModel(clanWarModel.getBossfivename(), clanWarModel.getBossfiveiconurl()));
-        }
-        for (TeamListTeamModel teamListTeamModel : teamModellist) {
-            String boss = teamListTeamModel.getTeamModel().getBoss().substring(1, 2);
-            boolean auto = teamListTeamModel.getTeamModel().isAuto();
-            if (boss.equals("5") && !auto) {
-                list.add(teamListTeamModel);
-            }
-        }
-        for (TeamListTeamModel teamListTeamModel : teamModellist) {
-            String boss = teamListTeamModel.getTeamModel().getBoss().substring(1, 2);
-            boolean auto = teamListTeamModel.getTeamModel().isAuto();
-            if (boss.equals("5") && auto) {
-                list.add(teamListTeamModel);
-            }
-        }
-        return list;
+        teamListBossModel.setTeamModels(teamModels);
+        return teamListBossModel;
     }
 
     public void notifyShowLink(boolean showlink) {
@@ -179,14 +116,19 @@ public class TeamList extends RecyclerView {
         adapter.notifyDataSetChanged();
     }
 
-    public void notifyAutoScreen(int autoScreen) {
-        adapter.setAutoScreen(autoScreen);
+    public void notifyStageSelect(int stageSelection) {
+        scrollToPosition(0);
+        adapter.setStageSelection(stageSelection);
         adapter.notifyDataSetChanged();
     }
 
-    public void notifyShowtype(int showtype) {
-        scrollToPosition(0);
-        adapter.setShowtype(showtype);
+    public void notifyBossSelect(int bossSelection) {
+        adapter.setBossSelection(bossSelection);
+        adapter.notifyDataSetChanged();
+    }
+
+    public void notifyTypeSelect(int typeSelection) {
+        adapter.setTypeSelection(typeSelection);
         adapter.notifyDataSetChanged();
     }
 

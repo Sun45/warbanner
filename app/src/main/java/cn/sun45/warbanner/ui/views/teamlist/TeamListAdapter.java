@@ -27,6 +27,7 @@ import java.util.List;
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.character.CharacterHelper;
 import cn.sun45.warbanner.clanwar.ClanwarHelper;
+import cn.sun45.warbanner.document.StaticHelper;
 import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
 import cn.sun45.warbanner.document.db.clanwar.TeamModel;
 import cn.sun45.warbanner.document.db.setup.ScreenCharacterModel;
@@ -42,26 +43,18 @@ import cn.sun45.warbanner.util.Utils;
 public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = "TeamListAdapter";
 
-    public static final int SHOW_TYPE_ALL = 0;
-    public static final int SHOW_TYPE_ONE = 1;
-    public static final int SHOW_TYPE_TWO = 2;
-    public static final int SHOW_TYPE_THREE = 3;
-    public static final int SHOW_TYPE_FOUR = 4;
-
     private Context context;
 
     private TeamListListener listener;
 
     private boolean showlink;
-    private int autoScreen;
-    private int showtype;
+    private int stageSelection;
+    private int bossSelection;
+    private int typeSelection;
 
     private List<TeamListTeamModel> list;
 
-    private List<Object> onelist;
-    private List<Object> twolist;
-    private List<Object> threelist;
-    private List<Object> fourlist;
+    private List<TeamListBossModel> teamWithBossList;
 
     //阵容自定义信息
     private List<TeamCustomizeModel> teamCustomizeModels;
@@ -85,23 +78,24 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.showlink = showlink;
     }
 
-    public void setAutoScreen(int autoScreen) {
-        this.autoScreen = autoScreen;
+    public void setStageSelection(int stageSelection) {
+        this.stageSelection = stageSelection;
     }
 
-    public void setShowtype(int showtype) {
-        this.showtype = showtype;
+    public void setBossSelection(int bossSelection) {
+        this.bossSelection = bossSelection;
+    }
+
+    public void setTypeSelection(int typeSelection) {
+        this.typeSelection = typeSelection;
     }
 
     public void setList(List<TeamListTeamModel> list) {
         this.list = list;
     }
 
-    public void setList(List<Object> onelist, List<Object> twolist, List<Object> threelist, List<Object> fourlist) {
-        this.onelist = onelist;
-        this.twolist = twolist;
-        this.threelist = threelist;
-        this.fourlist = fourlist;
+    public void setTeamWithBossList(List<TeamListBossModel> teamWithBossList) {
+        this.teamWithBossList = teamWithBossList;
     }
 
     public void setTeamCustomizeModels(List<TeamCustomizeModel> teamCustomizeModels) {
@@ -159,160 +153,55 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             return list.size();
         } else {
             int count = 0;
-            switch (showtype) {
-                case SHOW_TYPE_ALL:
-                    if (onelist != null) {
-                        count += countList(onelist);
+            if (teamWithBossList != null && !teamWithBossList.isEmpty()) {
+                int position = 0;
+                for (int stage = 1; stage <= StaticHelper.STAGE_COUNT; stage++) {
+                    for (int boss = 1; boss <= StaticHelper.BOSS_COUNT; boss++, position++) {
+                        if (stageSelection != 0 && stage != stageSelection) {
+                            continue;
+                        }
+                        if (bossSelection != 0 && boss != bossSelection) {
+                            continue;
+                        }
+                        count++;
+                        count += teamWithBossList.get(position).getModelCount(typeSelection);
                     }
-                    if (twolist != null) {
-                        count += countList(twolist);
-                    }
-                    if (threelist != null) {
-                        count += countList(threelist);
-                    }
-                    if (fourlist != null) {
-                        count += countList(fourlist);
-                    }
-                    break;
-                case SHOW_TYPE_ONE:
-                    count = countList(onelist);
-                    break;
-                case SHOW_TYPE_TWO:
-                    count = countList(twolist);
-                    break;
-                case SHOW_TYPE_THREE:
-                    count = countList(threelist);
-                    break;
-                case SHOW_TYPE_FOUR:
-                    count = countList(fourlist);
-                    break;
-                default:
-                    break;
+                }
             }
             Utils.logD(TAG, "getItemCount count:" + count);
             return count;
         }
     }
 
-    private int countList(List<Object> list) {
-        int count = 0;
-        if (list != null) {
-            switch (autoScreen) {
-                case 0:
-                    count = list.size();
-                    break;
-                case 1:
-                    for (Object object : list) {
-                        if (object instanceof TeamListTeamModel) {
-                            if (!((TeamListTeamModel) object).getTeamModel().isAuto()) {
-                                continue;
-                            }
-                        }
-                        count++;
-                    }
-                    break;
-                case 2:
-                    for (Object object : list) {
-                        if (object instanceof TeamListTeamModel) {
-                            if (((TeamListTeamModel) object).getTeamModel().isAuto()) {
-                                continue;
-                            }
-                        }
-                        count++;
-                    }
-                    break;
-            }
-        }
-        Utils.logD(TAG, "countList count:" + count);
-        return count;
-    }
-
     private Object getItem(int position) {
         if (list != null) {
             return list.get(position);
         } else {
-            Object item = null;
-            switch (showtype) {
-                case SHOW_TYPE_ALL:
-                    int p = position;
-                    int onelistcount = countList(onelist);
-                    if (onelist != null && onelistcount > p) {
-                        item = getItemFromList(onelist, p);
+            int bossposition = 0;
+            for (int stage = 1; stage <= StaticHelper.STAGE_COUNT; stage++) {
+                for (int boss = 1; boss <= StaticHelper.BOSS_COUNT; boss++, bossposition++) {
+                    if (stageSelection != 0 && stage != stageSelection) {
+                        continue;
+                    }
+                    if (bossSelection != 0 && boss != bossSelection) {
+                        continue;
+                    }
+                    TeamListBossModel teamListBossModel = teamWithBossList.get(bossposition);
+                    if (position == 0) {
+                        return teamListBossModel;
                     } else {
-                        p -= onelistcount;
-                        int twolistcount = countList(twolist);
-                        if (twolist != null && twolistcount > p) {
-                            item = getItemFromList(twolist, p);
+                        position--;
+                        int count = teamListBossModel.getModelCount(typeSelection);
+                        if (position < count) {
+                            return teamListBossModel.getModel(typeSelection, position);
                         } else {
-                            p -= twolistcount;
-                            int threelistcount = countList(threelist);
-                            if (threelist != null && threelistcount > p) {
-                                item = getItemFromList(threelist, p);
-                            } else {
-                                p -= threelistcount;
-                                item = getItemFromList(fourlist, p);
-                            }
+                            position -= count;
                         }
                     }
-                    break;
-                case SHOW_TYPE_ONE:
-                    item = getItemFromList(onelist, position);
-                    break;
-                case SHOW_TYPE_TWO:
-                    item = getItemFromList(twolist, position);
-                    break;
-                case SHOW_TYPE_THREE:
-                    item = getItemFromList(threelist, position);
-                    break;
-                case SHOW_TYPE_FOUR:
-                    item = getItemFromList(fourlist, position);
-                    break;
-                default:
-                    break;
+                }
             }
-            return item;
+            return null;
         }
-    }
-
-    private Object getItemFromList(List<Object> list, int position) {
-        int p = 0;
-        Object item = null;
-        switch (autoScreen) {
-            case 0:
-                item = list.get(position);
-                break;
-            case 1:
-                for (int i = 0; i < list.size(); i++) {
-                    Object object = list.get(i);
-                    if (object instanceof TeamListTeamModel) {
-                        if (!((TeamListTeamModel) object).getTeamModel().isAuto()) {
-                            continue;
-                        }
-                    }
-                    if (position == p) {
-                        item = object;
-                        break;
-                    }
-                    p++;
-                }
-                break;
-            case 2:
-                for (int i = 0; i < list.size(); i++) {
-                    Object object = list.get(i);
-                    if (object instanceof TeamListTeamModel) {
-                        if (((TeamListTeamModel) object).getTeamModel().isAuto()) {
-                            continue;
-                        }
-                    }
-                    if (position == p) {
-                        item = object;
-                        break;
-                    }
-                    p++;
-                }
-                break;
-        }
-        return item;
     }
 
     public class BossHolder extends RecyclerView.ViewHolder {

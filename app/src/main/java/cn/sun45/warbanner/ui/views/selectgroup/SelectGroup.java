@@ -30,8 +30,19 @@ public class SelectGroup extends LinearLayout {
 
     private SelectGroupListener listener;
 
+    private int selectItem;
+
+    public SelectGroup(Context context) {
+        super(context);
+        init();
+    }
+
     public SelectGroup(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        init();
+    }
+
+    private void init() {
         setOrientation(LinearLayout.HORIZONTAL);
         setPadding(Utils.dip2px(getContext(), 5), Utils.dip2px(getContext(), 5), Utils.dip2px(getContext(), 5), Utils.dip2px(getContext(), 5));
     }
@@ -60,6 +71,10 @@ public class SelectGroup extends LinearLayout {
         }
     }
 
+    public int getSelectItem() {
+        return selectItem;
+    }
+
     private class Holder {
         private int position;
         private String selection;
@@ -85,6 +100,7 @@ public class SelectGroup extends LinearLayout {
                 @Override
                 public void onClick(View v) {
                     if (!Holder.this.select) {
+                        selectItem = position;
                         if (listener != null) {
                             listener.select(position);
                         }

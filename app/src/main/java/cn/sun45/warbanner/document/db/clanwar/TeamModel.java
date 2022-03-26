@@ -45,6 +45,9 @@ public class TeamModel extends BaseDbTableModel {
     //自动刀
     @DbTableParamConfigure
     private boolean auto;
+    //尾刀
+    @DbTableParamConfigure
+    private boolean finish;
 
     //角色id信息
     @DbTableParamConfigure
@@ -130,6 +133,14 @@ public class TeamModel extends BaseDbTableModel {
         this.auto = auto;
     }
 
+    public boolean isFinish() {
+        return finish;
+    }
+
+    public void setFinish(boolean finish) {
+        this.finish = finish;
+    }
+
     public int getCharacterone() {
         return characterone;
     }
@@ -191,6 +202,19 @@ public class TeamModel extends BaseDbTableModel {
         return ClanWarProvider.class;
     }
 
+    /**
+     * 获取刀型
+     */
+    public int getType() {
+        if (auto) {
+            return 1;
+        } else if (finish) {
+            return 3;
+        } else {
+            return 2;
+        }
+    }
+
     public JSONObject getJson() {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -202,6 +226,7 @@ public class TeamModel extends BaseDbTableModel {
             jsonObject.put("damage", damage);
             jsonObject.put("ellipsisdamage", ellipsisdamage);
             jsonObject.put("auto", auto);
+            jsonObject.put("finish", finish);
             jsonObject.put("characterone", characterone);
             jsonObject.put("charactertwo", charactertwo);
             jsonObject.put("characterthree", characterthree);

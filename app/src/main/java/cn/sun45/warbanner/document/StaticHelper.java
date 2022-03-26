@@ -5,6 +5,11 @@ package cn.sun45.warbanner.document;
  * 静态参数
  */
 public class StaticHelper {
+    //阶段总个数
+    public static final int STAGE_COUNT = 4;
+    //BOSS总个数
+    public static final int BOSS_COUNT = 5;
+
     //  App URL
     public static final String APP_RAW_BASE = "https://cdn.jsdelivr.net/gh/";
     public static final String APP_RAW = "https://cdn.jsdelivr.net/gh/Sun45/warbanner@master";
