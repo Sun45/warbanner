@@ -1,14 +1,11 @@
 package cn.sun45.warbanner.framework.record;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import cn.sun45.warbanner.framework.MyApplication;
+import cn.sun45.warbanner.util.FileUtil;
 
 
 /**
@@ -30,20 +27,6 @@ public abstract class BaseRecordManager {
         String date = time.substring(0, 10);
         time = time.substring(11);
         file += File.separator + date;
-        BufferedWriter out = null;
-        try {
-            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file, true)));
-            out.write(time + content + "\n");
-        } catch (Exception e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (out != null) {
-                    out.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        FileUtil.writeFile(file, time + "\n" + content + "\n", true);
     }
 }

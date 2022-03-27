@@ -116,11 +116,9 @@ public class AssistUtils {
      * 从窗口移除
      */
     public static void removeViewFromWindow(View v) {
-        if (v.isAttachedToWindow()) {
-            WindowManager windowManager = (WindowManager) MyApplication.application.getSystemService(Context.WINDOW_SERVICE);
-            if (v != null) {
-                windowManager.removeView(v);
-            }
+        WindowManager windowManager = (WindowManager) MyApplication.application.getSystemService(Context.WINDOW_SERVICE);
+        if (v != null) {
+            windowManager.removeView(v);
         }
     }
 

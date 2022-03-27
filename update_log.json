@@ -1,6 +1,6 @@
 {
-  "versionCode": "31",
-  "versionName": "2.5.4",
+  "versionCode": "32",
+  "versionName": "2.5.5",
   "fource": "false",
-  "content": "1.调整辅助服务判断2.优化作业筛选"
+  "content": "1.调整辅助服务方法2.加入提示文字3.调整错误日志存储读取4.加入施工中内容"
 }

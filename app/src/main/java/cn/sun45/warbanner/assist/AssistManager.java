@@ -105,28 +105,32 @@ public class AssistManager {
     }
 
     public void startShow() {
-        Utils.logD(TAG, "startShow");
-        if (!new SetupPreference().isAutoclick()) {
-            Utils.logD(TAG, "自动连点未启用");
-            return;
-        }
-        if (!show) {
-            show = true;
-            mPanelLayoutParams = AssistUtils.addViewToWindow(mPanelView.getView(), mPanelView.getWidth(), mPanelView.getHeight(), Gravity.CENTER_VERTICAL | Gravity.LEFT, true);
-            if (mPanelView.isAreaShow()) {
-                showArea();
+        synchronized (this) {
+            Utils.logD(TAG, "startShow show:" + show);
+            if (!new SetupPreference().isAutoclick()) {
+                Utils.logD(TAG, "自动连点未启用");
+                return;
+            }
+            if (!show) {
+                show = true;
+                mPanelLayoutParams = AssistUtils.addViewToWindow(mPanelView.getView(), mPanelView.getWidth(), mPanelView.getHeight(), Gravity.CENTER_VERTICAL | Gravity.LEFT, true);
+                if (mPanelView.isAreaShow()) {
+                    showArea();
+                }
             }
         }
     }
 
     public void stopShow() {
-        Utils.logD(TAG, "stopShow");
-        if (show) {
-            show = false;
-            if (mPanelView.isAreaShow()) {
-                hideArea();
+        synchronized (this) {
+            Utils.logD(TAG, "stopShow show:" + show);
+            if (show) {
+                show = false;
+                if (mPanelView.isAreaShow()) {
+                    hideArea();
+                }
+                AssistUtils.removeViewFromWindow(mPanelView.getView());
             }
-            AssistUtils.removeViewFromWindow(mPanelView.getView());
         }
     }
 

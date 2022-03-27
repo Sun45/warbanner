@@ -42,7 +42,7 @@ public class RecordTextFragment extends BaseFragment {
     protected void initData() {
         Bundle bundle = getArguments();
         path = bundle.getString("path");
-        content = FileUtil.ReadFile(path);
+        content = FileUtil.convertCodeAndGetText(path);
         setHasOptionsMenu(true);
     }
 

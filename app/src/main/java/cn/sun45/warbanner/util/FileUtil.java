@@ -1,5 +1,8 @@
 package cn.sun45.warbanner.util;
 
+import static android.os.Build.VERSION.SDK_INT;
+import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR2;
+
 import android.annotation.TargetApi;
 import android.os.StatFs;
 
@@ -7,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,15 +20,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.Charset;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import cn.sun45.warbanner.document.StaticHelper;
 import cn.sun45.warbanner.framework.MyApplication;
-
-import static android.os.Build.VERSION.SDK_INT;
-import static android.os.Build.VERSION_CODES.JELLY_BEAN_MR2;
 
 /**
  * Created by Sun45 on 2020/1/10.
@@ -341,24 +342,16 @@ public class FileUtil {
     /**
      * 写入文件内容
      *
-     * @param path 文件路径
-     * @param str  string
-     * @throws IOException
+     * @param path   文件路径
+     * @param str    string
+     * @param append 追加
      */
-    public static void writeFile(String path, String str) {
-        Writer writer = null;
-        try {
-            writer = new OutputStreamWriter(new FileOutputStream(path));
-            writer.write(str);
-        } catch (Exception e) {
-        } finally {
-            if (writer != null) {
-                try {
-                    writer.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+    public static void writeFile(String path, String str, boolean append) {
+        try (Writer writer = new OutputStreamWriter(new FileOutputStream(path, append), Charset.forName("gbk"));
+             BufferedWriter bufferedWriter = new BufferedWriter(writer)) {
+            bufferedWriter.write(str);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

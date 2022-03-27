@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">炽旗</string>
     <string name="abnormal_exit_message">程序上次运行时出现致命异常，错误详情请参照日志</string>
+    <string name="progressing">施工中</string>
 
     <string name="confirm">确定</string>
     <string name="default_user">默认用户</string>

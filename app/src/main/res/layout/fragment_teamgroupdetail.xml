@@ -26,8 +26,20 @@
         android:id="@+id/teamlist"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/tip"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/appbar" />
+
+    <TextView
+        android:id="@+id/tip"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/toolbarPrimary"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="15dp"
+        android:text="@string/user_tip"
+        android:textColor="@color/white_50"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
