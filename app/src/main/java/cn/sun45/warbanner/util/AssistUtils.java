@@ -97,7 +97,11 @@ public class AssistUtils {
 //            }
 //        lp.buttonBrightness = BRIGHTNESS_OVERRIDE_OFF;
 //        lp.systemUiVisibility = SYSTEM_UI_FLAG_LOW_PROFILE;
-            windowManager.addView(v, lp);
+            try {
+                windowManager.addView(v, lp);
+            } catch (IllegalStateException e) {
+                e.printStackTrace();
+            }
         }
         return lp;
     }
@@ -116,9 +120,13 @@ public class AssistUtils {
      * 从窗口移除
      */
     public static void removeViewFromWindow(View v) {
-        WindowManager windowManager = (WindowManager) MyApplication.application.getSystemService(Context.WINDOW_SERVICE);
-        if (v != null) {
-            windowManager.removeView(v);
+        if (v.isAttachedToWindow()) {
+            WindowManager windowManager = (WindowManager) MyApplication.application.getSystemService(Context.WINDOW_SERVICE);
+            try {
+                windowManager.removeViewImmediate(v);
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            }
         }
     }
 

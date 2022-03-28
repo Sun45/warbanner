@@ -7,4 +7,4 @@
     android:canRequestFilterKeyEvents="false"
     android:canRetrieveWindowContent="true"
     android:description="@string/user_permission_accessibility_description"
-    android:notificationTimeout="1000" />
+    android:notificationTimeout="100" />
