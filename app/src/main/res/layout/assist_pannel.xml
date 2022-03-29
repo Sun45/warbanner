@@ -6,7 +6,7 @@
 
     <LinearLayout
         android:layout_width="80dp"
-        android:layout_height="235dp"
+        android:layout_height="285dp"
         android:background="@drawable/assist_pannel_bg"
         android:orientation="vertical"
         android:padding="5dp"
@@ -15,15 +15,13 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
+            android:layout_height="30dp"
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/area_show"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_gravity="right"
                 android:layout_marginRight="10dp"
                 android:padding="5dp"
                 android:src="@drawable/ic_baseline_texture_24" />
@@ -32,60 +30,141 @@
                 android:id="@+id/shrink"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_gravity="right"
                 android:padding="5dp"
                 android:src="@drawable/ic_baseline_sync_alt_24" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/character_one"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:layout_marginTop="20dp"
-            android:drawableRight="@drawable/ic_assist_character_hint"
-            android:gravity="center"
-            android:text="@string/auto_click_character_one"
-            android:textColor="@color/white_50"
-            android:textSize="12sp" />
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="20dp"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/character_two"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:drawableRight="@drawable/ic_assist_character_hint"
-            android:gravity="center"
-            android:text="@string/auto_click_character_two"
-            android:textColor="@color/white_50"
-            android:textSize="12sp" />
+            <FrameLayout
+                android:id="@+id/character_one"
+                android:layout_width="match_parent"
+                android:layout_height="35dp">
 
-        <TextView
-            android:id="@+id/character_three"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:drawableRight="@drawable/ic_assist_character_hint"
-            android:gravity="center"
-            android:text="@string/auto_click_character_three"
-            android:textColor="@color/white_50"
-            android:textSize="12sp" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/auto_click_character_one"
+                    android:textColor="@color/white_50"
+                    android:textSize="12sp" />
 
-        <TextView
-            android:id="@+id/character_four"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:drawableRight="@drawable/ic_assist_character_hint"
-            android:gravity="center"
-            android:text="@string/auto_click_character_four"
-            android:textColor="@color/white_50"
-            android:textSize="12sp" />
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/character_one_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:src="@drawable/ic_assist_character_hint" />
+            </FrameLayout>
 
-        <TextView
-            android:id="@+id/character_five"
+            <FrameLayout
+                android:id="@+id/character_two"
+                android:layout_width="match_parent"
+                android:layout_height="35dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/auto_click_character_two"
+                    android:textColor="@color/white_50"
+                    android:textSize="12sp" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/character_two_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:src="@drawable/ic_assist_character_hint" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/character_three"
+                android:layout_width="match_parent"
+                android:layout_height="35dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/auto_click_character_three"
+                    android:textColor="@color/white_50"
+                    android:textSize="12sp" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/character_three_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:src="@drawable/ic_assist_character_hint" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/character_four"
+                android:layout_width="match_parent"
+                android:layout_height="35dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/auto_click_character_four"
+                    android:textColor="@color/white_50"
+                    android:textSize="12sp" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/character_four_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:src="@drawable/ic_assist_character_hint" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/character_five"
+                android:layout_width="match_parent"
+                android:layout_height="35dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/auto_click_character_five"
+                    android:textColor="@color/white_50"
+                    android:textSize="12sp" />
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/character_five_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|right"
+                    android:src="@drawable/ic_assist_character_hint" />
+            </FrameLayout>
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:drawableRight="@drawable/ic_assist_character_hint"
-            android:gravity="center"
-            android:text="@string/auto_click_character_five"
-            android:textColor="@color/white_50"
-            android:textSize="12sp" />
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/multiply_tap"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/ic_baseline_more_vert_24" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/multiply_tap_function"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:padding="5dp"
+                android:src="@drawable/ic_baseline_play_arrow_24" />
+        </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -59,7 +59,6 @@ public class AssistManager {
     private boolean show;
     private AssistDataModel mAssistDataModel;
     private int tapInterval;
-    private int[] currentTapPoint;
 
     private AssistPanelView mPanelView;
     private WindowManager.LayoutParams mPanelLayoutParams;
@@ -81,8 +80,7 @@ public class AssistManager {
         }
 
         @Override
-        public void characterSelect(int characterSelection) {
-            currentTapPoint = mAssistDataModel.getTapPoint(characterSelection);
+        public void startTap() {
             autoTap();
         }
     };
@@ -146,7 +144,11 @@ public class AssistManager {
     }
 
     public void autoTap() {
-        if (currentTapPoint == null || service == null) {
+        if (service == null || mPanelView == null) {
+            return;
+        }
+        int[] currentTapPoint = mAssistDataModel.getTapPoint(mPanelView.getCharacterSelection());
+        if (currentTapPoint == null) {
             return;
         }
         Path path = new Path();

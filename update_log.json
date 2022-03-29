@@ -1,6 +1,6 @@
 {
-  "versionCode": "33",
-  "versionName": "2.5.6",
+  "versionCode": "34",
+  "versionName": "2.5.7",
   "fource": "false",
-  "content": "1.调整辅助服务方法2.调整辅助服务判断刷新间隔"
+  "content": "1.添加多角色点击功能"
 }
