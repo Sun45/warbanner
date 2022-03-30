@@ -60,8 +60,6 @@ public class MainActivity extends BaseActivity implements PermissionRequestListe
     protected void initData() {
         permissionRequester = new PermissionRequester(this,
                 new String[]{
-                        Manifest.permission.READ_EXTERNAL_STORAGE,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE
                 }, this);
         sharedSource = new ViewModelProvider(this).get(SharedViewModelSource.class);
         sharedSource.characterlist.observe(this, new Observer<List<CharacterModel>>() {

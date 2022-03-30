@@ -27,6 +27,7 @@ import cn.sun45.warbanner.framework.logic.RequestListener;
 import cn.sun45.warbanner.logic.app.AppLogic;
 import cn.sun45.warbanner.logic.app.AppModel;
 import cn.sun45.warbanner.util.FileUtil;
+import cn.sun45.warbanner.util.GithubUtils;
 import cn.sun45.warbanner.util.Utils;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
@@ -187,7 +188,8 @@ public class UpdateManager {
         String path = FileUtil.getExternalFilesDir("update");
         String name = StaticHelper.APK_NAME;
         new File(path + File.separator + name).deleteOnExit();
-        FileRequester.request(StaticHelper.APP_PACKAGE, path, name, true, new FileRequestListenerWithProgress() {
+        String fileUrl = GithubUtils.getFileUrl(GithubUtils.TYPE_CLOUDFLARE, StaticHelper.APK_OWNER, StaticHelper.APK_REPOSITORY, StaticHelper.APK_PATH);
+        FileRequester.request(fileUrl, path, name, true, new FileRequestListenerWithProgress() {
             @Override
             public void progress(long currentOffset, long totalLength, float percent, int progress) {
                 UpdateManager.this.currentOffset = currentOffset;

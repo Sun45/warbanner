@@ -1,6 +1,6 @@
 {
-  "versionCode": "34",
-  "versionName": "2.5.7",
+  "versionCode": "35",
+  "versionName": "2.5.8",
   "fource": "false",
-  "content": "1.添加多角色点击功能"
+  "content": "1.去除文件读写权限申请2.切换更新文件下载方式为cloudflare"
 }

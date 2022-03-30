@@ -81,6 +81,10 @@ public class PermissionRequester {
                         ActivityCompat.requestPermissions(activity, permissionList, PERMISSIONS_REQUEST);
                     }
                 }
+            } else {
+                if (listener != null) {
+                    listener.permissionGained();
+                }
             }
         } else {
             if (listener != null) {
