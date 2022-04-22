@@ -1,6 +1,6 @@
 {
-  "versionCode": "35",
-  "versionName": "2.5.8",
+  "versionCode": "36",
+  "versionName": "2.6.1",
   "fource": "false",
-  "content": "1.去除文件读写权限申请2.切换更新文件下载方式为cloudflare"
+  "content": "1.切换AUTO标志展示方式2.调整踩蘑菇会战数据解析方式"
 }

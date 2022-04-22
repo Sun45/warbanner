@@ -382,16 +382,11 @@ public class ClanwarLogic extends BaseLogic {
                                 if (unit == null || unit.length() < 5) {
                                     continue;
                                 }
-                                JSONObject characterone = unit.optJSONObject(0);
-                                JSONObject charactertwo = unit.optJSONObject(1);
-                                JSONObject characterthree = unit.optJSONObject(2);
-                                JSONObject characterfour = unit.optJSONObject(3);
-                                JSONObject characterfive = unit.optJSONObject(4);
-                                int characteroneid = characterone.optInt("id");
-                                int charactertwoid = charactertwo.optInt("id");
-                                int characterthreeid = characterthree.optInt("id");
-                                int characterfourid = characterfour.optInt("id");
-                                int characterfiveid = characterfive.optInt("id");
+                                int characteroneid = unit.optInt(0);
+                                int charactertwoid = unit.optInt(1);
+                                int characterthreeid = unit.optInt(2);
+                                int characterfourid = unit.optInt(3);
+                                int characterfiveid = unit.optInt(4);
                                 if (characteroneid == 0 || charactertwoid == 0 || characterthreeid == 0 || characterfourid == 0 || characterfiveid == 0) {
                                     continue;
                                 }
