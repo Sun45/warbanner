@@ -23,9 +23,9 @@ import java.util.List;
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.character.CharacterHelper;
 import cn.sun45.warbanner.clanwar.ClanwarHelper;
-import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
-import cn.sun45.warbanner.document.db.clanwar.TeamModel;
-import cn.sun45.warbanner.document.db.source.CharacterModel;
+import cn.sun45.warbanner.document.database.setup.models.TeamCustomizeModel;
+import cn.sun45.warbanner.document.database.source.models.CharacterModel;
+import cn.sun45.warbanner.document.database.source.models.TeamModel;
 import cn.sun45.warbanner.document.preference.SetupPreference;
 import cn.sun45.warbanner.framework.MyApplication;
 import cn.sun45.warbanner.framework.ui.BaseActivity;
@@ -92,7 +92,7 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
         sharedClanwar.teamList.observe(requireActivity(), new Observer<List<TeamModel>>() {
             @Override
             public void onChanged(List<TeamModel> teamModels) {
-                sharedSource.characterlist.observe(requireActivity(), new Observer<List<CharacterModel>>() {
+                sharedSource.characterList.observe(requireActivity(), new Observer<List<CharacterModel>>() {
                     @Override
                     public void onChanged(List<CharacterModel> characterModels) {
                         mTeamGroupList.setCharacterModels(characterModels);
@@ -191,7 +191,7 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
     @Override
     public void onDestroy() {
         super.onDestroy();
-        sharedSource.characterlist.removeObservers(requireActivity());
+        sharedSource.characterList.removeObservers(requireActivity());
         sharedClanwar.teamList.removeObservers(requireActivity());
         sharedClanwar.teamCustomizeList.removeObservers(requireActivity());
         sharedClanwar.loadData();

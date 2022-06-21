@@ -1,8 +1,6 @@
 package cn.sun45.warbanner.ui.views.characterlist;
 
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,8 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import cn.sun45.warbanner.R;
-import cn.sun45.warbanner.document.db.setup.ScreenCharacterModel;
-import cn.sun45.warbanner.document.db.source.CharacterModel;
+import cn.sun45.warbanner.document.database.source.models.CharacterModel;
 import cn.sun45.warbanner.framework.image.ImageRequester;
 import cn.sun45.warbanner.util.Utils;
 
@@ -102,7 +99,7 @@ public class CharacterListAdapter extends RecyclerView.Adapter<CharacterListAdap
             if (TextUtils.isEmpty(iconUrl)) {
                 icon.setImageBitmap(null);
             } else {
-                ImageRequester.request(characterModel.getIconUrl(), R.drawable.ic_character_default).loadImage(icon);
+                ImageRequester.request(characterModel.getIconUrl(), R.drawable.ic_character_default).loadRoundImage(icon);
             }
             name.setText(characterModel.getName());
         }

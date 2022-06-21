@@ -20,13 +20,16 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import cn.sun45.warbanner.R;
-import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
-import cn.sun45.warbanner.document.db.clanwar.TeamModel;
-import cn.sun45.warbanner.document.db.source.CharacterModel;
+import cn.sun45.warbanner.document.database.setup.models.TeamCustomizeModel;
+import cn.sun45.warbanner.document.database.source.models.CharacterModel;
+import cn.sun45.warbanner.document.database.source.models.TeamModel;
 import cn.sun45.warbanner.framework.ui.BaseActivity;
 import cn.sun45.warbanner.framework.ui.BaseFragment;
 import cn.sun45.warbanner.ui.shared.SharedViewModelClanwar;
 import cn.sun45.warbanner.ui.shared.SharedViewModelSource;
+import cn.sun45.warbanner.ui.views.listselectbar.ListSelectBar;
+import cn.sun45.warbanner.ui.views.listselectbar.ListSelectBarListener;
+import cn.sun45.warbanner.ui.views.listselectbar.ListSelectItem;
 import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListModel;
 import cn.sun45.warbanner.ui.views.teamlist.TeamList;
 import cn.sun45.warbanner.ui.views.teamlist.TeamListListener;
@@ -83,7 +86,7 @@ public class TeamGroupDetailFragment extends BaseFragment implements TeamListLis
                 mTeamList.notifyCustomize(teamCustomizeModels);
             }
         });
-        sharedSource.characterlist.observe(requireActivity(), new Observer<List<CharacterModel>>() {
+        sharedSource.characterList.observe(requireActivity(), new Observer<List<CharacterModel>>() {
             @Override
             public void onChanged(List<CharacterModel> characterModels) {
                 mTeamList.notifyCharacter(characterModels);
@@ -113,7 +116,10 @@ public class TeamGroupDetailFragment extends BaseFragment implements TeamListLis
             case R.id.menu_share:
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, teamGroupListModel.getTeamone().getShare() + "\n\n" + teamGroupListModel.getTeamtwo().getShare() + "\n\n" + teamGroupListModel.getTeamthree().getShare());
+                intent.putExtra(Intent.EXTRA_TEXT,
+                        teamGroupListModel.getTeamone().getShare(sharedSource.characterList.getValue())
+                                + "\n\n" + teamGroupListModel.getTeamtwo().getShare(sharedSource.characterList.getValue())
+                                + "\n\n" + teamGroupListModel.getTeamthree().getShare(sharedSource.characterList.getValue()));
                 intent.putExtra(Intent.EXTRA_SUBJECT, "share");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setType("text/plain");
@@ -121,6 +127,14 @@ public class TeamGroupDetailFragment extends BaseFragment implements TeamListLis
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void dataSet(int count, List<ListSelectItem> listSelectItems) {
+    }
+
+    @Override
+    public void onScrolled(int first, int last) {
     }
 
     @Override
@@ -135,6 +149,6 @@ public class TeamGroupDetailFragment extends BaseFragment implements TeamListLis
     public void onDestroy() {
         super.onDestroy();
         sharedClanwar.teamCustomizeList.removeObservers(requireActivity());
-        sharedSource.characterlist.removeObservers(requireActivity());
+        sharedSource.characterList.removeObservers(requireActivity());
     }
 }

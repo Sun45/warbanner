@@ -5,6 +5,7 @@
 
     <string name="confirm">确定</string>
     <string name="default_user">默认用户</string>
+    <string name="all">全部</string>
     <string name="auto">AUTO</string>
     <string name="user_tip">视频和轴是UP主心血的结晶，抄完作业记得至少给点个赞哦👍</string>
 
@@ -18,34 +19,16 @@
     <string name="app_update_progress_finished">安装中。。。</string>
     <string name="app_update_progress_error">安装包下载失败</string>
 
-    <string name="db_update_check_noneed">数据库无需更新</string>
-    <string name="db_update_dialog_title">数据库更新</string>
-    <string name="db_update_dialog_text">检测到数据库有新版本，需要现在更新吗？</string>
-    <string name="db_update_dialog_confirm">更新</string>
-    <string name="db_update_dialog_cancel">稍后</string>
-    <string name="db_update_progress_title">Update Database</string>
-    <string name="db_update_progress_text">Updating…</string>
-    <string name="db_update_download_finished_text">Download complete. Unpacking…</string>
-    <string name="db_update_finished_text">Update complete</string>
-    <string name="chara_load_failed">数据初始化失败，详情请参照日志</string>
-    <string name="db_update_failed">数据库更新失败，详情请参照日志</string>
-
-    <string name="clanwar_update_last_empty">作业数据为空</string>
-    <string name="clanwar_update_last">作业更新于%1$s前</string>
-    <string name="clanwar_update_dialog_title">作业更新</string>
-    <string name="clanwar_update_dialog_text">是否更新作业</string>
-    <string name="clanwar_update_dialog_confirm">更新</string>
-    <string name="clanwar_update_dialog_cancel">稍后</string>
-    <string name="clanwar_update_clanwar_empty">会战排期数据为空，请更新数据库</string>
-    <string name="clanwar_update_progress_title">作业下载</string>
-    <string name="clanwar_update_progress_text">作业下载中。。。</string>
-    <string name="clanwar_update_progress_text_one">一阶段作业下载中。。。</string>
-    <string name="clanwar_update_progress_text_two">二阶段作业下载中。。。</string>
-    <string name="clanwar_update_progress_text_three">三阶段作业下载中。。。</string>
-    <string name="clanwar_update_progress_text_four">四阶段作业下载中。。。</string>
-    <string name="clanwar_update_finished_text">作业更新完成</string>
-    <string name="clanwar_update_finished_winth_duplicate_id">作业更新完成 存在重复ID作业:%1$s</string>
-    <string name="clanwar_update_fail">作业更新失败</string>
+    <string name="data_update_last_empty">数据为空</string>
+    <string name="data_update_last">数据更新于%1$s前</string>
+    <string name="data_update_dialog_title">数据更新</string>
+    <string name="data_update_dialog_text">是否更新数据</string>
+    <string name="data_update_dialog_confirm">更新</string>
+    <string name="data_update_dialog_cancel">稍后</string>
+    <string name="data_update_basedata">基础数据下载中。。。</string>
+    <string name="data_update_teamdata">作业数据下载中。。。</string>
+    <string name="data_update_finish">数据更新完成</string>
+    <string name="data_update_failed">数据更新失败，详情请参照日志</string>
 
     <string name="title_collection">收藏</string>
     <string name="title_teamlist">作业</string>
@@ -53,19 +36,12 @@
 
     <string name="collection_empty_hint">当前分刀收藏为空\n请点击分刀按钮进行分刀</string>
 
-    <string name="teamlist_empty_hint">%1$s作业为空\n请更新作业或等待会战开始</string>
+    <string name="teamlist_empty_hint">作业数据为空</string>
     <string name="teamlist_menu_link">链接</string>
     <string name="teamlist_menu_link_screen">链接</string>
     <string name="teamlist_menu_link_show">展示作业链接</string>
     <string name="teamlist_menu_link_screen_dialog_confirm">确定</string>
     <string name="teamlist_menu_screen">筛选</string>
-    <string-array name="teamlist_screen_stage_options">
-        <item>全部</item>
-        <item>一阶段</item>
-        <item>二阶段</item>
-        <item>三阶段</item>
-        <item>四阶段</item>
-    </string-array>
     <string-array name="teamlist_screen_boss_options">
         <item>全部</item>
         <item>一王</item>
@@ -81,16 +57,8 @@
         <item>尾刀</item>
     </string-array>
 
-    <string name="menu_clanwar">作业</string>
-    <string name="menu_clanwar_update">作业更新</string>
-    <string name="menu_clanwar_way">作业下载方式</string>
-    <string-array name="menu_clanwar_way_dialog_options">
-        <item>Github Page(据说有些运营商会无法使用)</item>
-        <item>cloudflare(每日有全体100,000调用上限)</item>
-        <item>JsDeliver(有4-5小时的更新延迟)</item>
-        <item>Github Raw(需要翻墙)</item>
-    </string-array>
-    <string name="menu_clanwar_way_dialog_confirm">确定</string>
+    <string name="menu_data">数据</string>
+    <string name="menu_data_update">数据更新</string>
     <string name="menu_assist">辅助功能</string>
     <string name="menu_permission">权限设置</string>
     <string name="menu_auto_click">连点设置</string>
@@ -105,7 +73,9 @@
     </string-array>
     <string name="menu_link_open_type_dialog_confirm">确定</string>
     <string name="menu_system">系统</string>
-    <string name="menu_db_version">数据库版本</string>
+    <string name="menu_server">服务器</string>
+    <string name="menu_server_dialog_confirm">确定</string>
+
     <string name="menu_app_version">应用版本</string>
     <string name="menu_auto_update">自动更新</string>
     <string name="menu_others">其它</string>
@@ -120,12 +90,6 @@
     <string name="teamgroup_menu_screen">筛选</string>
 
     <string name="teamgroup_screen_title">分刀筛选</string>
-    <string-array name="teamgroup_screen_stage_options">
-        <item>一阶段</item>
-        <item>二阶段</item>
-        <item>三阶段</item>
-        <item>四阶段</item>
-    </string-array>
     <string-array name="teamgroup_screen_boss_options">
         <item>一王</item>
         <item>二王</item>
@@ -140,7 +104,7 @@
     </string-array>
 
     <string name="teamselect_title">阵容选择</string>
-    <string name="teamselect_empty_hint">%1$s作业为空\n请更新作业或等待会战开始</string>
+    <string name="teamselect_empty_hint">作业数据为空</string>
 
     <string name="teamgroup_detail_title">分刀详情</string>
     <string name="teamgroup_detail_menu_share">分享</string>
@@ -183,6 +147,9 @@
     <string name="user_manager_add_dialog_confirm">确定</string>
 
     <string name="character_screen_title">角色筛选</string>
+    <string name="character_screen_position_front">前卫</string>
+    <string name="character_screen_position_middle">中卫</string>
+    <string name="character_screen_position_back">后卫</string>
     <string name="character_screen_empty_hint">角色数据为空\n请更新数据库</string>
     <string name="character_screen_lack">表示角色缺失但可以借</string>
     <string name="character_screen_skip">表示角色不会参与分刀</string>

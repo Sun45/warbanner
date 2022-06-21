@@ -13,26 +13,25 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-import com.afollestad.materialdialogs.list.DialogSingleChoiceExtKt;
 import com.google.android.material.appbar.MaterialToolbar;
+
+import java.util.List;
 
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.character.CharacterHelper;
 import cn.sun45.warbanner.clanwar.ClanwarHelper;
-import cn.sun45.warbanner.document.db.clanwar.TeamGroupScreenModel;
-import cn.sun45.warbanner.document.db.clanwar.TeamModel;
-import cn.sun45.warbanner.document.db.source.CharacterModel;
+import cn.sun45.warbanner.document.database.setup.models.TeamGroupScreenModel;
+import cn.sun45.warbanner.document.database.source.models.CharacterModel;
+import cn.sun45.warbanner.document.database.source.models.TeamModel;
 import cn.sun45.warbanner.framework.image.ImageRequester;
 import cn.sun45.warbanner.framework.ui.BaseActivity;
 import cn.sun45.warbanner.framework.ui.BaseFragment;
+import cn.sun45.warbanner.stage.StageManager;
 import cn.sun45.warbanner.ui.shared.SharedViewModelSource;
 import cn.sun45.warbanner.ui.shared.SharedViewModelTeamScreenTeam;
 import cn.sun45.warbanner.ui.views.selectgroup.SelectGroup;
 import cn.sun45.warbanner.ui.views.selectgroup.SelectGroupListener;
 import cn.sun45.warbanner.util.Utils;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function3;
 
 /**
  * Created by Sun45 on 2021/7/3
@@ -248,7 +247,7 @@ public class TeamGroupScreenFragment extends BaseFragment {
         }
 
         public void setData() {
-            mStage.setData(Utils.getStringArray(R.array.teamgroup_screen_stage_options), getStage());
+            mStage.setData(StageManager.getInstance().getStageDescriptionList(), getStage());
             mBoss.setData(Utils.getStringArray(R.array.teamgroup_screen_boss_options), getBoss());
             mAuto.setData(Utils.getStringArray(R.array.teamgroup_screen_auto_options), getAuto());
             setCharacterData();
@@ -395,11 +394,11 @@ public class TeamGroupScreenFragment extends BaseFragment {
         }
 
         public void setdata(int id) {
-            CharacterModel characterModel = CharacterHelper.findCharacterById(id, sharedSource.characterlist.getValue());
+            CharacterModel characterModel = CharacterHelper.findCharacterById(id, sharedSource.characterList.getValue());
             if (characterModel == null) {
                 icon.setImageBitmap(null);
             } else {
-                ImageRequester.request(characterModel.getIconUrl(), R.drawable.ic_character_default).loadImage(icon);
+                ImageRequester.request(characterModel.getIconUrl(), R.drawable.ic_character_default).loadRoundImage(icon);
             }
         }
     }

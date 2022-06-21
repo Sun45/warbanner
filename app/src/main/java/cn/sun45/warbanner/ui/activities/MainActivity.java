@@ -1,8 +1,8 @@
 package cn.sun45.warbanner.ui.activities;
 
-import android.Manifest;
 import android.content.SharedPreferences;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.Observer;
@@ -13,31 +13,34 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import cn.sun45.warbanner.R;
-import cn.sun45.warbanner.datamanager.clanwar.ClanWarManager;
-import cn.sun45.warbanner.datamanager.source.SourceManager;
+import cn.sun45.warbanner.datamanager.data.DataManager;
 import cn.sun45.warbanner.datamanager.update.UpdateManager;
-import cn.sun45.warbanner.document.db.source.CharacterModel;
+import cn.sun45.warbanner.document.database.setup.SetupDataBase;
+import cn.sun45.warbanner.document.database.setup.models.UserModel;
+import cn.sun45.warbanner.document.database.source.models.CharacterModel;
 import cn.sun45.warbanner.document.preference.AppPreference;
 import cn.sun45.warbanner.document.preference.UserPreference;
 import cn.sun45.warbanner.framework.permission.PermissionRequestListener;
 import cn.sun45.warbanner.framework.permission.PermissionRequester;
 import cn.sun45.warbanner.framework.ui.BaseActivity;
+import cn.sun45.warbanner.server.ServerManager;
 import cn.sun45.warbanner.ui.shared.SharedViewModelClanwar;
 import cn.sun45.warbanner.ui.shared.SharedViewModelSource;
+import cn.sun45.warbanner.user.UserManager;
 import cn.sun45.warbanner.util.Utils;
 
 /**
  * Created by Sun45 on 2021/5/19
  * 首页界面
  */
-public class MainActivity extends BaseActivity implements PermissionRequestListener, SharedViewModelSource.CallBack, UpdateManager.IActivityCallBack, SourceManager.IActivityCallBack, ClanWarManager.IActivityCallBack {
+public class MainActivity extends BaseActivity implements PermissionRequestListener, ServerManager.IActivityCallBack, UpdateManager.IActivityCallBack, DataManager.IActivityCallBack {
     private PermissionRequester permissionRequester;
 
     private SharedViewModelSource sharedSource;
     private SharedViewModelClanwar sharedClanwar;
 
-    private SourceManager sourceManager;
-    private ClanWarManager clanWarManager;
+    private ServerManager serverManager;
+    private DataManager dataManager;
     private UpdateManager updateManager;
 
     private View mRoot;
@@ -62,7 +65,7 @@ public class MainActivity extends BaseActivity implements PermissionRequestListe
                 new String[]{
                 }, this);
         sharedSource = new ViewModelProvider(this).get(SharedViewModelSource.class);
-        sharedSource.characterlist.observe(this, new Observer<List<CharacterModel>>() {
+        sharedSource.characterList.observe(this, new Observer<List<CharacterModel>>() {
             @Override
             public void onChanged(List<CharacterModel> characterModels) {
 //                for (CharacterModel character : characterModels) {
@@ -70,16 +73,14 @@ public class MainActivity extends BaseActivity implements PermissionRequestListe
 //                }
             }
         });
-        sharedSource.setCallBack(this);
         sharedClanwar = new ViewModelProvider(this).get(SharedViewModelClanwar.class);
-        sourceManager = SourceManager.getInstance();
-        sourceManager.setiActivityCallBack(this);
-        clanWarManager = ClanWarManager.getInstance();
-        clanWarManager.setiActivityCallBack(this);
+        serverManager = ServerManager.getInstance();
+        serverManager.setiActivityCallBack(this);
+        dataManager = DataManager.getInstance();
+        dataManager.setiActivityCallBack(this);
         updateManager = UpdateManager.getInstance();
         updateManager.setiActivityCallBack(this);
 
-//        NickNameManager.init(this);
         new UserPreference().registListener(onSharedPreferenceChangeListener);
     }
 
@@ -110,34 +111,21 @@ public class MainActivity extends BaseActivity implements PermissionRequestListe
         permissionRequester.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
+    UserModel userModel;
+
     @Override
     public void permissionGained() {
-        sourceLoad();
+        dataLoad();
     }
 
-    private void sourceLoad() {
+    private void dataLoad() {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-//                if (sourceManager.checkDbFile()) {
-//                    sharedSource.loadData();
-//                    clanWarLoad();
-//                } else {
-                sourceManager.checkDatabaseVersion(true);
-//                }
-            }
-        });
-    }
-
-    private void clanWarLoad() {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (clanWarManager.needDataDownload()) {
-                    clanWarManager.showConfirmDialogCaimogu(true);
+                if (dataManager.checkEmpty()) {
+                    dataManager.update();
                 } else {
-                    sharedClanwar.loadData();
-                    checkAppVersion();
+                    dataUpdateFinished(true);
                 }
             }
         });
@@ -148,41 +136,24 @@ public class MainActivity extends BaseActivity implements PermissionRequestListe
     }
 
     @Override
-    public void sourceLoadFinished(boolean succeeded) {
-        if (!succeeded) {
-            Utils.tip(mRoot, R.string.chara_load_failed);
-        }
-    }
-
-    @Override
     public void showSnackBar(int messageRes) {
         Utils.tip(mRoot, messageRes);
     }
 
     @Override
-    public void showSnackBar(String message) {
-        Utils.tip(mRoot, message);
+    public void serverUpdate() {
+        UserManager.getInstance().resetToDefaultUser();
+        dataManager.update();
     }
 
     @Override
-    public void sourceUpdateFinished(boolean needload, boolean autocheck) {
+    public void dataUpdateFinished(boolean needload) {
         if (needload) {
             sharedSource.clearData();
             sharedSource.loadData();
-        }
-        if (autocheck) {
-            clanWarLoad();
-        } else {
             sharedClanwar.loadData();
         }
-    }
-
-    @Override
-    public void ClanWarReady(boolean autocheck) {
-        sharedClanwar.loadData();
-        if (autocheck) {
-            checkAppVersion();
-        }
+        checkAppVersion();
     }
 
     @Override

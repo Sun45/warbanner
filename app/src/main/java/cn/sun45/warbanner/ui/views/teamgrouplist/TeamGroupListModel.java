@@ -3,8 +3,8 @@ package cn.sun45.warbanner.ui.views.teamgrouplist;
 import java.io.Serializable;
 import java.util.List;
 
-import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
-import cn.sun45.warbanner.document.db.clanwar.TeamModel;
+import cn.sun45.warbanner.document.database.setup.models.TeamCustomizeModel;
+import cn.sun45.warbanner.document.database.source.models.TeamModel;
 import cn.sun45.warbanner.teamgroup.TeamGroupElementModel;
 
 /**
@@ -40,9 +40,9 @@ public class TeamGroupListModel implements Serializable {
         teamCustomizethree = elementthree.getTeamCustomizeModel();
         idlistthree = elementthree.getIdlist();
         borrowindexthree = idlistthree.indexOf((Object) idthree);
-        totaldamage = ((teamCustomizeone != null && teamCustomizeone.damageEffective()) ? teamCustomizeone.getEllipsisdamage() : teamone.getEllipsisdamage())
-                + ((teamCustomizetwo != null && teamCustomizetwo.damageEffective()) ? teamCustomizetwo.getEllipsisdamage() : teamtwo.getEllipsisdamage())
-                + ((teamCustomizethree != null && teamCustomizethree.damageEffective()) ? teamCustomizethree.getEllipsisdamage() : teamthree.getEllipsisdamage());
+        totaldamage = ((teamCustomizeone != null && teamCustomizeone.damageEffective()) ? teamCustomizeone.getDamage() : teamone.getDamage())
+                + ((teamCustomizetwo != null && teamCustomizetwo.damageEffective()) ? teamCustomizetwo.getDamage() : teamtwo.getDamage())
+                + ((teamCustomizethree != null && teamCustomizethree.damageEffective()) ? teamCustomizethree.getDamage() : teamthree.getDamage());
     }
 
     public TeamGroupListModel(TeamModel teamone, List<Integer> idlistone, int borrowindexone, TeamModel teamtwo, List<Integer> idlisttwo, int borrowindextwo, TeamModel teamthree, List<Integer> idlistthree, int borrowindexthree) {

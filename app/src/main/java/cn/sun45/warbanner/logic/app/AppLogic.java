@@ -2,10 +2,9 @@ package cn.sun45.warbanner.logic.app;
 
 import org.json.JSONObject;
 
-import cn.sun45.warbanner.document.StaticHelper;
+import cn.sun45.warbanner.document.statics.StaticHelper;
 import cn.sun45.warbanner.framework.logic.BaseLogic;
 import cn.sun45.warbanner.framework.logic.RequestListener;
-import cn.sun45.warbanner.util.Utils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

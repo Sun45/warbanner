@@ -25,6 +25,7 @@ public class CharacterList extends RecyclerView {
     }
 
     private void init() {
+        setVerticalScrollBarEnabled(false);
         setLayoutManager(new GridLayoutManager(getContext(), 5));
         adapter = new CharacterListAdapter(getContext());
         setAdapter(adapter);

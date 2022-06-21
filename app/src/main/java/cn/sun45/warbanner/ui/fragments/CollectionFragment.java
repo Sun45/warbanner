@@ -18,9 +18,8 @@ import java.util.List;
 
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.clanwar.ClanwarHelper;
-import cn.sun45.warbanner.document.db.clanwar.TeamGroupCollectionModel;
-import cn.sun45.warbanner.document.db.clanwar.TeamModel;
-import cn.sun45.warbanner.framework.document.db.DbHelper;
+import cn.sun45.warbanner.document.database.setup.models.TeamGroupCollectionModel;
+import cn.sun45.warbanner.document.database.source.models.TeamModel;
 import cn.sun45.warbanner.framework.ui.BaseFragment;
 import cn.sun45.warbanner.ui.activities.MainActivity;
 import cn.sun45.warbanner.ui.shared.SharedViewModelClanwar;
@@ -74,7 +73,7 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
         builder.setSpan(new ImageSpan(getContext(), R.drawable.ic_baseline_search_24), 12, 14, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         mEmptyHint.setText(builder);
 
-        sharedSource.characterlist.observe(requireActivity(), characterModels -> {
+        sharedSource.characterList.observe(requireActivity(), characterModels -> {
             mProgressingButton.setOnClickListener(v -> {
                 ((MainActivity) getActivity()).showSnackBar(R.string.progressing);
             });
@@ -87,34 +86,16 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
         sharedClanwar.teamGroupCollectionList.observe(requireActivity(), teamGroupCollectionModels -> {
             if (teamGroupCollectionModels != null && !teamGroupCollectionModels.isEmpty()) {
                 List<TeamGroupListModel> list = new ArrayList<>();
-                String date = ClanwarHelper.getCurrentClanWarDate();
                 for (int i = teamGroupCollectionModels.size() - 1; i >= 0; i--) {
                     TeamGroupCollectionModel teamGroupCollectionModel = teamGroupCollectionModels.get(i);
                     if (ClanwarHelper.isCollect(teamGroupCollectionModel)) {
-                        List<TeamModel> listone = DbHelper.query(getContext(), TeamModel.class, new String[]{"date", "number"}, new String[]{date, teamGroupCollectionModel.getTeamone()});
-                        TeamModel teamone = null;
-                        if (listone != null && !listone.isEmpty()) {
-                            teamone = listone.get(0);
-                        }
-                        if (teamone == null) {
+                        List<TeamModel> teamModels = ClanwarHelper.getTeamGroupCollectionTeamList(teamGroupCollectionModel);
+                        if (teamModels == null) {
                             continue;
                         }
-                        List<TeamModel> listtwo = DbHelper.query(getContext(), TeamModel.class, new String[]{"date", "number"}, new String[]{date, teamGroupCollectionModel.getTeamtwo()});
-                        TeamModel teamtwo = null;
-                        if (listtwo != null && !listtwo.isEmpty()) {
-                            teamtwo = listtwo.get(0);
-                        }
-                        if (teamtwo == null) {
-                            continue;
-                        }
-                        List<TeamModel> listthree = DbHelper.query(getContext(), TeamModel.class, new String[]{"date", "number"}, new String[]{date, teamGroupCollectionModel.getTeamthree()});
-                        TeamModel teamthree = null;
-                        if (listthree != null && !listthree.isEmpty()) {
-                            teamthree = listthree.get(0);
-                        }
-                        if (teamthree == null) {
-                            continue;
-                        }
+                        TeamModel teamone = teamModels.get(0);
+                        TeamModel teamtwo = teamModels.get(1);
+                        TeamModel teamthree = teamModels.get(2);
                         TeamGroupListModel teamGroupListModel = new TeamGroupListModel(
                                 teamone, buildIdlist(teamone), teamGroupCollectionModel.getBorrowindexone(),
                                 teamtwo, buildIdlist(teamtwo), teamGroupCollectionModel.getBorrowindextwo(),
@@ -171,7 +152,7 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
     @Override
     public void onDestroy() {
         super.onDestroy();
-        sharedSource.characterlist.removeObservers(requireActivity());
+        sharedSource.characterList.removeObservers(requireActivity());
         sharedClanwar.teamGroupCollectionList.removeObservers(requireActivity());
         sharedClanwar.teamCustomizeList.removeObservers(requireActivity());
     }

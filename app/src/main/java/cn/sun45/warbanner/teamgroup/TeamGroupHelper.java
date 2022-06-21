@@ -7,11 +7,13 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import cn.sun45.warbanner.clanwar.ClanwarHelper;
-import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
-import cn.sun45.warbanner.document.db.clanwar.TeamGroupScreenModel;
-import cn.sun45.warbanner.document.db.clanwar.TeamModel;
-import cn.sun45.warbanner.document.db.setup.ScreenCharacterModel;
+import cn.sun45.warbanner.document.database.setup.models.ScreenCharacterModel;
+import cn.sun45.warbanner.document.database.setup.models.TeamCustomizeModel;
+import cn.sun45.warbanner.document.database.setup.models.TeamGroupScreenModel;
+import cn.sun45.warbanner.document.database.source.models.TeamModel;
+import cn.sun45.warbanner.document.statics.ScreenCharacter;
 import cn.sun45.warbanner.framework.MyApplication;
+import cn.sun45.warbanner.stage.StageManager;
 import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListModel;
 import cn.sun45.warbanner.util.Utils;
 
@@ -58,7 +60,7 @@ public class TeamGroupHelper {
                 for (int i = 0; i < idlist.size(); i++) {
                     int id = idlist.get(i);
                     if (screenCharacterMap.containsKey(id)) {
-                        if (screenCharacterMap.get(id) == ScreenCharacterModel.TYPE_LACK) {
+                        if (screenCharacterMap.get(id) == ScreenCharacter.TYPE_LACK.getType()) {
                             if (screencharacter != 0) {
                                 notuseable = true;
                                 break;
@@ -124,7 +126,7 @@ public class TeamGroupHelper {
     private boolean fit(TeamGroupElementModel teamGroupElementModel, int stage, int boss, int auto, int characteroneid, int charactertwoid, int characterthreeid, int characterfourid, int characterfiveid) {
         List<Integer> idlist = teamGroupElementModel.getIdlist();
         TeamModel teamModel = teamGroupElementModel.getTeamModel();
-        if (teamModel.getStage() != stage + 1) {
+        if (!StageManager.getInstance().matchTeamModel(teamModel, stage)) {
             return false;
         }
         if (Integer.valueOf(teamModel.getBoss().substring(1, 2)) != boss + 1) {
@@ -162,16 +164,16 @@ public class TeamGroupHelper {
             TeamGroupElementModel one = elementModelListOne.get(i);
             for (int j = 0; j < elementModelListTwo.size(); j++) {
                 TeamGroupElementModel two = elementModelListTwo.get(j);
-                if (elementModelListOne.contains(two) && elementModelListTwo.contains(one) && one.getTeamModel().getSortnumber().compareTo(two.getTeamModel().getSortnumber()) >= 0) {
+                if (elementModelListOne.contains(two) && elementModelListTwo.contains(one) && one.getTeamModel().getId() - two.getTeamModel().getId() >= 0) {
                     continue;
                 }
                 if (compatible(one, two)) {
                     for (int k = 0; k < elementModelListThree.size(); k++) {
                         TeamGroupElementModel three = elementModelListThree.get(k);
-                        if (elementModelListOne.contains(three) && elementModelListThree.contains(one) && one.getTeamModel().getSortnumber().compareTo(three.getTeamModel().getSortnumber()) >= 0) {
+                        if (elementModelListOne.contains(three) && elementModelListThree.contains(one) && one.getTeamModel().getId() - three.getTeamModel().getId() >= 0) {
                             continue;
                         }
-                        if (elementModelListTwo.contains(three) && elementModelListThree.contains(two) && two.getTeamModel().getSortnumber().compareTo(three.getTeamModel().getSortnumber()) >= 0) {
+                        if (elementModelListTwo.contains(three) && elementModelListThree.contains(two) && two.getTeamModel().getId() - three.getTeamModel().getId() >= 0) {
                             continue;
                         }
                         TeamGroupListModel teamGroupListModel = compatible(one, two, three);

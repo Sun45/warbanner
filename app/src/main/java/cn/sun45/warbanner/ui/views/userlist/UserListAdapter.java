@@ -87,9 +87,6 @@ public class UserListAdapter extends RecyclerView.Adapter<UserListAdapter.Holder
             } else {
                 mName.setChecked(false);
             }
-            if (TextUtils.isEmpty(name)) {
-                name = Utils.getString(R.string.default_user);
-            }
             mName.setText(name);
         }
     }

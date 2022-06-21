@@ -35,6 +35,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
+        <cn.sun45.warbanner.ui.views.listselectbar.ListSelectBar
+            android:id="@+id/listselectbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|center_vertical" />
+
         <TextView
             android:id="@+id/empty_hint"
             android:layout_width="match_parent"

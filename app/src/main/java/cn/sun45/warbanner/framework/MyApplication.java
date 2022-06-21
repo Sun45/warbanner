@@ -5,7 +5,6 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
-import cn.sun45.warbanner.datamanager.source.SourceDataProcessHelper;
 import cn.sun45.warbanner.document.preference.AppPreference;
 import cn.sun45.warbanner.framework.image.ImageRequester;
 import cn.sun45.warbanner.framework.record.ErrorRecordManager;
@@ -40,8 +39,6 @@ public class MyApplication extends Application implements Thread.UncaughtExcepti
         Thread.setDefaultUncaughtExceptionHandler(this);
 
         ImageRequester.init(this);
-
-        SourceDataProcessHelper.init(this);
     }
 
     /**

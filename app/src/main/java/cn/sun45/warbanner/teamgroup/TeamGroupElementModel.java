@@ -2,8 +2,8 @@ package cn.sun45.warbanner.teamgroup;
 
 import java.util.List;
 
-import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
-import cn.sun45.warbanner.document.db.clanwar.TeamModel;
+import cn.sun45.warbanner.document.database.setup.models.TeamCustomizeModel;
+import cn.sun45.warbanner.document.database.source.models.TeamModel;
 
 /**
  * Created by Sun45 on 2021/5/30
@@ -49,9 +49,9 @@ public class TeamGroupElementModel {
 
     public int getDamage() {
         if (teamCustomizeModel != null && teamCustomizeModel.damageEffective()) {
-            return teamCustomizeModel.getEllipsisdamage();
+            return teamCustomizeModel.getDamage();
         } else {
-            return teamModel.getEllipsisdamage();
+            return teamModel.getDamage();
         }
     }
 

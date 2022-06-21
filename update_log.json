@@ -1,6 +1,6 @@
 {
-  "versionCode": "36",
-  "versionName": "2.6.1",
+  "versionCode": "37",
+  "versionName": "2.8.1",
   "fource": "false",
-  "content": "1.切换AUTO标志展示方式2.调整踩蘑菇会战数据解析方式"
+  "content": "1.开启踩蘑菇纪元，切换数据库来源为踩蘑菇网站2.角色筛选添加站位分组3.添加作业列表快速跳转器"
 }

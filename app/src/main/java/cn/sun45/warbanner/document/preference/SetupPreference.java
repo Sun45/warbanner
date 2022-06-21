@@ -1,5 +1,6 @@
 package cn.sun45.warbanner.document.preference;
 
+import cn.sun45.warbanner.document.statics.Locale;
 import cn.sun45.warbanner.framework.document.preference.BasePreference;
 
 /**
@@ -14,6 +15,9 @@ public class SetupPreference extends BasePreference {
 
     //角色筛选生效
     private boolean characterscreenenable = false;
+
+    //服务器
+    private int server;
 
     //自动更新开启
     private boolean autoupdate = true;
@@ -43,6 +47,14 @@ public class SetupPreference extends BasePreference {
 
     public void setCharacterscreenenable(boolean characterscreenenable) {
         save("characterscreenenable", characterscreenenable);
+    }
+
+    public int getServer() {
+        return load("server");
+    }
+
+    public void setServer(int server) {
+        save("server", server);
     }
 
     public boolean isAutoupdate() {

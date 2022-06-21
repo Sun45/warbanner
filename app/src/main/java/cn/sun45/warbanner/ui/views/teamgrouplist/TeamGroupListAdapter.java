@@ -23,9 +23,9 @@ import java.util.List;
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.character.CharacterHelper;
 import cn.sun45.warbanner.clanwar.ClanwarHelper;
-import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
-import cn.sun45.warbanner.document.db.clanwar.TeamModel;
-import cn.sun45.warbanner.document.db.source.CharacterModel;
+import cn.sun45.warbanner.document.database.setup.models.TeamCustomizeModel;
+import cn.sun45.warbanner.document.database.source.models.CharacterModel;
+import cn.sun45.warbanner.document.database.source.models.TeamModel;
 import cn.sun45.warbanner.framework.image.ImageRequester;
 import cn.sun45.warbanner.util.Utils;
 
@@ -131,16 +131,16 @@ public class TeamGroupListAdapter extends RecyclerView.Adapter<TeamGroupListAdap
             TeamCustomizeModel teamCustomizetwo = ClanwarHelper.findCustomizeModel(teamtwo, teamCustomizeModels);
             TeamCustomizeModel teamCustomizethree = ClanwarHelper.findCustomizeModel(teamthree, teamCustomizeModels);
             if ((teamCustomizeone != null && teamCustomizeone.damageEffective()) || (teamCustomizetwo != null && teamCustomizetwo.damageEffective()) || (teamCustomizethree != null && teamCustomizethree.damageEffective())) {
-                String title = ((teamCustomizeone != null && teamCustomizeone.damageEffective()) ? teamCustomizeone.getEllipsisdamage() : teamone.getEllipsisdamage())
-                        + ((teamCustomizetwo != null && teamCustomizetwo.damageEffective()) ? teamCustomizetwo.getEllipsisdamage() : teamtwo.getEllipsisdamage())
-                        + ((teamCustomizethree != null && teamCustomizethree.damageEffective()) ? teamCustomizethree.getEllipsisdamage() : teamthree.getEllipsisdamage()) + "w";
+                String title = ((teamCustomizeone != null && teamCustomizeone.damageEffective()) ? teamCustomizeone.getDamage() : teamone.getDamage())
+                        + ((teamCustomizetwo != null && teamCustomizetwo.damageEffective()) ? teamCustomizetwo.getDamage() : teamtwo.getDamage())
+                        + ((teamCustomizethree != null && teamCustomizethree.damageEffective()) ? teamCustomizethree.getDamage() : teamthree.getDamage()) + "w";
                 int length = title.length();
                 title += " " + teamone.getBoss() + " " + teamtwo.getBoss() + " " + teamthree.getBoss();
                 SpannableStringBuilder builder = new SpannableStringBuilder(title);
                 builder.setSpan(new ForegroundColorSpan(Utils.getAttrColor(context, R.attr.colorSecondary)), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 mTitle.setText(builder);
             } else {
-                String title = teamone.getEllipsisdamage() + teamtwo.getEllipsisdamage() + teamthree.getEllipsisdamage() + "w" + " " + teamone.getBoss() + " " + teamtwo.getBoss() + " " + teamthree.getBoss();
+                String title = teamone.getDamage() + teamtwo.getDamage() + teamthree.getDamage() + "w" + " " + teamone.getBoss() + " " + teamtwo.getBoss() + " " + teamthree.getBoss();
                 mTitle.setText(title);
             }
             showCollection();
@@ -180,10 +180,10 @@ public class TeamGroupListAdapter extends RecyclerView.Adapter<TeamGroupListAdap
 
         public void setdata(TeamModel teamModel, TeamCustomizeModel teamCustomizeModel, List<Integer> idlist, int borrowindex) {
             if (teamCustomizeModel == null) {
-                String title = teamModel.getNumber() + " " + teamModel.getEllipsisdamage() + "w";
+                String title = teamModel.getSn() + " " + teamModel.getDamage() + "w";
                 mTitle.setText(title);
             } else {
-                String str = teamModel.getNumber();
+                String str = teamModel.getSn();
                 SpannableStringBuilder builder = new SpannableStringBuilder(str);
                 if (teamCustomizeModel.isBlock()) {
                     builder.setSpan(new StrikethroughSpan(), 0, str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -192,10 +192,10 @@ public class TeamGroupListAdapter extends RecyclerView.Adapter<TeamGroupListAdap
                 builder.append(" ");
                 int start = builder.length();
                 if (teamCustomizeModel.damageEffective()) {
-                    builder.append(teamCustomizeModel.getEllipsisdamage() + "w");
+                    builder.append(teamCustomizeModel.getDamage() + "w");
                     builder.setSpan(new ForegroundColorSpan(Utils.getAttrColor(context, R.attr.colorSecondary)), start, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 } else {
-                    builder.append(teamModel.getEllipsisdamage() + "w");
+                    builder.append(teamModel.getDamage() + "w");
                 }
                 mTitle.setText(builder);
             }
@@ -235,7 +235,7 @@ public class TeamGroupListAdapter extends RecyclerView.Adapter<TeamGroupListAdap
                 name.setVisibility(View.VISIBLE);
                 name.setText(id + "");
             } else {
-                ImageRequester.request(characterModel.getIconUrl(), R.drawable.ic_character_default).loadImage(icon);
+                ImageRequester.request(characterModel.getIconUrl(), R.drawable.ic_character_default).loadRoundImage(icon);
                 name.setVisibility(View.INVISIBLE);
                 name.setText("");
             }

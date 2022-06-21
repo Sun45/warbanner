@@ -1,16 +1,9 @@
 package cn.sun45.warbanner.ui.views.teamlist;
 
-import android.text.TextUtils;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.sun45.warbanner.document.db.clanwar.TeamModel;
-import cn.sun45.warbanner.util.Utils;
+import cn.sun45.warbanner.document.database.source.models.TeamModel;
 
 /**
  * Created by Sun45 on 2021/6/2
@@ -29,22 +22,12 @@ public class TeamListTeamModel {
         this.teamModel = teamModel;
         this.borrowindex = borrowindex;
         remarkModels = new ArrayList<>();
-        try {
-            JSONArray remarkarray = new JSONArray(teamModel.getRemarks());
-            for (int i = 0; i < remarkarray.length(); i++) {
-                JSONObject object = remarkarray.optJSONObject(i);
-                String content = object.optString("content");
-                content = Utils.replaceBlank(content);
-                String link = object.optString("link");
-                if (!TextUtils.isEmpty(content) && !TextUtils.isEmpty(link)) {
-                    TeamListRemarkModel remarkModel = new TeamListRemarkModel();
-                    remarkModel.setContent(content);
-                    remarkModel.setLink(link);
-                    remarkModels.add(remarkModel);
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        List<TeamModel.TimeLine> timeLineList = teamModel.getTimeLines();
+        for (TeamModel.TimeLine timeLine : timeLineList) {
+            TeamListRemarkModel remarkModel = new TeamListRemarkModel();
+            remarkModel.setContent(timeLine.getContent());
+            remarkModel.setLink(timeLine.getLink());
+            remarkModels.add(remarkModel);
         }
     }
 

@@ -39,16 +39,6 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <provider
-            android:name="cn.sun45.warbanner.document.db.source.SourceProvider"
-            android:authorities="cn.sun45.warbanner.document.db.source.SourceProvider"></provider>
-        <provider
-            android:name="cn.sun45.warbanner.document.db.clanwar.ClanWarProvider"
-            android:authorities="cn.sun45.warbanner.document.db.clanwar.ClanWarProvider"></provider>
-        <provider
-            android:name="cn.sun45.warbanner.document.db.setup.SetupProvider"
-            android:authorities="cn.sun45.warbanner.document.db.setup.SetupProvider"></provider>
-
         <service
             android:name=".assist.CustomMyAccessibilityService"
             android:enabled="true"

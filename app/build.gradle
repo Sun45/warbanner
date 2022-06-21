@@ -8,10 +8,17 @@ android {
         applicationId "cn.sun45.warbanner"
         minSdkVersion 24
         targetSdkVersion 30
-        versionCode 36
-        versionName "2.6.1"
+        versionCode 37
+        versionName "2.8.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation":
+                                     "$projectDir/schemas".toString()]
+            }
+        }
     }
 
     buildTypes {
@@ -59,6 +66,10 @@ dependencies {
 
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0'
+
+    def room_version = "2.2.5"
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version"
 
     implementation 'org.jsoup:jsoup:1.13.1'
 

@@ -1,14 +1,16 @@
 package cn.sun45.warbanner.clanwar;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
-import cn.sun45.warbanner.document.db.clanwar.TeamGroupCollectionModel;
-import cn.sun45.warbanner.document.db.clanwar.TeamGroupScreenModel;
-import cn.sun45.warbanner.document.db.clanwar.TeamModel;
-import cn.sun45.warbanner.document.db.source.ClanWarModel;
-import cn.sun45.warbanner.framework.MyApplication;
-import cn.sun45.warbanner.framework.document.db.DbHelper;
+import cn.sun45.warbanner.document.database.setup.SetupDataBase;
+import cn.sun45.warbanner.document.database.setup.models.TeamCustomizeModel;
+import cn.sun45.warbanner.document.database.setup.models.TeamGroupCollectionModel;
+import cn.sun45.warbanner.document.database.setup.models.TeamGroupScreenModel;
+import cn.sun45.warbanner.document.database.setup.models.TeamListShowModel;
+import cn.sun45.warbanner.document.database.source.SourceDataBase;
+import cn.sun45.warbanner.document.database.source.models.TeamModel;
+import cn.sun45.warbanner.server.ServerManager;
 import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListModel;
 import cn.sun45.warbanner.user.UserManager;
 
@@ -18,32 +20,63 @@ import cn.sun45.warbanner.user.UserManager;
  */
 public class ClanwarHelper {
     /**
-     * 获取当期会战日期
+     * 获取阵容信息展示数据模型
      *
      * @return
      */
-    public static String getCurrentClanWarDate() {
-        String date = null;
-        ClanWarModel clanWarModel = getCurrentClanWarModel();
-        if (clanWarModel != null) {
-            String startdate = clanWarModel.getStartdate();
-            date = startdate.substring(0, 10).replace("/", "");
+    public static TeamListShowModel getTeamListShowModel() {
+        int userId = UserManager.getInstance().getCurrentUserId();
+        TeamListShowModel teamListShowModel = SetupDataBase.getInstance().setupDao().quaryTeamListShow(userId);
+        if (teamListShowModel == null) {
+            teamListShowModel = new TeamListShowModel();
+            teamListShowModel.setUserId(userId);
+            SetupDataBase.getInstance().setupDao().insertTeamListShow(teamListShowModel);
         }
-        return date;
+        return teamListShowModel;
     }
 
     /**
-     * 获取当期会战信息
+     * 设置阵容信息展示链接展示
      *
-     * @return
+     * @param linkShow 链接展示
      */
-    public static ClanWarModel getCurrentClanWarModel() {
-        ClanWarModel model = null;
-        List<ClanWarModel> clanWarModelList = DbHelper.query(MyApplication.application, ClanWarModel.class);
-        if (clanWarModelList != null && !clanWarModelList.isEmpty()) {
-            model = clanWarModelList.get(0);
-        }
-        return model;
+    public static void setTeamListShowLinkShow(boolean linkShow) {
+        TeamListShowModel teamListShowModel = getTeamListShowModel();
+        teamListShowModel.setLinkShow(linkShow);
+        SetupDataBase.getInstance().setupDao().insertTeamListShow(teamListShowModel);
+    }
+
+    /**
+     * 设置阵容信息展示阶段筛选
+     *
+     * @param teamListStage 阶段筛选
+     */
+    public static void setTeamListShowStage(int teamListStage) {
+        TeamListShowModel teamListShowModel = getTeamListShowModel();
+        teamListShowModel.setTeamListStage(teamListStage);
+        SetupDataBase.getInstance().setupDao().insertTeamListShow(teamListShowModel);
+    }
+
+    /**
+     * 设置阵容信息展示BOSS筛选
+     *
+     * @param teamListBoss BOSS筛选
+     */
+    public static void setTeamListShowBoss(int teamListBoss) {
+        TeamListShowModel teamListShowModel = getTeamListShowModel();
+        teamListShowModel.setTeamListBoss(teamListBoss);
+        SetupDataBase.getInstance().setupDao().insertTeamListShow(teamListShowModel);
+    }
+
+    /**
+     * 设置阵容信息展示刀型筛选
+     *
+     * @param teamListType 刀型筛选
+     */
+    public static void setTeamListShowType(int teamListType) {
+        TeamListShowModel teamListShowModel = getTeamListShowModel();
+        teamListShowModel.setTeamListType(teamListType);
+        SetupDataBase.getInstance().setupDao().insertTeamListShow(teamListShowModel);
     }
 
     /**
@@ -56,7 +89,7 @@ public class ClanwarHelper {
         TeamCustomizeModel teamCustomizeModel = null;
         if (teamCustomizeModels != null) {
             for (TeamCustomizeModel model : teamCustomizeModels) {
-                if (model.getDate().equals(teamModel.getDate()) && model.getNumber().equals(teamModel.getNumber())) {
+                if (model.getTeamId() == teamModel.getId()) {
                     teamCustomizeModel = model;
                     break;
                 }
@@ -71,13 +104,7 @@ public class ClanwarHelper {
      * @param teamModel
      */
     public static TeamCustomizeModel getCustomizeModel(TeamModel teamModel) {
-        List<TeamCustomizeModel> teamCustomizeList = DbHelper.query(MyApplication.application, TeamCustomizeModel.class,
-                new String[]{"date", "number"}, new String[]{teamModel.getDate(), teamModel.getNumber()});
-        TeamCustomizeModel teamCustomizeModel = null;
-        if (teamCustomizeList != null && !teamCustomizeList.isEmpty()) {
-            teamCustomizeModel = teamCustomizeList.get(0);
-        }
-        return teamCustomizeModel;
+        return SetupDataBase.getInstance().setupDao().queryTeamCustomize(teamModel.getId());
     }
 
     /**
@@ -89,8 +116,7 @@ public class ClanwarHelper {
     public static TeamCustomizeModel customizeTeamBlock(TeamModel teamModel, TeamCustomizeModel teamCustomizeModel) {
         if (teamCustomizeModel == null) {
             teamCustomizeModel = new TeamCustomizeModel();
-            teamCustomizeModel.setDate(teamModel.getDate());
-            teamCustomizeModel.setNumber(teamModel.getNumber());
+            teamCustomizeModel.setTeamId(teamModel.getId());
             teamCustomizeModel.setBlock(!teamCustomizeModel.isBlock());
             return saveTeamCustomizeModel(teamCustomizeModel);
         } else {
@@ -109,12 +135,11 @@ public class ClanwarHelper {
     public static TeamCustomizeModel customizeTeamDamage(TeamModel teamModel, TeamCustomizeModel teamCustomizeModel, int damage) {
         if (teamCustomizeModel == null) {
             teamCustomizeModel = new TeamCustomizeModel();
-            teamCustomizeModel.setDate(teamModel.getDate());
-            teamCustomizeModel.setNumber(teamModel.getNumber());
-            teamCustomizeModel.setEllipsisdamage(damage);
+            teamCustomizeModel.setTeamId(teamModel.getId());
+            teamCustomizeModel.setDamage(damage);
             return saveTeamCustomizeModel(teamCustomizeModel);
         } else {
-            teamCustomizeModel.setEllipsisdamage(damage);
+            teamCustomizeModel.setDamage(damage);
             return saveTeamCustomizeModel(teamCustomizeModel);
         }
     }
@@ -125,7 +150,7 @@ public class ClanwarHelper {
      * @param teamCustomizeModel
      */
     public static TeamCustomizeModel removeCustomizeTeamDamage(TeamCustomizeModel teamCustomizeModel) {
-        teamCustomizeModel.setEllipsisdamage(-1);
+        teamCustomizeModel.setDamage(-1);
         return saveTeamCustomizeModel(teamCustomizeModel);
     }
 
@@ -144,8 +169,7 @@ public class ClanwarHelper {
      * @param teamCustomizeModel
      */
     private static void deleteCustomizeModel(TeamCustomizeModel teamCustomizeModel) {
-        DbHelper.delete(MyApplication.application, TeamCustomizeModel.class,
-                new String[]{"date", "number"}, new String[]{teamCustomizeModel.getDate(), teamCustomizeModel.getNumber()});
+        SetupDataBase.getInstance().setupDao().deleteTeamCustomize(teamCustomizeModel.getTeamId());
     }
 
     /**
@@ -154,11 +178,11 @@ public class ClanwarHelper {
      * @param teamCustomizeModel
      */
     private static TeamCustomizeModel saveTeamCustomizeModel(TeamCustomizeModel teamCustomizeModel) {
-        deleteCustomizeModel(teamCustomizeModel);
         if (customizeEffective(teamCustomizeModel)) {
-            DbHelper.insert(MyApplication.application, teamCustomizeModel);
+            SetupDataBase.getInstance().setupDao().insertTeamCustomize(teamCustomizeModel);
             return teamCustomizeModel;
         } else {
+            deleteCustomizeModel(teamCustomizeModel);
             return null;
         }
     }
@@ -176,6 +200,31 @@ public class ClanwarHelper {
     }
 
     /**
+     * 获得分刀收藏的阵容信息列表
+     *
+     * @param teamGroupCollectionModel
+     */
+    public static List<TeamModel> getTeamGroupCollectionTeamList(TeamGroupCollectionModel teamGroupCollectionModel) {
+        List<TeamModel> list = new ArrayList<>();
+        TeamModel teamone = SourceDataBase.getInstance().sourceDao().queryTeam(ServerManager.getInstance().getLang(), teamGroupCollectionModel.getTeamoneId());
+        if (teamone == null) {
+            return null;
+        }
+        TeamModel teamtwo = SourceDataBase.getInstance().sourceDao().queryTeam(ServerManager.getInstance().getLang(), teamGroupCollectionModel.getTeamtwoId());
+        if (teamtwo == null) {
+            return null;
+        }
+        TeamModel teamthree = SourceDataBase.getInstance().sourceDao().queryTeam(ServerManager.getInstance().getLang(), teamGroupCollectionModel.getTeamthreeId());
+        if (teamthree == null) {
+            return null;
+        }
+        list.add(teamone);
+        list.add(teamtwo);
+        list.add(teamthree);
+        return list;
+    }
+
+    /**
      * 判断分刀数据已收藏
      *
      * @param teamGroupListModel
@@ -184,9 +233,9 @@ public class ClanwarHelper {
         boolean collected = false;
         List<TeamGroupCollectionModel> collectionlist = getCollectionlist();
         for (TeamGroupCollectionModel teamGroupCollectionModel : collectionlist) {
-            if (teamGroupCollectionModel.getTeamone().equals(teamGroupListModel.getTeamone().getNumber())) {
-                if (teamGroupCollectionModel.getTeamtwo().equals(teamGroupListModel.getTeamtwo().getNumber())) {
-                    if (teamGroupCollectionModel.getTeamthree().equals(teamGroupListModel.getTeamthree().getNumber())) {
+            if (teamGroupCollectionModel.getTeamoneId() == teamGroupListModel.getTeamone().getId()) {
+                if (teamGroupCollectionModel.getTeamtwoId() == teamGroupListModel.getTeamtwo().getId()) {
+                    if (teamGroupCollectionModel.getTeamthreeId() == teamGroupListModel.getTeamthree().getId()) {
                         collected = true;
                         break;
                     }
@@ -200,7 +249,7 @@ public class ClanwarHelper {
      * 获取收藏的分刀数据列表
      */
     public static List<TeamGroupCollectionModel> getCollectionlist() {
-        List<TeamGroupCollectionModel> collectionlist = DbHelper.query(MyApplication.application, TeamGroupCollectionModel.class, "userId", UserManager.getInstance().getCurrentUserId() + "");
+        List<TeamGroupCollectionModel> collectionlist = SetupDataBase.getInstance().setupDao().queryAllTeamGroupCollection(UserManager.getInstance().getCurrentUserId());
         return collectionlist;
     }
 
@@ -212,28 +261,21 @@ public class ClanwarHelper {
      */
     public static void collect(TeamGroupListModel teamGroupListModel, boolean collect) {
         int userId = UserManager.getInstance().getCurrentUserId();
-        String date = getCurrentClanWarDate();
         if (collect) {
             TeamGroupCollectionModel teamGroupCollectionModel = new TeamGroupCollectionModel();
             teamGroupCollectionModel.setUserId(userId);
-            teamGroupCollectionModel.setDate(date);
-            teamGroupCollectionModel.setTeamone(teamGroupListModel.getTeamone().getNumber());
+            teamGroupCollectionModel.setTeamoneId(teamGroupListModel.getTeamone().getId());
             teamGroupCollectionModel.setBorrowindexone(teamGroupListModel.getBorrowindexone());
-            teamGroupCollectionModel.setTeamtwo(teamGroupListModel.getTeamtwo().getNumber());
+            teamGroupCollectionModel.setTeamtwoId(teamGroupListModel.getTeamtwo().getId());
             teamGroupCollectionModel.setBorrowindextwo(teamGroupListModel.getBorrowindextwo());
-            teamGroupCollectionModel.setTeamthree(teamGroupListModel.getTeamthree().getNumber());
+            teamGroupCollectionModel.setTeamthreeId(teamGroupListModel.getTeamthree().getId());
             teamGroupCollectionModel.setBorrowindexthree(teamGroupListModel.getBorrowindexthree());
-            DbHelper.insert(MyApplication.application, teamGroupCollectionModel);
+            SetupDataBase.getInstance().setupDao().insertTeamGroupCollection(teamGroupCollectionModel);
         } else {
-            DbHelper.delete(MyApplication.application, TeamGroupCollectionModel.class
-                    , new String[]{"userId", "date", "teamone", "teamtwo", "teamthree"}
-                    , new String[]{
-                            userId + "",
-                            date,
-                            teamGroupListModel.getTeamone().getNumber(),
-                            teamGroupListModel.getTeamtwo().getNumber(),
-                            teamGroupListModel.getTeamthree().getNumber()
-                    });
+            SetupDataBase.getInstance().setupDao().deleteTeamGroupCollection(userId,
+                    teamGroupListModel.getTeamone().getId(),
+                    teamGroupListModel.getTeamtwo().getId(),
+                    teamGroupListModel.getTeamthree().getId());
         }
     }
 
@@ -242,7 +284,7 @@ public class ClanwarHelper {
      */
     public static TeamGroupScreenModel getScreenModel() {
         int userId = UserManager.getInstance().getCurrentUserId();
-        TeamGroupScreenModel teamGroupScreenModel = DbHelper.query(MyApplication.application, TeamGroupScreenModel.class, userId + "");
+        TeamGroupScreenModel teamGroupScreenModel = SetupDataBase.getInstance().setupDao().queryAllTeamGroupScreen(userId);
         if (teamGroupScreenModel == null) {
             teamGroupScreenModel = new TeamGroupScreenModel();
             teamGroupScreenModel.setUserId(userId);
@@ -256,12 +298,6 @@ public class ClanwarHelper {
      * @param screenModel
      */
     public static void setScreenModel(TeamGroupScreenModel screenModel) {
-        int userId = UserManager.getInstance().getCurrentUserId();
-        TeamGroupScreenModel teamGroupScreenModel = DbHelper.query(MyApplication.application, TeamGroupScreenModel.class, userId + "");
-        if (teamGroupScreenModel == null) {
-            DbHelper.insert(MyApplication.application, screenModel);
-        } else {
-            DbHelper.modify(MyApplication.application, screenModel, screenModel.getUserId() + "");
-        }
+        SetupDataBase.getInstance().setupDao().insertTeamGroupScreen(screenModel);
     }
 }

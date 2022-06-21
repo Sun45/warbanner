@@ -2,10 +2,9 @@ package cn.sun45.warbanner.character;
 
 import java.util.List;
 
-import cn.sun45.warbanner.document.db.setup.ScreenCharacterModel;
-import cn.sun45.warbanner.document.db.source.CharacterModel;
-import cn.sun45.warbanner.framework.MyApplication;
-import cn.sun45.warbanner.framework.document.db.DbHelper;
+import cn.sun45.warbanner.document.database.setup.SetupDataBase;
+import cn.sun45.warbanner.document.database.setup.models.ScreenCharacterModel;
+import cn.sun45.warbanner.document.database.source.models.CharacterModel;
 import cn.sun45.warbanner.user.UserManager;
 
 /**
@@ -33,36 +32,10 @@ public class CharacterHelper {
     }
 
     /**
-     * 根据昵称查找角色信息
-     *
-     * @param nickname        昵称
-     * @param characterModels 角色信息列表
-     */
-    public static CharacterModel findCharacterByNickname(String nickname, List<CharacterModel> characterModels) {
-        CharacterModel characterModel = null;
-        boolean find = false;
-        if (characterModels != null && !characterModels.isEmpty()) {
-            for (CharacterModel model : characterModels) {
-                for (String str : model.getNicknames()) {
-                    if (nickname.equals(str)) {
-                        find = true;
-                        break;
-                    }
-                }
-                if (find) {
-                    characterModel = model;
-                    break;
-                }
-            }
-        }
-        return characterModel;
-    }
-
-    /**
      * 获取筛选角色列表
      */
     public static List<ScreenCharacterModel> getScreenCharacterList() {
-        return DbHelper.query(MyApplication.application, ScreenCharacterModel.class, "userId", UserManager.getInstance().getCurrentUserId() + "");
+        return SetupDataBase.getInstance().setupDao().queryAllScreenCharacter(UserManager.getInstance().getCurrentUserId());
     }
 
     /**
@@ -75,22 +48,18 @@ public class CharacterHelper {
         int userId = UserManager.getInstance().getCurrentUserId();
         int characterId = characterModel.getId();
         if (type == 0) {
-            DbHelper.delete(MyApplication.application, ScreenCharacterModel.class, new String[]{"userId", "characterId"}, new String[]{userId + "", characterId + ""});
+            SetupDataBase.getInstance().setupDao().deleteScreenCharacter(userId, characterId);
         } else {
-            ScreenCharacterModel screenCharacterModel = null;
-            List<ScreenCharacterModel> screenCharacterModels = DbHelper.query(MyApplication.application, ScreenCharacterModel.class, new String[]{"userId", "characterId"}, new String[]{userId + "", characterId + ""});
-            if (screenCharacterModels != null && !screenCharacterModels.isEmpty()) {
-                screenCharacterModel = screenCharacterModels.get(0);
-            }
+            ScreenCharacterModel screenCharacterModel = SetupDataBase.getInstance().setupDao().queryScreenCharacter(userId, characterId);
             if (screenCharacterModel == null) {
                 screenCharacterModel = new ScreenCharacterModel();
                 screenCharacterModel.setUserId(userId);
                 screenCharacterModel.setCharacterId(characterId);
                 screenCharacterModel.setType(type);
-                DbHelper.insert(MyApplication.application, screenCharacterModel);
+                SetupDataBase.getInstance().setupDao().insertScreenCharacter(screenCharacterModel);
             } else {
                 screenCharacterModel.setType(type);
-                DbHelper.modify(MyApplication.application, screenCharacterModel, new String[]{"userId", "characterId"}, new String[]{userId + "", characterId + ""});
+                SetupDataBase.getInstance().setupDao().updateScreenCharacter(screenCharacterModel);
             }
         }
     }

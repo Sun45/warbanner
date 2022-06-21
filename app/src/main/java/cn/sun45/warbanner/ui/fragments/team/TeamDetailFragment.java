@@ -30,9 +30,9 @@ import org.jetbrains.annotations.NotNull;
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.character.CharacterHelper;
 import cn.sun45.warbanner.clanwar.ClanwarHelper;
-import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
-import cn.sun45.warbanner.document.db.clanwar.TeamModel;
-import cn.sun45.warbanner.document.db.source.CharacterModel;
+import cn.sun45.warbanner.document.database.setup.models.TeamCustomizeModel;
+import cn.sun45.warbanner.document.database.source.models.CharacterModel;
+import cn.sun45.warbanner.document.database.source.models.TeamModel;
 import cn.sun45.warbanner.framework.image.ImageRequester;
 import cn.sun45.warbanner.framework.ui.BaseActivity;
 import cn.sun45.warbanner.framework.ui.BaseFragment;
@@ -115,11 +115,11 @@ public class TeamDetailFragment extends BaseFragment {
             public void onClick(View v) {
                 MaterialDialog dialog = new MaterialDialog(getContext(), MaterialDialog.getDEFAULT_BEHAVIOR());
                 dialog.title(R.string.team_detail_damage_dialog_title, null);
-                int damage = teamModel.getEllipsisdamage();
+                int damage = teamModel.getDamage();
                 if (teamCustomizeModel != null && teamCustomizeModel.damageEffective()) {
-                    damage = teamCustomizeModel.getEllipsisdamage();
+                    damage = teamCustomizeModel.getDamage();
                 }
-                DialogInputExtKt.input(dialog, Utils.getStringWithPlaceHolder(R.string.team_detail_damage_dialog_hint, teamModel.getEllipsisdamage() + "w"), null, damage + "", null, InputType.TYPE_CLASS_NUMBER, null, true, false, new Function2<MaterialDialog, CharSequence, Unit>() {
+                DialogInputExtKt.input(dialog, Utils.getStringWithPlaceHolder(R.string.team_detail_damage_dialog_hint, teamModel.getDamage() + "w"), null, damage + "", null, InputType.TYPE_CLASS_NUMBER, null, true, false, new Function2<MaterialDialog, CharSequence, Unit>() {
                     @Override
                     public Unit invoke(MaterialDialog materialDialog, CharSequence charSequence) {
                         int damage = Integer.valueOf(charSequence.toString());
@@ -154,7 +154,7 @@ public class TeamDetailFragment extends BaseFragment {
 
     private void showBlock() {
         if (teamCustomizeModel != null && teamCustomizeModel.isBlock()) {
-            String str = teamModel.getNumber();
+            String str = teamModel.getSn();
             SpannableStringBuilder builder = new SpannableStringBuilder(str);
             builder.setSpan(new StrikethroughSpan(), 0, str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             builder.setSpan(new ForegroundColorSpan(Utils.getColor(R.color.red_500)), 0, str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -163,22 +163,22 @@ public class TeamDetailFragment extends BaseFragment {
             drawable.setTint(Utils.getColor(R.color.red_500));
             mTitle.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, drawable, null);
         } else {
-            mTitle.setText(teamModel.getNumber());
+            mTitle.setText(teamModel.getSn());
             mTitle.setCompoundDrawables(null, null, null, null);
         }
     }
 
     private void showDamage() {
         if (teamCustomizeModel != null && teamCustomizeModel.damageEffective()) {
-            String str = teamCustomizeModel.getEllipsisdamage() + "w";
+            String str = teamCustomizeModel.getDamage() + "w";
             int length = str.length();
-            str += "(" + teamModel.getEllipsisdamage() + "w)";
+            str += "(" + teamModel.getDamage() + "w)";
             SpannableStringBuilder builder = new SpannableStringBuilder(str);
             builder.setSpan(new ForegroundColorSpan(Utils.getAttrColor(getContext(), R.attr.colorSecondary)), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
             mDamageText.setText(builder);
             mDamageClean.setVisibility(View.VISIBLE);
         } else {
-            mDamageText.setText(teamModel.getEllipsisdamage() + "w");
+            mDamageText.setText(teamModel.getDamage() + "w");
             mDamageClean.setVisibility(View.INVISIBLE);
         }
     }
@@ -209,7 +209,7 @@ public class TeamDetailFragment extends BaseFragment {
             case R.id.menu_share:
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT, teamModel.getShare());
+                intent.putExtra(Intent.EXTRA_TEXT, teamModel.getShare(sharedSource.characterList.getValue()));
                 intent.putExtra(Intent.EXTRA_SUBJECT, "share");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setType("text/plain");
@@ -231,14 +231,14 @@ public class TeamDetailFragment extends BaseFragment {
         }
 
         public void setData(int id) {
-            CharacterModel characterModel = CharacterHelper.findCharacterById(id, sharedSource.characterlist.getValue());
+            CharacterModel characterModel = CharacterHelper.findCharacterById(id, sharedSource.characterList.getValue());
             lay.setCardBackgroundColor(Utils.getColor(R.color.gray));
             if (characterModel == null) {
                 icon.setImageBitmap(null);
                 name.setVisibility(View.VISIBLE);
                 name.setText(id + "");
             } else {
-                ImageRequester.request(characterModel.getIconUrl(), R.drawable.ic_character_default).loadImage(icon);
+                ImageRequester.request(characterModel.getIconUrl(), R.drawable.ic_character_default).loadRoundImage(icon);
                 name.setVisibility(View.INVISIBLE);
                 name.setText("");
             }

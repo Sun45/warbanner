@@ -12,11 +12,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import cn.sun45.warbanner.document.db.source.CharacterModel;
-import cn.sun45.warbanner.ui.views.recordlist.RecordListModel;
-import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListListener;
-import cn.sun45.warbanner.ui.views.teamlist.TeamListAdapter;
-
 /**
  * Created by Sun45 on 2021/6/16
  * 用户列表

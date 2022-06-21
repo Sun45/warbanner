@@ -4,9 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.Spannable;
-import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
@@ -21,19 +21,21 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.character.CharacterHelper;
 import cn.sun45.warbanner.clanwar.ClanwarHelper;
-import cn.sun45.warbanner.document.StaticHelper;
-import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
-import cn.sun45.warbanner.document.db.clanwar.TeamModel;
-import cn.sun45.warbanner.document.db.setup.ScreenCharacterModel;
-import cn.sun45.warbanner.document.db.source.CharacterModel;
+import cn.sun45.warbanner.document.database.setup.models.ScreenCharacterModel;
+import cn.sun45.warbanner.document.database.setup.models.TeamCustomizeModel;
+import cn.sun45.warbanner.document.database.source.models.CharacterModel;
+import cn.sun45.warbanner.document.database.source.models.TeamModel;
 import cn.sun45.warbanner.document.preference.SetupPreference;
+import cn.sun45.warbanner.document.statics.StaticHelper;
 import cn.sun45.warbanner.framework.image.ImageRequester;
+import cn.sun45.warbanner.stage.StageManager;
+import cn.sun45.warbanner.ui.views.listselectbar.ListSelectItem;
 import cn.sun45.warbanner.util.Utils;
 
 /**
@@ -155,7 +157,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             int count = 0;
             if (teamWithBossList != null && !teamWithBossList.isEmpty()) {
                 int position = 0;
-                for (int stage = 1; stage <= StaticHelper.STAGE_COUNT; stage++) {
+                for (int stage = 1; stage <= StageManager.getInstance().getStageCount(); stage++) {
                     for (int boss = 1; boss <= StaticHelper.BOSS_COUNT; boss++, position++) {
                         if (stageSelection != 0 && stage != stageSelection) {
                             continue;
@@ -168,8 +170,33 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     }
                 }
             }
-            Utils.logD(TAG, "getItemCount count:" + count);
+//            Utils.logD(TAG, "getItemCount count:" + count);
             return count;
+        }
+    }
+
+    public List<ListSelectItem> getListSelectItemList() {
+        if (list != null) {
+            return null;
+        } else {
+            List<ListSelectItem> list = new ArrayList<>();
+            int position = 0;
+            int bossposition = 0;
+            for (int stage = 1; stage <= StageManager.getInstance().getStageCount(); stage++) {
+                for (int boss = 1; boss <= StaticHelper.BOSS_COUNT; boss++, bossposition++) {
+                    if (stageSelection != 0 && stage != stageSelection) {
+                        continue;
+                    }
+                    if (bossSelection != 0 && boss != bossSelection) {
+                        continue;
+                    }
+                    TeamListBossModel teamListBossModel = teamWithBossList.get(bossposition);
+                    ListSelectItem listSelectItem = new ListSelectItem(teamListBossModel.getIconUrl(), position);
+                    list.add(listSelectItem);
+                    position += (teamListBossModel.getModelCount(typeSelection) + 1);
+                }
+            }
+            return list;
         }
     }
 
@@ -178,7 +205,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             return list.get(position);
         } else {
             int bossposition = 0;
-            for (int stage = 1; stage <= StaticHelper.STAGE_COUNT; stage++) {
+            for (int stage = 1; stage <= StageManager.getInstance().getStageCount(); stage++) {
                 for (int boss = 1; boss <= StaticHelper.BOSS_COUNT; boss++, bossposition++) {
                     if (stageSelection != 0 && stage != stageSelection) {
                         continue;
@@ -215,7 +242,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         public void setData(TeamListBossModel teamListBossModel) {
-            ImageRequester.request(teamListBossModel.getIconUrl(), R.drawable.ic_character_default).loadImage(icon);
+            ImageRequester.request(teamListBossModel.getIconUrl(), R.drawable.ic_character_default).loadRoundImage(icon);
             name.setText(teamListBossModel.getName());
         }
     }
@@ -262,10 +289,10 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             mBoss.setText(teamModel.getBoss());
             TeamCustomizeModel teamCustomizeModel = ClanwarHelper.findCustomizeModel(teamModel, teamCustomizeModels);
             if (teamCustomizeModel == null) {
-                String title = teamModel.getNumber() + " " + teamModel.getEllipsisdamage() + "w";
+                String title = teamModel.getSn() + " " + teamModel.getDamage() + "w";
                 mTitle.setText(title);
             } else {
-                String str = teamModel.getNumber();
+                String str = teamModel.getSn();
                 SpannableStringBuilder builder = new SpannableStringBuilder(str);
                 if (teamCustomizeModel.isBlock()) {
                     builder.setSpan(new StrikethroughSpan(), 0, str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -274,10 +301,10 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 builder.append(" ");
                 int start = builder.length();
                 if (teamCustomizeModel.damageEffective()) {
-                    builder.append(teamCustomizeModel.getEllipsisdamage() + "w");
+                    builder.append(teamCustomizeModel.getDamage() + "w");
                     builder.setSpan(new ForegroundColorSpan(Utils.getAttrColor(context, R.attr.colorSecondary)), start, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 } else {
-                    builder.append(teamModel.getEllipsisdamage() + "w");
+                    builder.append(teamModel.getDamage() + "w");
                 }
                 mTitle.setText(builder);
             }
@@ -305,33 +332,35 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 } else {
                     SpannableStringBuilder ssb = new SpannableStringBuilder();
                     for (int i = 0; i < remarkModels.size(); i++) {
-                        if (i != 0) {
-                            ssb.append("\n");
-                        }
                         TeamListRemarkModel remarkModel = remarkModels.get(i);
                         String content = remarkModel.getContent();
                         String link = remarkModel.getLink();
+                        if (i != 0) {
+                            ssb.append("\n");
+                        }
                         ssb.append(content);
-                        ssb.setSpan(new ClickableSpan() {
-                            @Override
-                            public void onClick(@NonNull View widget) {
-                                if (new SetupPreference().getLinkopentype() == 0) {
-                                    Uri uri = Uri.parse(link);
-                                    Intent intent = new Intent();
-                                    intent.setAction("android.intent.action.VIEW");
-                                    intent.setData(uri);
-                                    context.startActivity(intent);
-                                } else {
-                                    Intent intent = new Intent();
-                                    intent.setAction(Intent.ACTION_SEND);
-                                    intent.putExtra(Intent.EXTRA_TEXT, model.getTeamModel().getNumber() + " " + content + "\n" + link);
-                                    intent.putExtra(Intent.EXTRA_SUBJECT, "share");
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.setType("text/plain");
-                                    context.startActivity(Intent.createChooser(intent, Utils.getString(R.string.app_name)));
+                        if (!TextUtils.isEmpty(link)) {
+                            ssb.setSpan(new ClickableSpan() {
+                                @Override
+                                public void onClick(@NonNull View widget) {
+                                    if (new SetupPreference().getLinkopentype() == 0) {
+                                        Uri uri = Uri.parse(link);
+                                        Intent intent = new Intent();
+                                        intent.setAction("android.intent.action.VIEW");
+                                        intent.setData(uri);
+                                        context.startActivity(intent);
+                                    } else {
+                                        Intent intent = new Intent();
+                                        intent.setAction(Intent.ACTION_SEND);
+                                        intent.putExtra(Intent.EXTRA_TEXT, model.getTeamModel().getSn() + " " + content + "\n" + link);
+                                        intent.putExtra(Intent.EXTRA_SUBJECT, "share");
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        intent.setType("text/plain");
+                                        context.startActivity(Intent.createChooser(intent, Utils.getString(R.string.app_name)));
+                                    }
                                 }
-                            }
-                        }, ssb.length() - content.length(), ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                            }, ssb.length() - content.length(), ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        }
                     }
                     mRemarks.setVisibility(View.VISIBLE);
                     mRemarks.setMovementMethod(LinkMovementMethod.getInstance());
@@ -386,7 +415,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 name.setVisibility(View.VISIBLE);
                 name.setText(id + "");
             } else {
-                ImageRequester.request(characterModel.getIconUrl(), R.drawable.ic_character_default).loadImage(icon);
+                ImageRequester.request(characterModel.getIconUrl(), R.drawable.ic_character_default).loadRoundImage(icon);
                 name.setVisibility(View.INVISIBLE);
                 name.setText("");
             }
@@ -404,7 +433,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 name.setVisibility(View.VISIBLE);
                 name.setText(id + "");
             } else {
-                ImageRequester.request(characterModel.getIconUrl(), R.drawable.ic_character_default).loadImage(icon);
+                ImageRequester.request(characterModel.getIconUrl(), R.drawable.ic_character_default).loadRoundImage(icon);
                 name.setVisibility(View.INVISIBLE);
                 name.setText("");
             }

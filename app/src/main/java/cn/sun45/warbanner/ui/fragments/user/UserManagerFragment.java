@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.sun45.warbanner.R;
-import cn.sun45.warbanner.document.db.setup.UserModel;
+import cn.sun45.warbanner.document.database.setup.models.UserModel;
 import cn.sun45.warbanner.framework.ui.BaseActivity;
 import cn.sun45.warbanner.framework.ui.BaseFragment;
 import cn.sun45.warbanner.ui.views.userlist.UserList;
@@ -94,7 +94,6 @@ public class UserManagerFragment extends BaseFragment implements UserListListene
     private void showUserList() {
         List<UserModel> userList = userManager.getUserList();
         List<UserListModel> list = new ArrayList<>();
-        list.add(new UserListModel(0, ""));
         for (UserModel userModel : userList) {
             list.add(new UserListModel(userModel.getId(), userModel.getName()));
         }

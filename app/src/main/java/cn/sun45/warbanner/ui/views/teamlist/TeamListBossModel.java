@@ -7,16 +7,12 @@ import java.util.List;
  * 阵容列表boss信息数据模型
  */
 public class TeamListBossModel {
-    private int stage;
-    private int boss;
     private String name;
     private String iconUrl;
 
     private List<TeamListTeamModel> teamModels;
 
-    public TeamListBossModel(int stage, int boss, String name, String iconUrl) {
-        this.stage = stage;
-        this.boss = boss;
+    public TeamListBossModel(String name, String iconUrl) {
         this.name = name;
         this.iconUrl = iconUrl;
     }
@@ -42,7 +38,7 @@ public class TeamListBossModel {
             } else {
                 int count = 0;
                 for (TeamListTeamModel teamModel : teamModels) {
-                    if (teamModel.getTeamModel().getType() == type) {
+                    if (teamModel.getTeamModel().getType().getType() == type) {
                         count++;
                     }
                 }
@@ -53,7 +49,7 @@ public class TeamListBossModel {
 
     public TeamListTeamModel getModel(int type, int position) {
         for (TeamListTeamModel teamModel : teamModels) {
-            if (type == 0 || teamModel.getTeamModel().getType() == type) {
+            if (type == 0 || teamModel.getTeamModel().getType().getType() == type) {
                 if (position == 0) {
                     return teamModel;
                 }

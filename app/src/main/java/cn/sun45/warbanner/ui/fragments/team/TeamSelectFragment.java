@@ -1,7 +1,6 @@
 package cn.sun45.warbanner.ui.fragments.team;
 
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,17 +28,21 @@ import java.util.List;
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.character.CharacterHelper;
 import cn.sun45.warbanner.clanwar.ClanwarHelper;
-import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
-import cn.sun45.warbanner.document.db.clanwar.TeamModel;
-import cn.sun45.warbanner.document.db.source.CharacterModel;
-import cn.sun45.warbanner.document.db.source.ClanWarModel;
-import cn.sun45.warbanner.document.preference.ClanwarPreference;
+import cn.sun45.warbanner.document.database.setup.models.TeamCustomizeModel;
+import cn.sun45.warbanner.document.database.setup.models.TeamListShowModel;
+import cn.sun45.warbanner.document.database.source.models.BossModel;
+import cn.sun45.warbanner.document.database.source.models.CharacterModel;
+import cn.sun45.warbanner.document.database.source.models.TeamModel;
 import cn.sun45.warbanner.document.preference.SetupPreference;
 import cn.sun45.warbanner.framework.ui.BaseActivity;
 import cn.sun45.warbanner.framework.ui.BaseFragment;
+import cn.sun45.warbanner.stage.StageManager;
 import cn.sun45.warbanner.ui.shared.SharedViewModelClanwar;
 import cn.sun45.warbanner.ui.shared.SharedViewModelSource;
 import cn.sun45.warbanner.ui.shared.SharedViewModelTeamScreenTeam;
+import cn.sun45.warbanner.ui.views.listselectbar.ListSelectBar;
+import cn.sun45.warbanner.ui.views.listselectbar.ListSelectBarListener;
+import cn.sun45.warbanner.ui.views.listselectbar.ListSelectItem;
 import cn.sun45.warbanner.ui.views.selectgroup.SelectGroup;
 import cn.sun45.warbanner.ui.views.teamlist.TeamList;
 import cn.sun45.warbanner.ui.views.teamlist.TeamListListener;
@@ -49,7 +52,7 @@ import cn.sun45.warbanner.util.Utils;
  * Created by Sun45 on 2021/7/4
  * 阵容选择Fragment
  */
-public class TeamSelectFragment extends BaseFragment implements TeamListListener {
+public class TeamSelectFragment extends BaseFragment implements TeamListListener, ListSelectBarListener {
     private int team;
 
     private SharedViewModelSource sharedSource;
@@ -57,6 +60,7 @@ public class TeamSelectFragment extends BaseFragment implements TeamListListener
     private SharedViewModelTeamScreenTeam sharedTeamScreenTeam;
 
     private TeamList mTeamList;
+    private ListSelectBar mListSelectBar;
     private TextView mEmptyHint;
 
     @Override
@@ -82,9 +86,11 @@ public class TeamSelectFragment extends BaseFragment implements TeamListListener
             }
         });
         mTeamList = mRoot.findViewById(R.id.teamlist);
+        mListSelectBar = mRoot.findViewById(R.id.listselectbar);
         mEmptyHint = mRoot.findViewById(R.id.empty_hint);
 
         mTeamList.setListener(this);
+        mListSelectBar.setListener(this);
     }
 
     @Override
@@ -92,27 +98,17 @@ public class TeamSelectFragment extends BaseFragment implements TeamListListener
         sharedSource = new ViewModelProvider(requireActivity()).get(SharedViewModelSource.class);
         sharedClanwar = new ViewModelProvider(requireActivity()).get(SharedViewModelClanwar.class);
         sharedTeamScreenTeam = new ViewModelProvider(requireActivity()).get(SharedViewModelTeamScreenTeam.class);
-        String emptyhint;
-        String date = ClanwarHelper.getCurrentClanWarDate();
-        if (!TextUtils.isEmpty(date) && date.length() == 8) {
-            String year = date.substring(0, 4);
-            String month = date.substring(4, 6);
-            String day = date.substring(6, 8);
-            date = year + "年" + month + "月" + day + "日";
-            emptyhint = Utils.getStringWithPlaceHolder(R.string.teamselect_empty_hint, date);
-        } else {
-            emptyhint = Utils.getStringWithPlaceHolder(R.string.teamselect_empty_hint, "");
-        }
-        mEmptyHint.setText(emptyhint);
+        mEmptyHint.setText(R.string.teamselect_empty_hint);
 
         sharedClanwar.teamList.observe(requireActivity(), new Observer<List<TeamModel>>() {
             @Override
             public void onChanged(List<TeamModel> teamModels) {
                 if (teamModels != null && !teamModels.isEmpty()) {
-                    sharedSource.clanWarlist.observe(requireActivity(), new Observer<List<ClanWarModel>>() {
+                    sharedSource.bossList.observe(requireActivity(), new Observer<List<BossModel>>() {
                         @Override
-                        public void onChanged(List<ClanWarModel> clanWarModels) {
-                            mTeamList.setData(teamModels, clanWarModels.get(0), false, new ClanwarPreference().getTeamliststage(), new ClanwarPreference().getTeamlistboss(), new ClanwarPreference().getTeamlisttype());
+                        public void onChanged(List<BossModel> bossModels) {
+                            TeamListShowModel teamListShowModel = ClanwarHelper.getTeamListShowModel();
+                            mTeamList.setData(teamModels, bossModels, false, teamListShowModel.getTeamListStage(), teamListShowModel.getTeamListBoss(), teamListShowModel.getTeamListType());
                             if (teamModels != null && !teamModels.isEmpty()) {
                                 mEmptyHint.setVisibility(View.INVISIBLE);
                             }
@@ -122,7 +118,7 @@ public class TeamSelectFragment extends BaseFragment implements TeamListListener
                                     mTeamList.notifyCustomize(teamCustomizeModels);
                                 }
                             });
-                            sharedSource.characterlist.observe(requireActivity(), new Observer<List<CharacterModel>>() {
+                            sharedSource.characterList.observe(requireActivity(), new Observer<List<CharacterModel>>() {
                                 @Override
                                 public void onChanged(List<CharacterModel> characterModels) {
                                     mTeamList.notifyCharacter(characterModels);
@@ -168,29 +164,42 @@ public class TeamSelectFragment extends BaseFragment implements TeamListListener
         LinearLayout lay = new LinearLayout(getContext());
         lay.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         lay.setOrientation(LinearLayout.VERTICAL);
+        TeamListShowModel teamListShowModel = ClanwarHelper.getTeamListShowModel();
         SelectGroup stage = new SelectGroup(getContext());
-        stage.setData(Utils.getStringArray(R.array.teamlist_screen_stage_options), new ClanwarPreference().getTeamliststage());
+        List<String> stageDescriptionList = StageManager.getInstance().getStageDescriptionList();
+        stageDescriptionList.add(0, Utils.getString(R.string.all));
+        stage.setData(stageDescriptionList, teamListShowModel.getTeamListStage());
         stage.setListener(position -> {
-            new ClanwarPreference().setTeamliststage(position);
+            ClanwarHelper.setTeamListShowStage(position);
             mTeamList.notifyStageSelect(position);
         });
         lay.addView(stage);
         SelectGroup boss = new SelectGroup(getContext());
-        boss.setData(Utils.getStringArray(R.array.teamlist_screen_boss_options), new ClanwarPreference().getTeamlistboss());
+        boss.setData(Utils.getStringArray(R.array.teamlist_screen_boss_options), teamListShowModel.getTeamListBoss());
         boss.setListener(position -> {
-            new ClanwarPreference().setTeamlistboss(position);
+            ClanwarHelper.setTeamListShowBoss(position);
             mTeamList.notifyBossSelect(position);
         });
         lay.addView(boss);
         SelectGroup type = new SelectGroup(getContext());
-        type.setData(Utils.getStringArray(R.array.teamlist_screen_type_options), new ClanwarPreference().getTeamlisttype());
+        type.setData(Utils.getStringArray(R.array.teamlist_screen_type_options), teamListShowModel.getTeamListType());
         type.setListener(position -> {
-            new ClanwarPreference().setTeamlisttype(position);
+            ClanwarHelper.setTeamListShowType(position);
             mTeamList.notifyTypeSelect(position);
         });
         lay.addView(type);
         DialogCustomViewExtKt.customView(dialog, 0, lay, false, false, true, true);
         dialog.show();
+    }
+
+    @Override
+    public void dataSet(int count, List<ListSelectItem> listSelectItems) {
+        mListSelectBar.init(count, listSelectItems);
+    }
+
+    @Override
+    public void onScrolled(int first, int last) {
+        mListSelectBar.scroll(first, last);
     }
 
     @Override
@@ -210,11 +219,16 @@ public class TeamSelectFragment extends BaseFragment implements TeamListListener
     }
 
     @Override
+    public void seek(int position) {
+        mTeamList.scrollToPosition(position);
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         sharedClanwar.teamList.removeObservers(requireActivity());
-        sharedSource.clanWarlist.removeObservers(requireActivity());
+        sharedSource.bossList.removeObservers(requireActivity());
         sharedClanwar.teamCustomizeList.removeObservers(requireActivity());
-        sharedSource.characterlist.removeObservers(requireActivity());
+        sharedSource.characterList.removeObservers(requireActivity());
     }
 }

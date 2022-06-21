@@ -2,16 +2,13 @@ package cn.sun45.warbanner.user;
 
 import java.util.List;
 import java.util.Random;
-import java.util.logging.Handler;
 
 import cn.sun45.warbanner.R;
-import cn.sun45.warbanner.document.db.clanwar.TeamGroupCollectionModel;
-import cn.sun45.warbanner.document.db.clanwar.TeamGroupScreenModel;
-import cn.sun45.warbanner.document.db.setup.ScreenCharacterModel;
-import cn.sun45.warbanner.document.db.setup.UserModel;
+import cn.sun45.warbanner.document.database.setup.SetupDataBase;
+import cn.sun45.warbanner.document.database.setup.models.UserModel;
 import cn.sun45.warbanner.document.preference.UserPreference;
 import cn.sun45.warbanner.framework.MyApplication;
-import cn.sun45.warbanner.framework.document.db.DbHelper;
+import cn.sun45.warbanner.server.ServerManager;
 import cn.sun45.warbanner.util.Utils;
 
 /**
@@ -37,7 +34,7 @@ public class UserManager {
      * 获取本地用户列表
      */
     public List<UserModel> getUserList() {
-        List<UserModel> list = DbHelper.query(MyApplication.application, UserModel.class);
+        List<UserModel> list = SetupDataBase.getInstance().setupDao().queryAllUser(ServerManager.getInstance().getLang());
         return list;
     }
 
@@ -48,45 +45,71 @@ public class UserManager {
      */
     public void addUser(String name) {
         UserModel userModel = new UserModel();
-        int id = 0;
-        do {
-            id = new Random().nextInt(100000);
-        } while (DbHelper.query(MyApplication.application, UserModel.class, id + "") != null);
-        userModel.setId(id);
+        userModel.setLang(ServerManager.getInstance().getLang());
         userModel.setName(name);
-        DbHelper.insert(MyApplication.application, userModel);
+        SetupDataBase.getInstance().setupDao().insertUser(userModel);
     }
 
     /**
-     * 删除用户
+     * 删除用户及关联信息
      *
      * @param userid
      */
     public void deleteUser(int userid) {
-        DbHelper.delete(MyApplication.application, UserModel.class, userid + "");
-        DbHelper.delete(MyApplication.application, ScreenCharacterModel.class, "userId", userid + "");
-        DbHelper.delete(MyApplication.application, TeamGroupCollectionModel.class, "userId", userid + "");
-        DbHelper.delete(MyApplication.application, TeamGroupScreenModel.class, "userId", userid + "");
+        SetupDataBase.getInstance().setupDao().deleteUser(userid);
+        SetupDataBase.getInstance().setupDao().deleteScreenCharacter(userid);
+        SetupDataBase.getInstance().setupDao().deleteTeamListShow(userid);
+        SetupDataBase.getInstance().setupDao().deleteTeamGroupScreen(userid);
+        SetupDataBase.getInstance().setupDao().deleteTeamGroupCollection(userid);
+    }
+
+    /**
+     * 获取默认用户
+     */
+    public UserModel GetDefaultUser() {
+        String lang = ServerManager.getInstance().getLang();
+        UserModel userModel = SetupDataBase.getInstance().setupDao().queryDefaultUser(lang);
+        if (userModel == null) {
+            userModel = new UserModel();
+            userModel.setLang(lang);
+            userModel.setDefaultUser(true);
+            userModel.setName(Utils.getString(R.string.default_user));
+            SetupDataBase.getInstance().setupDao().insertUser(userModel);
+            userModel = SetupDataBase.getInstance().setupDao().queryDefaultUser(lang);
+        }
+        return userModel;
     }
 
     /**
      * 获取当前用户id
      */
     public int getCurrentUserId() {
-        return new UserPreference().getUserid();
+        int userId = new UserPreference().getUserid();
+        //sp存0代表默认用户
+        if (userId == 0) {
+            userId = GetDefaultUser().getId();
+        }
+        return userId;
+    }
+
+    /**
+     * 获取当前用户
+     */
+    public UserModel getCurrentUser() {
+        int currentUserId = getCurrentUserId();
+        UserModel userModel = SetupDataBase.getInstance().setupDao().queryUser(currentUserId);
+        if (userModel == null) {
+            resetToDefaultUser();
+            userModel = SetupDataBase.getInstance().setupDao().queryUser(getCurrentUserId());
+        }
+        return userModel;
     }
 
     /**
      * 获取当前用户名
      */
     public String getCurrentUserName() {
-        int currentUserId = getCurrentUserId();
-        if (currentUserId == 0) {
-            return Utils.getString(R.string.default_user);
-        } else {
-            UserModel userModel = DbHelper.query(MyApplication.application, UserModel.class, currentUserId + "");
-            return userModel.getName();
-        }
+        return getCurrentUser().getName();
     }
 
     /**
@@ -102,13 +125,14 @@ public class UserManager {
      * @return
      */
     public boolean isDefaultUser() {
-        return new UserPreference().getUserid() == 0;
+        return getCurrentUser().isDefaultUser();
     }
 
     /**
      * 重置为默认用户
      */
     public void resetToDefaultUser() {
+        //sp存0代表默认用户
         setCurrentUserId(0);
     }
 }

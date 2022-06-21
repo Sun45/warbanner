@@ -12,15 +12,23 @@
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/auto_click_showlay_bg.xml" value="0.3185" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_assist_character_hint.xml" value="0.3085" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_assist_character_select_hint.xml" value="0.1425" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.2365" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" value="0.3215" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_block_24.xml" value="0.38229166666666664" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_blur_on_24.xml" value="0.2035" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_cleaning_services_24.xml" value="0.2035" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_cloud_24.xml" value="0.2035" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_collections_24.xml" value="0.2035" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_image_24.xml" value="0.2365" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_info_24.xml" value="0.2485" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_link_24.xml" value="0.2485" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_security_24.xml" value="0.3185" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_settings_24.xml" value="0.2485" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_source_24.xml" value="0.2365" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_star_yellow.xml" value="0.38229166666666664" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_sync_alt_24.xml" value="0.3215" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_character_screen_lack_hint.xml" value="0.3085" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/listselectbar_bg.xml" value="0.2365" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/selectgroup_item_center_bg.xml" value="0.3185" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/selectgroup_item_left_bg.xml" value="0.2145" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/teamgroup_auto_screen_progress_drawable.xml" value="0.3185" />
@@ -41,6 +49,7 @@
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/fragment_teamselect.xml" value="0.2864583333333333" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/fragment_usermanager.xml" value="0.24270833333333333" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/teamgrouplist_item_team_lay.xml" value="0.2942708333333333" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/teamlist_bossitem.xml" value="0.275" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/teamlist_teamitem.xml" value="0.36614583333333334" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/menu/fragment_teamdetail_drop_toolbar.xml" value="0.36614583333333334" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/menu/fragment_teamlist_drop_toolbar.xml" value="0.36614583333333334" />

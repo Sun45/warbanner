@@ -28,13 +28,12 @@ import com.wanglu.photoviewerlibrary.PhotoViewer;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.sun45.warbanner.R;
-import cn.sun45.warbanner.document.db.clanwar.TeamModel;
+import cn.sun45.warbanner.document.database.source.models.TeamModel;
 import cn.sun45.warbanner.framework.MyApplication;
 import cn.sun45.warbanner.framework.image.ImageRequester;
 import cn.sun45.warbanner.util.Utils;
@@ -48,7 +47,6 @@ public class TeamDetailScroll extends ScrollView {
 
     private TeamModel teamModel;
 
-    private List<SketchHolder> sketchHolderList;
     private List<RemarkHolder> remarkHolderList;
 
     public TeamDetailScroll(Context context, AttributeSet attrs) {
@@ -64,44 +62,12 @@ public class TeamDetailScroll extends ScrollView {
         this.teamModel = teamModel;
         lay.removeAllViews();
         List<View> layList = new ArrayList<>();
-        sketchHolderList = new ArrayList<>();
-        try {
-            JSONArray sketcharray = new JSONArray(teamModel.getSketch());
-            for (int i = 0; i < sketcharray.length(); i++) {
-                String sketch = sketcharray.optString(i);
-                SketchHolder sketchHolder = new SketchHolder(sketch);
-                layList.add(sketchHolder.getLay());
-                sketchHolderList.add(sketchHolder);
-            }
-        } catch (JSONException e) {
-            SketchHolder sketchHolder = new SketchHolder(teamModel.getSketch());
-            layList.add(sketchHolder.getLay());
-            sketchHolderList.add(sketchHolder);
-        }
         remarkHolderList = new ArrayList<>();
-        try {
-            JSONArray remarkarray = new JSONArray(teamModel.getRemarks());
-            for (int i = 0; i < remarkarray.length(); i++) {
-                JSONObject remark = remarkarray.optJSONObject(i);
-                String content = remark.optString("content");
-                content = Utils.replaceBlank(content);
-                String link = remark.optString("link");
-                JSONArray images = remark.optJSONArray("images");
-                JSONArray comments = remark.optJSONArray("comments");
-                String image = null;
-                if (images != null && images.length() > 0) {
-                    if (comments != null && comments.length() > 0) {
-                        content = comments.getString(0);
-                        content = content.replace("←", "");
-                    }
-                    image = images.getString(0);
-                }
-                RemarkHolder remarkHolder = new RemarkHolder(content, link, image);
-                layList.add(remarkHolder.getLay());
-                remarkHolderList.add(remarkHolder);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+        List<TeamModel.TimeLine> timeLineList = teamModel.getTimeLines();
+        for (TeamModel.TimeLine timeLine : timeLineList) {
+            RemarkHolder remarkHolder = new RemarkHolder(timeLine);
+            layList.add(remarkHolder.getLay());
+            remarkHolderList.add(remarkHolder);
         }
         for (int i = 0; i < layList.size(); i++) {
             if (i != 0) {
@@ -114,97 +80,81 @@ public class TeamDetailScroll extends ScrollView {
         }
     }
 
-    private class SketchHolder {
-        private FrameLayout lay;
-
-        public SketchHolder(String sketch) {
-            lay = new FrameLayout(getContext());
-            lay.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            TextView textView = new TextView(getContext());
-            textView.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-            textView.setText(sketch);
-            lay.addView(textView);
-        }
-
-        public FrameLayout getLay() {
-            return lay;
-        }
-    }
-
     private class RemarkHolder {
         private FrameLayout lay;
 
-        public RemarkHolder(String content, String link, String image) {
+        public RemarkHolder(TeamModel.TimeLine timeLine) {
+            String title = timeLine.getTitle();
+            String description = timeLine.getDescription();
+            String videoUrl = timeLine.getVideoUrl();
+            List<TeamModel.Image> imageList = timeLine.getImageList();
             lay = new FrameLayout(getContext());
             lay.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             LinearLayout contentlay = new LinearLayout(getContext());
             contentlay.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             contentlay.setOrientation(LinearLayout.VERTICAL);
-            TextView contenttext = new TextView(getContext());
-            contenttext.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            contenttext.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-            contenttext.setText(content);
-            contentlay.addView(contenttext);
-            if (!TextUtils.isEmpty(link)) {
+            TextView titleText = new TextView(getContext());
+            titleText.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            titleText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+            titleText.setText(title);
+            contentlay.addView(titleText);
+            if (!TextUtils.isEmpty(description)) {
+                TextView descriptionText = new TextView(getContext());
+                descriptionText.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                descriptionText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
+                descriptionText.setText(description);
+                contentlay.addView(descriptionText);
+            }
+            if (!TextUtils.isEmpty(videoUrl)) {
                 TextView linktext = new TextView(getContext());
                 linktext.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 linktext.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-                SpannableStringBuilder builder = new SpannableStringBuilder(link);
-                builder.setSpan(new ForegroundColorSpan(Utils.getAttrColor(getContext(), R.attr.colorSecondary)), 0, link.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                SpannableStringBuilder builder = new SpannableStringBuilder(videoUrl);
+                builder.setSpan(new ForegroundColorSpan(Utils.getAttrColor(getContext(), R.attr.colorSecondary)), 0, videoUrl.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 builder.setSpan(new ClickableSpan() {
                     @Override
                     public void onClick(@NonNull View widget) {
-                        Uri uri = Uri.parse(link);
+                        Uri uri = Uri.parse(videoUrl);
                         Intent intent = new Intent();
                         intent.setAction("android.intent.action.VIEW");
                         intent.setData(uri);
                         getContext().startActivity(intent);
                     }
-                }, 0, link.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }, 0, videoUrl.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 linktext.setMovementMethod(LinkMovementMethod.getInstance());
                 linktext.setText(builder, TextView.BufferType.SPANNABLE);
                 contentlay.addView(linktext);
             }
-            if (!TextUtils.isEmpty(image)) {
-                ImageView imageView = new ImageView(getContext());
-                imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                ImageRequester.request(image, R.drawable.ic_baseline_image_24).loadImage(imageView);
-                imageView.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        PhotoViewer.INSTANCE.setClickSingleImg(image, imageView).setShowImageViewInterface(new PhotoViewer.ShowImageViewInterface() {
-                            @Override
-                            public void show(@NonNull ImageView imageView, @NonNull String url) {
-                                ImageRequester.request(url, R.drawable.ic_baseline_image_24).loadImage(imageView);
-                            }
-                        }).start(MyApplication.getCurrentActivity());
+            if (imageList != null) {
+                for (TeamModel.Image image : imageList) {
+                    String thumb = image.getThumb();
+                    String poster = image.getPoster();
+                    if (!TextUtils.isEmpty(thumb)) {
+                        ImageView imageView = new ImageView(getContext());
+                        imageView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        ImageRequester.request(thumb, R.drawable.ic_baseline_image_24).loadImage(imageView);
+                        imageView.setOnClickListener(v -> PhotoViewer.INSTANCE.setClickSingleImg(poster, imageView)
+                                .setShowImageViewInterface((imageView1, url) -> ImageRequester.request(url, R.drawable.ic_baseline_image_24).loadImage(imageView1))
+                                .start(MyApplication.getCurrentActivity()));
+                        contentlay.addView(imageView);
                     }
-                });
-                contentlay.addView(imageView);
+                }
             }
             AppCompatImageView share = new AppCompatImageView(getContext());
             share.setLayoutParams(new FrameLayout.LayoutParams(Utils.dip2px(getContext(), 40), Utils.dip2px(getContext(), 40), Gravity.RIGHT));
             share.setPadding(Utils.dip2px(getContext(), 5), Utils.dip2px(getContext(), 5), Utils.dip2px(getContext(), 5), Utils.dip2px(getContext(), 5));
             share.setImageResource(R.drawable.ic_baseline_share_24);
-            share.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent();
-                    intent.setAction(Intent.ACTION_SEND);
-                    String str = teamModel.getNumber() + " " + content;
-                    if (!TextUtils.isEmpty(link)) {
-                        str += "\n" + link;
-                    }
-                    if (!TextUtils.isEmpty(image)) {
-                        str += "\n" + image;
-                    }
-                    intent.putExtra(Intent.EXTRA_TEXT, str);
-                    intent.putExtra(Intent.EXTRA_SUBJECT, "share");
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.setType("text/plain");
-                    getContext().startActivity(Intent.createChooser(intent, Utils.getString(R.string.app_name)));
-                }
+            share.setOnClickListener(v -> {
+                Intent intent = new Intent();
+                intent.setAction(Intent.ACTION_SEND);
+                StringBuilder stringBuilder = new StringBuilder();
+                stringBuilder.append(teamModel.getSn());
+                stringBuilder.append("\n" + timeLine.getShare());
+                intent.putExtra(Intent.EXTRA_TEXT, stringBuilder.toString());
+                intent.putExtra(Intent.EXTRA_SUBJECT, "share");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.setType("text/plain");
+                getContext().startActivity(Intent.createChooser(intent, Utils.getString(R.string.app_name)));
             });
             lay.addView(share);
             lay.addView(contentlay);

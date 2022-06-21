@@ -5,6 +5,8 @@ import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.Shader;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Callback;
@@ -13,6 +15,10 @@ import com.squareup.picasso.Target;
 import com.squareup.picasso.Transformation;
 
 import java.io.IOException;
+
+import cn.sun45.warbanner.R;
+import cn.sun45.warbanner.framework.MyApplication;
+import cn.sun45.warbanner.util.Utils;
 
 /**
  * Created by Sun45 on 2019/10/29.
@@ -68,6 +74,16 @@ public class ImageRequestLoader {
      */
     public void loadCircleImage(ImageView image) {
         requestCreator.transform(new CircleTransformation());
+        requestCreator.into(image);
+    }
+
+    /**
+     * 转换成圆角加载到图片
+     *
+     * @param image
+     */
+    public void loadRoundImage(ImageView image) {
+        requestCreator.transform(new RoundedCornersTransformation());
         requestCreator.into(image);
     }
 
@@ -130,6 +146,36 @@ public class ImageRequestLoader {
         @Override
         public String key() {
             return "circle";
+        }
+    }
+
+    /**
+     * 圆角转换器
+     */
+    public class RoundedCornersTransformation implements Transformation {
+        private int mRadius;
+
+        public RoundedCornersTransformation() {
+            mRadius = Utils.dip2px(MyApplication.application,5);
+        }
+
+        @Override
+        public Bitmap transform(Bitmap source) {
+            int width = source.getWidth();
+            int height = source.getHeight();
+            Bitmap bitmap = Bitmap.createBitmap(width, height, source.getConfig());
+            Canvas canvas = new Canvas(bitmap);
+            Paint paint = new Paint();
+            paint.setAntiAlias(true);
+            paint.setShader(new BitmapShader(source, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP));
+            canvas.drawRoundRect(new RectF(0, 0, width, height), mRadius, mRadius, paint);
+            source.recycle();
+            return bitmap;
+        }
+
+        @Override
+        public String key() {
+            return "RoundedTransformation()";
         }
     }
 }

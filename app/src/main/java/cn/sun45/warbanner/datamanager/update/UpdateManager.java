@@ -18,7 +18,7 @@ import com.liulishuo.okdownload.DownloadTask;
 import java.io.File;
 
 import cn.sun45.warbanner.R;
-import cn.sun45.warbanner.document.StaticHelper;
+import cn.sun45.warbanner.document.statics.StaticHelper;
 import cn.sun45.warbanner.document.preference.SetupPreference;
 import cn.sun45.warbanner.framework.MyApplication;
 import cn.sun45.warbanner.framework.file.FileRequestListenerWithProgress;

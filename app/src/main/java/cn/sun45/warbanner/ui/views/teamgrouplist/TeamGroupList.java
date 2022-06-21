@@ -12,8 +12,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import cn.sun45.warbanner.document.db.clanwar.TeamCustomizeModel;
-import cn.sun45.warbanner.document.db.source.CharacterModel;
+import cn.sun45.warbanner.document.database.setup.models.TeamCustomizeModel;
+import cn.sun45.warbanner.document.database.source.models.CharacterModel;
 
 /**
  * Created by Sun45 on 2021/5/30
@@ -28,6 +28,7 @@ public class TeamGroupList extends RecyclerView {
     }
 
     private void init() {
+        setVerticalScrollBarEnabled(false);
         setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new TeamGroupListAdapter(getContext());
         setAdapter(adapter);

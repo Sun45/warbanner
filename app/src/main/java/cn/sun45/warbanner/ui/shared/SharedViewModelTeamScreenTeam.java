@@ -3,7 +3,7 @@ package cn.sun45.warbanner.ui.shared;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import cn.sun45.warbanner.document.db.clanwar.TeamModel;
+import cn.sun45.warbanner.document.database.source.models.TeamModel;
 
 /**
  * Created by Sun45 on 2021/7/4

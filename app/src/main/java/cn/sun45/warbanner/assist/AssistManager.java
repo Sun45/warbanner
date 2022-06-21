@@ -6,7 +6,6 @@ import android.graphics.Path;
 import android.view.Gravity;
 import android.view.WindowManager;
 
-import cn.sun45.warbanner.datamanager.source.SourceManager;
 import cn.sun45.warbanner.document.preference.SetupPreference;
 import cn.sun45.warbanner.framework.MyApplication;
 import cn.sun45.warbanner.util.AssistUtils;
@@ -24,7 +23,7 @@ public class AssistManager {
 
     public static AssistManager getInstance() {
         if (instance == null) {
-            synchronized (SourceManager.class) {
+            synchronized (AssistManager.class) {
                 if (instance == null) {
                     instance = new AssistManager();
                 }

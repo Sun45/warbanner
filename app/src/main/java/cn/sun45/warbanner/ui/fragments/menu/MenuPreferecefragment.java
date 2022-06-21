@@ -13,14 +13,18 @@ import androidx.preference.SwitchPreferenceCompat;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.list.DialogSingleChoiceExtKt;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.assist.AssistManager;
-import cn.sun45.warbanner.datamanager.clanwar.ClanWarManager;
-import cn.sun45.warbanner.datamanager.source.SourceManager;
+import cn.sun45.warbanner.datamanager.data.DataManager;
 import cn.sun45.warbanner.datamanager.update.UpdateManager;
-import cn.sun45.warbanner.document.preference.ClanwarPreference;
+import cn.sun45.warbanner.document.preference.DataPreference;
 import cn.sun45.warbanner.document.preference.SetupPreference;
-import cn.sun45.warbanner.document.preference.SourcePreference;
+import cn.sun45.warbanner.document.preference.UserPreference;
+import cn.sun45.warbanner.document.statics.StaticHelper;
+import cn.sun45.warbanner.server.ServerManager;
 import cn.sun45.warbanner.user.UserManager;
 import cn.sun45.warbanner.util.Utils;
 import kotlin.Unit;
@@ -33,9 +37,8 @@ import kotlin.jvm.functions.Function3;
 public class MenuPreferecefragment extends PreferenceFragmentCompat {
     private static final String TAG = "MenuPreferecefragment";
 
-    //作业
+    //数据
     private Preference update;
-    private Preference way;
 
     //辅助功能
     private Preference permission;
@@ -48,7 +51,7 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
     private Preference link;
 
     //系统
-    private Preference db;
+    private Preference server;
     private Preference app;
     private SwitchPreferenceCompat autoUpdate;
 
@@ -60,10 +63,13 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
             if (key.equals("lastupdate")) {
-                update.setSummary(ClanWarManager.getInstance().getUpdateInfo());
+                update.setSummary(DataManager.getInstance().getUpdateInfo());
             }
-            if (key.equals("dbVersion")) {
-                db.setSummary(SourceManager.getInstance().getDbVersion() + "");
+            if (key.equals("userid")) {
+                user.setSummary(UserManager.getInstance().getCurrentUserName());
+            }
+            if (key.equals("server")) {
+                server.setSummary(ServerManager.getInstance().getServerName());
             }
         }
     };
@@ -73,28 +79,11 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
         Utils.logD(TAG, "onCreatePreferences");
         setPreferencesFromResource(R.xml.preference, rootKey);
 
-        update = findPreference("clanwar_update");
+        update = findPreference("data_update");
         update.setOnPreferenceClickListener(preference -> {
-            ClanWarManager.getInstance().showConfirmDialogCaimogu(false);
+            DataManager.getInstance().showConfirmDialogCaimogu();
             btnRestore(preference);
             return true;
-        });
-
-        way = findPreference("clanwar_way");
-        way.setOnPreferenceClickListener(preference -> {
-            MaterialDialog dialog = new MaterialDialog(getContext(), MaterialDialog.getDEFAULT_BEHAVIOR());
-            dialog.title(R.string.menu_clanwar_way, null);
-            DialogSingleChoiceExtKt.listItemsSingleChoice(dialog, R.array.menu_clanwar_way_dialog_options, null, null, new ClanwarPreference().getWay(), true, 0, 0, new Function3<MaterialDialog, Integer, CharSequence, Unit>() {
-                @Override
-                public Unit invoke(MaterialDialog materialDialog, Integer integer, CharSequence charSequence) {
-                    new ClanwarPreference().setWay(integer);
-                    return null;
-                }
-            });
-            dialog.cancelOnTouchOutside(false);
-            dialog.positiveButton(R.string.menu_clanwar_way_dialog_confirm, null, null);
-            dialog.show();
-            return false;
         });
 
         permission = findPreference("permission");
@@ -149,11 +138,24 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
             return false;
         });
 
-        db = findPreference("db_version");
-        db.setOnPreferenceClickListener(preference -> {
-            SourceManager.getInstance().checkDatabaseVersion(false);
-            btnRestore(preference);
-            return true;
+        server = findPreference("server");
+        server.setOnPreferenceClickListener(preference -> {
+            MaterialDialog dialog = new MaterialDialog(getContext(), MaterialDialog.getDEFAULT_BEHAVIOR());
+            dialog.title(R.string.menu_server, null);
+            List<String> items = new ArrayList<>();
+            items.add(StaticHelper.ZH_CN_SERVERNAME);
+            items.add(StaticHelper.ZH_TW_SERVERNAME);
+            DialogSingleChoiceExtKt.listItemsSingleChoice(dialog, 0, items, null, ServerManager.getInstance().getCurrentServer(), true, 0, 0, new Function3<MaterialDialog, Integer, CharSequence, Unit>() {
+                @Override
+                public Unit invoke(MaterialDialog materialDialog, Integer integer, CharSequence charSequence) {
+                    ServerManager.getInstance().setCurrentServer(integer);
+                    return null;
+                }
+            });
+            dialog.cancelOnTouchOutside(false);
+            dialog.positiveButton(R.string.menu_link_open_type_dialog_confirm, null, null);
+            dialog.show();
+            return false;
         });
 
         app = findPreference("app_version");
@@ -184,8 +186,9 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
             return true;
         });
 
-        new ClanwarPreference().registListener(listener);
-        new SourcePreference().registListener(listener);
+        new DataPreference().registListener(listener);
+        new UserPreference().registListener(listener);
+        new SetupPreference().registListener(listener);
     }
 
     private void btnRestore(Preference preference) {
@@ -216,7 +219,7 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
     public void onResume() {
         Utils.logD(TAG, "onResume");
         super.onResume();
-        update.setSummary(ClanWarManager.getInstance().getUpdateInfo());
+        update.setSummary(DataManager.getInstance().getUpdateInfo());
         if (AssistManager.hasPermission()) {
             autoClick.setEnabled(true);
             autoClick.setSummary(null);
@@ -225,14 +228,15 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
             autoClick.setSummary(Utils.getString(R.string.user_permission_notgranted));
         }
         user.setSummary(UserManager.getInstance().getCurrentUserName());
-        db.setSummary(SourceManager.getInstance().getDbVersion() + "");
+        server.setSummary(ServerManager.getInstance().getServerName());
         app.setSummary(Utils.getVersionName());
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        new ClanwarPreference().unregistListener(listener);
-        new SourcePreference().unregistListener(listener);
+        new DataPreference().unregistListener(listener);
+        new UserPreference().unregistListener(listener);
+        new SetupPreference().unregistListener(listener);
     }
 }
