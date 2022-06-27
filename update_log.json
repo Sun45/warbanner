@@ -1,6 +1,6 @@
 {
-  "versionCode": "37",
-  "versionName": "2.8.1",
+  "versionCode": "38",
+  "versionName": "2.8.2",
   "fource": "false",
-  "content": "1.开启踩蘑菇纪元，切换数据库来源为踩蘑菇网站2.角色筛选添加站位分组3.添加作业列表快速跳转器"
+  "content": "1.优化数据加载2.暂时去除数据接口请求缓存"
 }

@@ -78,17 +78,20 @@ public class TeamList extends RecyclerView {
         onScrolled();
     }
 
-    public void setData(TeamGroupListModel teamGroupListModel) {
+    public void setData(TeamGroupListModel teamGroupListModel, List<CharacterModel> characterModels) {
         List<TeamListTeamModel> list = new ArrayList<>();
         list.add(new TeamListTeamModel(teamGroupListModel.getTeamone(), teamGroupListModel.getBorrowindexone()));
         list.add(new TeamListTeamModel(teamGroupListModel.getTeamtwo(), teamGroupListModel.getBorrowindextwo()));
         list.add(new TeamListTeamModel(teamGroupListModel.getTeamthree(), teamGroupListModel.getBorrowindexthree()));
         adapter.setList(list);
+        adapter.setCharacterModels(characterModels);
         adapter.setShowlink(true);
         dataNotify();
     }
 
-    public void setData(List<TeamModel> teamModelList, List<BossModel> bossModelList, boolean showlink, int stageSelection, int bossSelection, int typeSelection) {
+    public void setData(List<TeamModel> teamModelList, List<BossModel> bossModelList, List<CharacterModel> characterModels,
+                        boolean showlink, int stageSelection, int bossSelection, int typeSelection,
+                        boolean screenFunction, List<ScreenCharacterModel> screenCharacterModels) {
         List<TeamListBossModel> teamWithBossList = new ArrayList<>();
         for (int stagePosition = 0; stagePosition < StageManager.getInstance().getStageCount(); stagePosition++) {
             for (int boss = 1; boss <= StaticHelper.BOSS_COUNT; boss++) {
@@ -98,10 +101,13 @@ public class TeamList extends RecyclerView {
             }
         }
         adapter.setTeamWithBossList(teamWithBossList);
+        adapter.setCharacterModels(characterModels);
         adapter.setShowlink(showlink);
         adapter.setStageSelection(stageSelection);
         adapter.setBossSelection(bossSelection);
         adapter.setTypeSelection(typeSelection);
+        adapter.setScreenfunction(screenFunction);
+        adapter.setScreenCharacterModels(screenCharacterModels);
         dataNotify();
     }
 
@@ -149,22 +155,6 @@ public class TeamList extends RecyclerView {
 
     public void notifyCustomize(List<TeamCustomizeModel> teamCustomizeModels) {
         adapter.setTeamCustomizeModels(teamCustomizeModels);
-        dataNotify();
-    }
-
-    public void notifyCharacter(List<CharacterModel> characterModels) {
-        adapter.setCharacterModels(characterModels);
-        dataNotify();
-    }
-
-    public void setScreenFunction(boolean screenFunction) {
-        adapter.setScreenfunction(screenFunction);
-        dataNotify();
-    }
-
-    public void notifyScreenCharacter(boolean screenFunction, List<ScreenCharacterModel> screenCharacterModels) {
-        adapter.setScreenfunction(screenFunction);
-        adapter.setScreenCharacterModels(screenCharacterModels);
         dataNotify();
     }
 }

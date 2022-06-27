@@ -1,6 +1,5 @@
 package cn.sun45.warbanner.ui.fragments.team;
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -31,7 +29,6 @@ import java.util.List;
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.character.CharacterHelper;
 import cn.sun45.warbanner.clanwar.ClanwarHelper;
-import cn.sun45.warbanner.document.database.setup.models.TeamCustomizeModel;
 import cn.sun45.warbanner.document.database.setup.models.TeamListShowModel;
 import cn.sun45.warbanner.document.database.source.models.BossModel;
 import cn.sun45.warbanner.document.database.source.models.CharacterModel;
@@ -64,15 +61,6 @@ public class TeamListFragment extends BaseFragment implements TeamListListener, 
     private ListSelectBar mListSelectBar;
     private TextView mEmptyHint;
 
-    private SharedPreferences.OnSharedPreferenceChangeListener listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key.equals("characterscreenenable")) {
-                mTeamList.setScreenFunction(new SetupPreference().isCharacterscreenenable());
-            }
-        }
-    };
-
     @Override
     protected int getContentViewId() {
         return R.layout.fragment_teamlist;
@@ -102,41 +90,21 @@ public class TeamListFragment extends BaseFragment implements TeamListListener, 
         sharedClanwar = new ViewModelProvider(requireActivity()).get(SharedViewModelClanwar.class);
         mEmptyHint.setText(R.string.teamlist_empty_hint);
 
-        sharedClanwar.teamList.observe(requireActivity(), new Observer<List<TeamModel>>() {
-            @Override
-            public void onChanged(List<TeamModel> teamModels) {
-                logD("sharedTeamList onChanged");
-//                for (TeamModel teamModel : teamModels) {
-//                    logD(teamModel.toString());
-//                }
+        sharedSource.teamList.observe(requireActivity(), teamModels -> {
+            logD("sharedSource teamList onChanged");
+            if (teamModels != null && !teamModels.isEmpty()) {
+                List<BossModel> bossModels = sharedSource.bossList.getValue();
+                List<CharacterModel> characterModels = sharedSource.characterList.getValue();
+                TeamListShowModel teamListShowModel = ClanwarHelper.getTeamListShowModel();
+                mTeamList.setData(teamModels, bossModels, characterModels,
+                        teamListShowModel.isLinkShow(), teamListShowModel.getTeamListStage(), teamListShowModel.getTeamListBoss(), teamListShowModel.getTeamListType(),
+                        new SetupPreference().isCharacterscreenenable(), CharacterHelper.getScreenCharacterList());
                 if (teamModels != null && !teamModels.isEmpty()) {
-                    sharedSource.bossList.observe(requireActivity(), new Observer<List<BossModel>>() {
-                        @Override
-                        public void onChanged(List<BossModel> bossModels) {
-                            TeamListShowModel teamListShowModel = ClanwarHelper.getTeamListShowModel();
-                            mTeamList.setData(teamModels, bossModels, teamListShowModel.isLinkShow(), teamListShowModel.getTeamListStage(), teamListShowModel.getTeamListBoss(), teamListShowModel.getTeamListType());
-                            if (teamModels != null && !teamModels.isEmpty()) {
-                                mEmptyHint.setVisibility(View.INVISIBLE);
-                            }
-                            sharedClanwar.teamCustomizeList.observe(requireActivity(), new Observer<List<TeamCustomizeModel>>() {
-                                @Override
-                                public void onChanged(List<TeamCustomizeModel> teamCustomizeModels) {
-                                    mTeamList.notifyCustomize(teamCustomizeModels);
-                                }
-                            });
-                            sharedSource.characterList.observe(requireActivity(), new Observer<List<CharacterModel>>() {
-                                @Override
-                                public void onChanged(List<CharacterModel> characterModels) {
-                                    mTeamList.notifyCharacter(characterModels);
-                                    mTeamList.notifyScreenCharacter(new SetupPreference().isCharacterscreenenable(), CharacterHelper.getScreenCharacterList());
-                                }
-                            });
-                        }
-                    });
+                    mEmptyHint.setVisibility(View.INVISIBLE);
                 }
+                sharedClanwar.teamCustomizeList.observe(requireActivity(), teamCustomizeModels -> mTeamList.notifyCustomize(teamCustomizeModels));
             }
         });
-        new SetupPreference().registListener(listener);
     }
 
     @Override
@@ -242,10 +210,7 @@ public class TeamListFragment extends BaseFragment implements TeamListListener, 
     public void onDestroy() {
         logD("onDestroy");
         super.onDestroy();
-        new SetupPreference().unregistListener(listener);
-        sharedClanwar.teamList.removeObservers(requireActivity());
-        sharedSource.bossList.removeObservers(requireActivity());
+        sharedSource.teamList.removeObservers(requireActivity());
         sharedClanwar.teamCustomizeList.removeObservers(requireActivity());
-        sharedSource.characterList.removeObservers(requireActivity());
     }
 }

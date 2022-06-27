@@ -29,23 +29,23 @@ import retrofit2.http.Url;
  */
 public class CaimoguLogic extends BaseLogic {
     interface Source {
-        @Headers("x-requested-with: XMLHttpRequest")
+        @Headers({"x-requested-with: XMLHttpRequest", "Cache-Control: no-store"})
         @GET
-        Call<String> getBaseData(@Url String url, @Query("data") String data, @Query("lang") String lang);
+        Call<String> getBaseData(@Url String url, @Query("date") String date, @Query("lang") String lang);
 
-        @Headers("x-requested-with: XMLHttpRequest")
+        @Headers({"x-requested-with: XMLHttpRequest", "Cache-Control: no-store"})
         @GET
-        Call<String> getTeamData(@Url String url, @Query("data") String data, @Query("lang") String lang);
+        Call<String> getTeamData(@Url String url, @Query("date") String date, @Query("lang") String lang);
     }
 
     /**
      * 获取基础数据
      *
-     * @param data yyyy-MM
+     * @param date yyyy-MM
      * @param lang zh-cn zh-tw
      */
-    public Call<String> getBaseData(final RequestListener<CaimoguBaseData> listener, String data, String lang) {
-        Call call = retrofit(StaticHelper.CAIMOGU_BASE).create(Source.class).getBaseData(StaticHelper.CAIMOGU_BASEDATA_URL, data, lang);
+    public Call<String> getBaseData(final RequestListener<CaimoguBaseData> listener, String date, String lang) {
+        Call call = retrofit(StaticHelper.CAIMOGU_BASE).create(Source.class).getBaseData(StaticHelper.CAIMOGU_BASEDATA_URL, date, lang);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
@@ -115,11 +115,11 @@ public class CaimoguLogic extends BaseLogic {
     /**
      * 获取作业数据
      *
-     * @param data yyyy-MM
+     * @param date yyyy-MM
      * @param lang zh-cn zh-tw
      */
-    public Call<String> getTeamData(final RequestListener<List<TeamModel>> listener, String data, String lang) {
-        Call call = retrofit(StaticHelper.CAIMOGU_BASE).create(Source.class).getTeamData(StaticHelper.CAIMOGU_TEAMDATA_URL, data, lang);
+    public Call<String> getTeamData(final RequestListener<List<TeamModel>> listener, String date, String lang) {
+        Call call = retrofit(StaticHelper.CAIMOGU_BASE).create(Source.class).getTeamData(StaticHelper.CAIMOGU_TEAMDATA_URL, date, lang);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {

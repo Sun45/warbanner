@@ -79,18 +79,9 @@ public class TeamGroupDetailFragment extends BaseFragment implements TeamListLis
         sharedSource = new ViewModelProvider(requireActivity()).get(SharedViewModelSource.class);
         sharedClanwar = new ViewModelProvider(requireActivity()).get(SharedViewModelClanwar.class);
 
-        mTeamList.setData(teamGroupListModel);
-        sharedClanwar.teamCustomizeList.observe(requireActivity(), new Observer<List<TeamCustomizeModel>>() {
-            @Override
-            public void onChanged(List<TeamCustomizeModel> teamCustomizeModels) {
-                mTeamList.notifyCustomize(teamCustomizeModels);
-            }
-        });
-        sharedSource.characterList.observe(requireActivity(), new Observer<List<CharacterModel>>() {
-            @Override
-            public void onChanged(List<CharacterModel> characterModels) {
-                mTeamList.notifyCharacter(characterModels);
-            }
+        sharedSource.characterList.observe(requireActivity(), characterModels -> {
+            mTeamList.setData(teamGroupListModel, characterModels);
+            sharedClanwar.teamCustomizeList.observe(requireActivity(), teamCustomizeModels -> mTeamList.notifyCustomize(teamCustomizeModels));
         });
     }
 

@@ -87,45 +87,36 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
         sharedClanwar = new ViewModelProvider(requireActivity()).get(SharedViewModelClanwar.class);
 
         if (list != null) {
-            showresult();
+            showResult();
         }
-        sharedClanwar.teamList.observe(requireActivity(), new Observer<List<TeamModel>>() {
+        sharedSource.teamList.observe(requireActivity(), new Observer<List<TeamModel>>() {
             @Override
             public void onChanged(List<TeamModel> teamModels) {
-                sharedSource.characterList.observe(requireActivity(), new Observer<List<CharacterModel>>() {
+                List<CharacterModel> characterModels = sharedSource.characterList.getValue();
+                mTeamGroupList.setCharacterModels(characterModels);
+                sharedClanwar.teamCustomizeList.observe(requireActivity(), new Observer<List<TeamCustomizeModel>>() {
                     @Override
-                    public void onChanged(List<CharacterModel> characterModels) {
-                        mTeamGroupList.setCharacterModels(characterModels);
-                        sharedClanwar.teamCustomizeList.observe(requireActivity(), new Observer<List<TeamCustomizeModel>>() {
+                    public void onChanged(List<TeamCustomizeModel> teamCustomizeModels) {
+                        mTeamGroupList.notifyCustomize(teamCustomizeModels);
+                        mState.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onChanged(List<TeamCustomizeModel> teamCustomizeModels) {
-                                mTeamGroupList.notifyCustomize(teamCustomizeModels);
-                                mState.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+                                mState.setClickable(false);
+                                mState.setText(R.string.teamgroup_state_progressing);
+                                new Thread() {
                                     @Override
-                                    public void onClick(View v) {
-                                        mState.setClickable(false);
-                                        mState.setText(R.string.teamgroup_state_progressing);
-                                        new Thread() {
-                                            @Override
-                                            public void run() {
-                                                super.run();
-                                                long start = MyApplication.getTimecurrent();
-                                                logD("teamGroup build");
-                                                list = teamGroupHelper.build(CharacterHelper.getScreenCharacterList(), teamModels, teamCustomizeModels);
-                                                logD("teamGroup finish:" + (list != null ? list.size() : 0) + " " + (MyApplication.getTimecurrent() - start) + "ms");
-                                                Activity activity = getActivity();
-                                                if (activity != null) {
-                                                    activity.runOnUiThread(new Runnable() {
-                                                        @Override
-                                                        public void run() {
-                                                            showresult();
-                                                        }
-                                                    });
-                                                }
-                                            }
-                                        }.start();
+                                    public void run() {
+                                        super.run();
+                                        long start = MyApplication.getTimecurrent();
+                                        logD("teamGroup build");
+                                        list = teamGroupHelper.build(CharacterHelper.getScreenCharacterList(), teamModels, teamCustomizeModels);
+                                        logD("teamGroup finish:" + (list != null ? list.size() : 0) + " " + (MyApplication.getTimecurrent() - start) + "ms");
+                                        Activity activity = getActivity();
+                                        if (activity != null) {
+                                            activity.runOnUiThread(() -> showResult());
+                                        }
                                     }
-                                });
+                                }.start();
                             }
                         });
                     }
@@ -137,7 +128,7 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
     /**
      * 展示分刀结果
      */
-    private void showresult() {
+    private void showResult() {
         int size = list != null ? list.size() : 0;
         if (size == TeamGroupHelper.interruptsize) {
             mState.setText(Utils.getStringWithPlaceHolder(R.string.teamgroup_state_interrupt_finish, size));
@@ -191,8 +182,7 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
     @Override
     public void onDestroy() {
         super.onDestroy();
-        sharedSource.characterList.removeObservers(requireActivity());
-        sharedClanwar.teamList.removeObservers(requireActivity());
+        sharedSource.teamList.removeObservers(requireActivity());
         sharedClanwar.teamCustomizeList.removeObservers(requireActivity());
         sharedClanwar.loadData();
     }

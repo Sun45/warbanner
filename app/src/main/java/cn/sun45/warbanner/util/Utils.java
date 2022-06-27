@@ -87,6 +87,13 @@ public class Utils {
     }
 
     /**
+     * 测试log
+     */
+    public static void logTest(String msg) {
+        logD("test", msg);
+    }
+
+    /**
      * log
      */
     public static void logD(String tag, String msg) {

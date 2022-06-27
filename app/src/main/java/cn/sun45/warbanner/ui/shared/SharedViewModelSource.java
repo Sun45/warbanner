@@ -9,6 +9,7 @@ import java.util.List;
 import cn.sun45.warbanner.document.database.source.SourceDataBase;
 import cn.sun45.warbanner.document.database.source.models.BossModel;
 import cn.sun45.warbanner.document.database.source.models.CharacterModel;
+import cn.sun45.warbanner.document.database.source.models.TeamModel;
 import cn.sun45.warbanner.framework.MyApplication;
 import cn.sun45.warbanner.server.ServerManager;
 import cn.sun45.warbanner.util.Utils;
@@ -22,6 +23,7 @@ public class SharedViewModelSource extends ViewModel {
 
     public MutableLiveData<List<CharacterModel>> characterList = new MutableLiveData<>();
     public MutableLiveData<List<BossModel>> bossList = new MutableLiveData<>();
+    public MutableLiveData<List<TeamModel>> teamList = new MutableLiveData<>();
 
     public void loadData() {
         boolean succeeded = true;
@@ -33,8 +35,19 @@ public class SharedViewModelSource extends ViewModel {
         if (bossModelList == null || bossModelList.isEmpty()) {
             succeeded = false;
         }
+        List<TeamModel> teamModelList = SourceDataBase.getInstance().sourceDao().queryAllTeam(ServerManager.getInstance().getLang());
+        if (teamModelList == null || teamModelList.isEmpty()) {
+            succeeded = false;
+        }
 
         if (succeeded) {
+            bossList.postValue(bossModelList);
+            if (MyApplication.testing) {
+                for (BossModel bossModel : bossModelList) {
+                    Utils.logD(TAG, bossModel.toString());
+                }
+            }
+
             characterList.postValue(characterModelList);
             if (MyApplication.testing) {
                 for (CharacterModel characterModel : characterModelList) {
@@ -42,11 +55,10 @@ public class SharedViewModelSource extends ViewModel {
                 }
             }
 
-            //导入会战排期
-            bossList.postValue(bossModelList);
+            teamList.postValue(teamModelList);
             if (MyApplication.testing) {
-                for (BossModel bossModel : bossModelList) {
-                    Utils.logD(TAG, bossModel.toString());
+                for (TeamModel teamModel : teamModelList) {
+                    Utils.logD(TAG, teamModel.toString());
                 }
             }
         }
@@ -55,5 +67,6 @@ public class SharedViewModelSource extends ViewModel {
     public void clearData() {
         characterList.postValue(new ArrayList<>());
         bossList.postValue(new ArrayList<>());
+        teamList.postValue(new ArrayList<>());
     }
 }

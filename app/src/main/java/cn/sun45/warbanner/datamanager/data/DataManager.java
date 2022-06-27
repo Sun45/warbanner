@@ -19,6 +19,7 @@ import cn.sun45.warbanner.document.database.source.models.TeamModel;
 import cn.sun45.warbanner.document.preference.DataPreference;
 import cn.sun45.warbanner.framework.MyApplication;
 import cn.sun45.warbanner.framework.logic.RequestListener;
+import cn.sun45.warbanner.framework.record.ErrorRecordManager;
 import cn.sun45.warbanner.logic.caimogu.CaimoguBaseData;
 import cn.sun45.warbanner.logic.caimogu.CaimoguLogic;
 import cn.sun45.warbanner.server.ServerManager;
@@ -154,7 +155,8 @@ public class DataManager {
             @Override
             public void onSuccess(CaimoguBaseData result) {
                 if (result == null || result.isEmpty()) {
-                    updateFail();
+                    updateFail("getBaseData result is empty");
+                    return;
                 }
                 List<CharacterModel> characterModels = result.getCharacterModels();
                 List<BossModel> bossModels = result.getBossModels();
@@ -170,7 +172,8 @@ public class DataManager {
                     @Override
                     public void onSuccess(List<TeamModel> result) {
                         if (result == null || result.isEmpty()) {
-                            updateFail();
+                            updateFail("getTeamData result is empty");
+                            return;
                         }
                         SourceDataBase.getInstance().sourceDao().deleteAllTeam(ServerManager.getInstance().getLang());
                         SourceDataBase.getInstance().sourceDao().insertTeam(result);
@@ -185,14 +188,14 @@ public class DataManager {
 
                     @Override
                     public void onFailed(String message) {
-                        updateFail();
+                        updateFail("getTeamData onFailed: " + message);
                     }
                 }, null, ServerManager.getInstance().getLang());
             }
 
             @Override
             public void onFailed(String message) {
-                updateFail();
+                updateFail("getBaseData onFailed: " + message);
             }
         }, null, ServerManager.getInstance().getLang());
     }
@@ -200,8 +203,9 @@ public class DataManager {
     /**
      * 更新失败
      */
-    private void updateFail() {
+    private void updateFail(String message) {
         if (iActivityCallBack != null) {
+            ErrorRecordManager.getInstance().save(message);
             iActivityCallBack.showSnackBar(R.string.data_update_failed);
             iActivityCallBack.dataUpdateFinished(false);
         }
