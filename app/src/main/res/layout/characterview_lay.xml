@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/character_lay"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardBackgroundColor="@color/gray"
+    app:cardCornerRadius="5dp">
+
+    <ImageView
+        android:id="@+id/character_icon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="2dp" />
+
+    <TextView
+        android:id="@+id/character_name"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textSize="12sp" />
+
+    <cn.sun45.warbanner.ui.views.portraittextview.PortraitTextView
+        android:id="@+id/character_auto"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/green_350"
+        android:gravity="center"
+        android:text="@string/auto"
+        android:textColor="@color/white_50"
+        android:textSize="8sp"
+        android:textStyle="bold"
+        android:visibility="invisible" />
+</com.google.android.material.card.MaterialCardView>

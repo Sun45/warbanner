@@ -3,11 +3,8 @@ package cn.sun45.warbanner.ui.fragments.teamgroup;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.cardview.widget.CardView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
@@ -15,20 +12,18 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.appbar.MaterialToolbar;
 
-import java.util.List;
-
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.character.CharacterHelper;
 import cn.sun45.warbanner.clanwar.ClanwarHelper;
 import cn.sun45.warbanner.document.database.setup.models.TeamGroupScreenModel;
 import cn.sun45.warbanner.document.database.source.models.CharacterModel;
 import cn.sun45.warbanner.document.database.source.models.TeamModel;
-import cn.sun45.warbanner.framework.image.ImageRequester;
 import cn.sun45.warbanner.framework.ui.BaseActivity;
 import cn.sun45.warbanner.framework.ui.BaseFragment;
 import cn.sun45.warbanner.stage.StageManager;
 import cn.sun45.warbanner.ui.shared.SharedViewModelSource;
 import cn.sun45.warbanner.ui.shared.SharedViewModelTeamScreenTeam;
+import cn.sun45.warbanner.ui.views.characterview.CharacterView;
 import cn.sun45.warbanner.ui.views.selectgroup.SelectGroup;
 import cn.sun45.warbanner.ui.views.selectgroup.SelectGroupListener;
 import cn.sun45.warbanner.util.Utils;
@@ -158,11 +153,11 @@ public class TeamGroupScreenFragment extends BaseFragment {
         private SelectGroup mBoss;
         private SelectGroup mAuto;
         private ViewGroup mCharacterLay;
-        private CharacterHolder mCharacterone;
-        private CharacterHolder mCharactertwo;
-        private CharacterHolder mCharacterthree;
-        private CharacterHolder mCharacterfour;
-        private CharacterHolder mCharacterfive;
+        private CharacterView mCharacterone;
+        private CharacterView mCharactertwo;
+        private CharacterView mCharacterthree;
+        private CharacterView mCharacterfour;
+        private CharacterView mCharacterfive;
         private AppCompatImageView mClean;
         private AppCompatImageView mSetting;
 
@@ -172,11 +167,11 @@ public class TeamGroupScreenFragment extends BaseFragment {
             mBoss = lay.findViewById(R.id.boss);
             mAuto = lay.findViewById(R.id.auto);
             mCharacterLay = lay.findViewById(R.id.character_lay);
-            mCharacterone = new CharacterHolder(lay.findViewById(R.id.characterone_lay), R.id.characterone_icon, R.id.characterone_name);
-            mCharactertwo = new CharacterHolder(lay.findViewById(R.id.charactertwo_lay), R.id.charactertwo_icon, R.id.charactertwo_name);
-            mCharacterthree = new CharacterHolder(lay.findViewById(R.id.characterthree_lay), R.id.characterthree_icon, R.id.characterthree_name);
-            mCharacterfour = new CharacterHolder(lay.findViewById(R.id.characterfour_lay), R.id.characterfour_icon, R.id.characterfour_name);
-            mCharacterfive = new CharacterHolder(lay.findViewById(R.id.characterfive_lay), R.id.characterfive_icon, R.id.characterfive_name);
+            mCharacterone = lay.findViewById(R.id.characterone_lay);
+            mCharactertwo = lay.findViewById(R.id.charactertwo_lay);
+            mCharacterthree = lay.findViewById(R.id.characterthree_lay);
+            mCharacterfour = lay.findViewById(R.id.characterfour_lay);
+            mCharacterfive = lay.findViewById(R.id.characterfive_lay);
             mClean = lay.findViewById(R.id.clean);
             mSetting = lay.findViewById(R.id.setting);
 
@@ -256,25 +251,25 @@ public class TeamGroupScreenFragment extends BaseFragment {
         private void setCharacterData() {
             switch (team) {
                 case 1:
-                    mCharacterone.setdata(teamGroupScreenModel.getTeamonecharacteroneid());
-                    mCharactertwo.setdata(teamGroupScreenModel.getTeamonecharactertwoid());
-                    mCharacterthree.setdata(teamGroupScreenModel.getTeamonecharacterthreeid());
-                    mCharacterfour.setdata(teamGroupScreenModel.getTeamonecharacterfourid());
-                    mCharacterfive.setdata(teamGroupScreenModel.getTeamonecharacterfiveid());
+                    characterDataSet(mCharacterone, teamGroupScreenModel.getTeamonecharacteroneid());
+                    characterDataSet(mCharactertwo, teamGroupScreenModel.getTeamonecharactertwoid());
+                    characterDataSet(mCharacterthree, teamGroupScreenModel.getTeamonecharacterthreeid());
+                    characterDataSet(mCharacterfour, teamGroupScreenModel.getTeamonecharacterfourid());
+                    characterDataSet(mCharacterfive, teamGroupScreenModel.getTeamonecharacterfiveid());
                     break;
                 case 2:
-                    mCharacterone.setdata(teamGroupScreenModel.getTeamtwocharacteroneid());
-                    mCharactertwo.setdata(teamGroupScreenModel.getTeamtwocharactertwoid());
-                    mCharacterthree.setdata(teamGroupScreenModel.getTeamtwocharacterthreeid());
-                    mCharacterfour.setdata(teamGroupScreenModel.getTeamtwocharacterfourid());
-                    mCharacterfive.setdata(teamGroupScreenModel.getTeamtwocharacterfiveid());
+                    characterDataSet(mCharacterone, teamGroupScreenModel.getTeamtwocharacteroneid());
+                    characterDataSet(mCharactertwo, teamGroupScreenModel.getTeamtwocharactertwoid());
+                    characterDataSet(mCharacterthree, teamGroupScreenModel.getTeamtwocharacterthreeid());
+                    characterDataSet(mCharacterfour, teamGroupScreenModel.getTeamtwocharacterfourid());
+                    characterDataSet(mCharacterfive, teamGroupScreenModel.getTeamtwocharacterfiveid());
                     break;
                 case 3:
-                    mCharacterone.setdata(teamGroupScreenModel.getTeamthreecharacteroneid());
-                    mCharactertwo.setdata(teamGroupScreenModel.getTeamthreecharactertwoid());
-                    mCharacterthree.setdata(teamGroupScreenModel.getTeamthreecharacterthreeid());
-                    mCharacterfour.setdata(teamGroupScreenModel.getTeamthreecharacterfourid());
-                    mCharacterfive.setdata(teamGroupScreenModel.getTeamthreecharacterfiveid());
+                    characterDataSet(mCharacterone, teamGroupScreenModel.getTeamthreecharacteroneid());
+                    characterDataSet(mCharactertwo, teamGroupScreenModel.getTeamthreecharactertwoid());
+                    characterDataSet(mCharacterthree, teamGroupScreenModel.getTeamthreecharacterthreeid());
+                    characterDataSet(mCharacterfour, teamGroupScreenModel.getTeamthreecharacterfourid());
+                    characterDataSet(mCharacterfive, teamGroupScreenModel.getTeamthreecharacterfiveid());
                     break;
             }
         }
@@ -382,24 +377,12 @@ public class TeamGroupScreenFragment extends BaseFragment {
         }
     }
 
-    private class CharacterHolder {
-        private CardView lay;
-        private ImageView icon;
-        private TextView name;
-
-        public CharacterHolder(CardView lay, int iconid, int nameid) {
-            this.lay = lay;
-            icon = lay.findViewById(iconid);
-            name = lay.findViewById(nameid);
-        }
-
-        public void setdata(int id) {
-            CharacterModel characterModel = CharacterHelper.findCharacterById(id, sharedSource.characterList.getValue());
-            if (characterModel == null) {
-                icon.setImageBitmap(null);
-            } else {
-                ImageRequester.request(characterModel.getIconUrl(), R.drawable.ic_character_default).loadRoundImage(icon);
-            }
+    private void characterDataSet(CharacterView characterView, int id) {
+        CharacterModel characterModel = CharacterHelper.findCharacterById(id, sharedSource.characterList.getValue());
+        if (characterModel == null) {
+            characterView.resetCharacterModel();
+        } else {
+            characterView.setCharacterModel(characterModel, id);
         }
     }
 

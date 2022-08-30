@@ -133,14 +133,14 @@ public class Utils {
      * 展示提示信息
      */
     public static void tip(View view, @StringRes int resId) {
-        Snackbar.make(view, resId, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(view, resId, Snackbar.LENGTH_SHORT).show();
     }
 
     /**
      * 展示提示信息
      */
     public static void tip(View view, @NonNull CharSequence text) {
-        Snackbar.make(view, text, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(view, text, Snackbar.LENGTH_SHORT).show();
     }
 
     //system

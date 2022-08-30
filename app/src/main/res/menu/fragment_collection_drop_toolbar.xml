@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <group
+        android:id="@+id/stage"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_sort_time"
+            android:title="@string/collection_sort_time"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menu_sort_damage"
+            android:title="@string/collection_sort_damage"
+            app:showAsAction="never" />
+    </group>
+</menu>

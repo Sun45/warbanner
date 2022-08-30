@@ -3,7 +3,6 @@ package cn.sun45.warbanner.document.database.setup.models;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 
 /**
  * Created by Sun45 on 2022/6/9
@@ -32,6 +31,9 @@ public class TeamGroupCollectionModel {
     private int teamthreeId;
     @ColumnInfo
     private int borrowindexthree;
+
+    @ColumnInfo
+    private String time;
 
     public int getUserId() {
         return userId;
@@ -87,5 +89,13 @@ public class TeamGroupCollectionModel {
 
     public void setBorrowindexthree(int borrowindexthree) {
         this.borrowindexthree = borrowindexthree;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }

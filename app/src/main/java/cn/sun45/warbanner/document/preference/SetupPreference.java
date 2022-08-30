@@ -1,6 +1,5 @@
 package cn.sun45.warbanner.document.preference;
 
-import cn.sun45.warbanner.document.statics.Locale;
 import cn.sun45.warbanner.framework.document.preference.BasePreference;
 
 /**
@@ -8,6 +7,9 @@ import cn.sun45.warbanner.framework.document.preference.BasePreference;
  * 设置信息
  */
 public class SetupPreference extends BasePreference {
+    //收藏排序
+    private int collectionsort = 0;
+
     //连点间隔
     private int tapinterval = 10;
     //自动连点启用
@@ -24,6 +26,14 @@ public class SetupPreference extends BasePreference {
 
     //链接打开方式
     private int linkopentype;
+
+    public int getCollectionsort() {
+        return load("collectionsort");
+    }
+
+    public void setCollectionsort(int collectionsort) {
+        save("collectionsort", collectionsort);
+    }
 
     public int getTapinterval() {
         return load("tapinterval");

@@ -1,12 +1,18 @@
 package cn.sun45.warbanner.framework.logic;
 
+import android.webkit.WebSettings;
+
 import java.io.File;
+import java.io.IOException;
 
 import cn.sun45.warbanner.framework.MyApplication;
 import cn.sun45.warbanner.util.FileUtil;
 import cn.sun45.warbanner.util.Utils;
 import okhttp3.Cache;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 
@@ -24,6 +30,17 @@ public class BaseLogic {
             synchronized (BaseLogic.class) {
                 if (mOkHttpClient == null) {
                     OkHttpClient.Builder builder = new OkHttpClient.Builder();
+                    builder.addInterceptor(new Interceptor() {
+                        @Override
+                        public Response intercept(Chain chain) throws IOException {
+                            Request request = chain.request()
+                                    .newBuilder()
+                                    .removeHeader("User-Agent")//移除旧的
+                                    .addHeader("User-Agent", WebSettings.getDefaultUserAgent(MyApplication.application))//添加真正的头部
+                                    .build();
+                            return chain.proceed(request);
+                        }
+                    });
                     File cachefile = new File(FileUtil.getExternalFilesDir("OkHttpClient"));
                     builder.cache(new Cache(cachefile, FileUtil.calculateDiskCacheSize(cachefile)));
                     if (MyApplication.testing) {

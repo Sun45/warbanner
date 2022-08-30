@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -35,6 +34,7 @@ import cn.sun45.warbanner.document.preference.SetupPreference;
 import cn.sun45.warbanner.document.statics.StaticHelper;
 import cn.sun45.warbanner.framework.image.ImageRequester;
 import cn.sun45.warbanner.stage.StageManager;
+import cn.sun45.warbanner.ui.views.characterview.CharacterView;
 import cn.sun45.warbanner.ui.views.listselectbar.ListSelectItem;
 import cn.sun45.warbanner.util.Utils;
 
@@ -250,12 +250,11 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public class TeamHolder extends RecyclerView.ViewHolder {
         private TextView mBoss;
         private TextView mTitle;
-        private View mAuto;
-        private CharacterHolder mCharacterone;
-        private CharacterHolder mCharactertwo;
-        private CharacterHolder mCharacterthree;
-        private CharacterHolder mCharacterfour;
-        private CharacterHolder mCharacterfive;
+        private CharacterView mCharacterone;
+        private CharacterView mCharactertwo;
+        private CharacterView mCharacterthree;
+        private CharacterView mCharacterfour;
+        private CharacterView mCharacterfive;
         private TextView mRemarks;
 
         private TeamListTeamModel model;
@@ -264,12 +263,11 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             super(itemView);
             mBoss = itemView.findViewById(R.id.boss);
             mTitle = itemView.findViewById(R.id.title);
-            mAuto = itemView.findViewById(R.id.auto);
-            mCharacterone = new CharacterHolder(itemView.findViewById(R.id.characterone_lay), R.id.characterone_icon, R.id.characterone_name);
-            mCharactertwo = new CharacterHolder(itemView.findViewById(R.id.charactertwo_lay), R.id.charactertwo_icon, R.id.charactertwo_name);
-            mCharacterthree = new CharacterHolder(itemView.findViewById(R.id.characterthree_lay), R.id.characterthree_icon, R.id.characterthree_name);
-            mCharacterfour = new CharacterHolder(itemView.findViewById(R.id.characterfour_lay), R.id.characterfour_icon, R.id.characterfour_name);
-            mCharacterfive = new CharacterHolder(itemView.findViewById(R.id.characterfive_lay), R.id.characterfive_icon, R.id.characterfive_name);
+            mCharacterone = itemView.findViewById(R.id.characterone_lay);
+            mCharactertwo = itemView.findViewById(R.id.charactertwo_lay);
+            mCharacterthree = itemView.findViewById(R.id.characterthree_lay);
+            mCharacterfour = itemView.findViewById(R.id.characterfour_lay);
+            mCharacterfive = itemView.findViewById(R.id.characterfive_lay);
             mRemarks = itemView.findViewById(R.id.remarks);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -308,23 +306,19 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 }
                 mTitle.setText(builder);
             }
-            if (teamModel.isAuto()) {
-                mAuto.setVisibility(View.VISIBLE);
-            } else {
-                mAuto.setVisibility(View.INVISIBLE);
-            }
+            mCharacterone.setAutoShow(teamModel.isAuto());
             if (borrowindex == -1) {
-                mCharacterone.setData(teamModel.getCharacterone());
-                mCharactertwo.setData(teamModel.getCharactertwo());
-                mCharacterthree.setData(teamModel.getCharacterthree());
-                mCharacterfour.setData(teamModel.getCharacterfour());
-                mCharacterfive.setData(teamModel.getCharacterfive());
+                characterDataSet(mCharacterone, teamModel.getCharacterone());
+                characterDataSet(mCharactertwo, teamModel.getCharactertwo());
+                characterDataSet(mCharacterthree, teamModel.getCharacterthree());
+                characterDataSet(mCharacterfour, teamModel.getCharacterfour());
+                characterDataSet(mCharacterfive, teamModel.getCharacterfive());
             } else {
-                mCharacterone.setData(teamModel.getCharacterone(), borrowindex == 0);
-                mCharactertwo.setData(teamModel.getCharactertwo(), borrowindex == 1);
-                mCharacterthree.setData(teamModel.getCharacterthree(), borrowindex == 2);
-                mCharacterfour.setData(teamModel.getCharacterfour(), borrowindex == 3);
-                mCharacterfive.setData(teamModel.getCharacterfive(), borrowindex == 4);
+                characterDataSet(mCharacterone, teamModel.getCharacterone(), borrowindex == 0);
+                characterDataSet(mCharactertwo, teamModel.getCharactertwo(), borrowindex == 1);
+                characterDataSet(mCharacterthree, teamModel.getCharacterthree(), borrowindex == 2);
+                characterDataSet(mCharacterfour, teamModel.getCharacterfour(), borrowindex == 3);
+                characterDataSet(mCharacterfive, teamModel.getCharacterfive(), borrowindex == 4);
             }
             if (showlink) {
                 if (remarkModels.isEmpty()) {
@@ -370,20 +364,8 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 mRemarks.setVisibility(View.GONE);
             }
         }
-    }
 
-    private class CharacterHolder {
-        private CardView lay;
-        private ImageView icon;
-        private TextView name;
-
-        public CharacterHolder(CardView lay, int iconid, int nameid) {
-            this.lay = lay;
-            icon = lay.findViewById(iconid);
-            name = lay.findViewById(nameid);
-        }
-
-        public void setData(int id) {
+        private void characterDataSet(CharacterView characterView, int id) {
             CharacterModel characterModel = CharacterHelper.findCharacterById(id, characterModels);
             if (screenfunction) {
                 ScreenCharacterModel screenCharacterModel = null;
@@ -398,45 +380,29 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 if (screenCharacterModel != null) {
                     switch (screenCharacterModel.getType()) {
                         case 1://TYPE_LACK
-                            lay.setCardBackgroundColor(Utils.getAttrColor(context, R.attr.colorSecondary));
+                            characterView.setBackGroundType(CharacterView.BG_YELLOW);
                             break;
                         case 2://TYPE_SKIP
-                            lay.setCardBackgroundColor(Utils.getAttrColor(context, R.attr.colorPrimary));
+                            characterView.setBackGroundType(CharacterView.BG_RED);
                             break;
                     }
                 } else {
-                    lay.setCardBackgroundColor(Utils.getColor(R.color.gray));
+                    characterView.setBackGroundType(CharacterView.BG_DEFAULT);
                 }
             } else {
-                lay.setCardBackgroundColor(Utils.getColor(R.color.gray));
+                characterView.setBackGroundType(CharacterView.BG_DEFAULT);
             }
-            if (characterModel == null) {
-                icon.setImageBitmap(null);
-                name.setVisibility(View.VISIBLE);
-                name.setText(id + "");
-            } else {
-                ImageRequester.request(characterModel.getIconUrl(), R.drawable.ic_character_default).loadRoundImage(icon);
-                name.setVisibility(View.INVISIBLE);
-                name.setText("");
-            }
+            characterView.setCharacterModel(characterModel, id);
         }
 
-        public void setData(int id, boolean borrow) {
+        private void characterDataSet(CharacterView characterView, int id, boolean borrow) {
             CharacterModel characterModel = CharacterHelper.findCharacterById(id, characterModels);
             if (borrow) {
-                lay.setCardBackgroundColor(Utils.getAttrColor(context, R.attr.colorPrimary));
+                characterView.setBackGroundType(CharacterView.BG_RED);
             } else {
-                lay.setCardBackgroundColor(Utils.getColor(R.color.gray));
+                characterView.setBackGroundType(CharacterView.BG_DEFAULT);
             }
-            if (characterModel == null) {
-                icon.setImageBitmap(null);
-                name.setVisibility(View.VISIBLE);
-                name.setText(id + "");
-            } else {
-                ImageRequester.request(characterModel.getIconUrl(), R.drawable.ic_character_default).loadRoundImage(icon);
-                name.setVisibility(View.INVISIBLE);
-                name.setText("");
-            }
+            characterView.setCharacterModel(characterModel, id);
         }
     }
 }

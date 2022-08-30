@@ -35,6 +35,8 @@
     <string name="title_menu">菜单</string>
 
     <string name="collection_empty_hint">当前分刀收藏为空\n请点击分刀按钮进行分刀</string>
+    <string name="collection_sort_time">按时间排序</string>
+    <string name="collection_sort_damage">按伤害排序</string>
 
     <string name="teamlist_empty_hint">作业数据为空</string>
     <string name="teamlist_menu_link">链接</string>

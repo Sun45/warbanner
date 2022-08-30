@@ -55,6 +55,9 @@ public class TeamGroupListModel implements Serializable {
         this.teamthree = teamthree;
         this.idlistthree = idlistthree;
         this.borrowindexthree = borrowindexthree;
+        this.totaldamage = ((teamCustomizeone != null && teamCustomizeone.damageEffective()) ? teamCustomizeone.getDamage() : teamone.getDamage())
+                + ((teamCustomizetwo != null && teamCustomizetwo.damageEffective()) ? teamCustomizetwo.getDamage() : teamtwo.getDamage())
+                + ((teamCustomizethree != null && teamCustomizethree.damageEffective()) ? teamCustomizethree.getDamage() : teamthree.getDamage());
     }
 
     public TeamModel getTeamone() {

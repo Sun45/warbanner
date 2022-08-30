@@ -88,6 +88,17 @@ public class ImageRequestLoader {
     }
 
     /**
+     * 转换成圆角加载到图片
+     *
+     * @param image
+     * @param callback
+     */
+    public void loadRoundImage(ImageView image, Callback callback) {
+        requestCreator.transform(new RoundedCornersTransformation());
+        requestCreator.into(image, callback);
+    }
+
+    /**
      * 加载bitmap对象
      *
      * @param target
@@ -156,7 +167,7 @@ public class ImageRequestLoader {
         private int mRadius;
 
         public RoundedCornersTransformation() {
-            mRadius = Utils.dip2px(MyApplication.application,5);
+            mRadius = Utils.dip2px(MyApplication.application, 5);
         }
 
         @Override

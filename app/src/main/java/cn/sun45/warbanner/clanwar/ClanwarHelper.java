@@ -10,6 +10,7 @@ import cn.sun45.warbanner.document.database.setup.models.TeamGroupScreenModel;
 import cn.sun45.warbanner.document.database.setup.models.TeamListShowModel;
 import cn.sun45.warbanner.document.database.source.SourceDataBase;
 import cn.sun45.warbanner.document.database.source.models.TeamModel;
+import cn.sun45.warbanner.framework.MyApplication;
 import cn.sun45.warbanner.server.ServerManager;
 import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListModel;
 import cn.sun45.warbanner.user.UserManager;
@@ -270,6 +271,7 @@ public class ClanwarHelper {
             teamGroupCollectionModel.setBorrowindextwo(teamGroupListModel.getBorrowindextwo());
             teamGroupCollectionModel.setTeamthreeId(teamGroupListModel.getTeamthree().getId());
             teamGroupCollectionModel.setBorrowindexthree(teamGroupListModel.getBorrowindexthree());
+            teamGroupCollectionModel.setTime(MyApplication.getTimecurrent() + "");
             SetupDataBase.getInstance().setupDao().insertTeamGroupCollection(teamGroupCollectionModel);
         } else {
             SetupDataBase.getInstance().setupDao().deleteTeamGroupCollection(userId,

@@ -4,22 +4,33 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ImageSpan;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.clanwar.ClanwarHelper;
 import cn.sun45.warbanner.document.database.setup.models.TeamGroupCollectionModel;
 import cn.sun45.warbanner.document.database.source.models.TeamModel;
+import cn.sun45.warbanner.document.preference.SetupPreference;
+import cn.sun45.warbanner.framework.ui.BaseActivity;
 import cn.sun45.warbanner.framework.ui.BaseFragment;
 import cn.sun45.warbanner.ui.activities.MainActivity;
 import cn.sun45.warbanner.ui.shared.SharedViewModelClanwar;
@@ -50,11 +61,13 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
 
     @Override
     protected void initData() {
-
+        setHasOptionsMenu(true);
     }
 
     @Override
     protected void initView() {
+        MaterialToolbar toolbar = mRoot.findViewById(R.id.drop_toolbar);
+        ((BaseActivity) getActivity()).setSupportActionBar(toolbar);
         mTeamGroupList = mRoot.findViewById(R.id.teamgrouplist);
         mEmptyHint = mRoot.findViewById(R.id.empty_hint);
         mProgressingButton = mRoot.findViewById(R.id.progressing_btn);
@@ -83,10 +96,24 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
             });
             mTeamGroupList.setCharacterModels(characterModels);
         });
+        showList();
+    }
+
+    private List<Integer> buildIdlist(TeamModel teamModel) {
+        List<Integer> idlist = new ArrayList<>();
+        idlist.add(teamModel.getCharacterone());
+        idlist.add(teamModel.getCharactertwo());
+        idlist.add(teamModel.getCharacterthree());
+        idlist.add(teamModel.getCharacterfour());
+        idlist.add(teamModel.getCharacterfive());
+        return idlist;
+    }
+
+    private void showList() {
         sharedClanwar.teamGroupCollectionList.observe(requireActivity(), teamGroupCollectionModels -> {
             if (teamGroupCollectionModels != null && !teamGroupCollectionModels.isEmpty()) {
                 List<TeamGroupListModel> list = new ArrayList<>();
-                for (int i = teamGroupCollectionModels.size() - 1; i >= 0; i--) {
+                for (int i = 0; i < teamGroupCollectionModels.size(); i++) {
                     TeamGroupCollectionModel teamGroupCollectionModel = teamGroupCollectionModels.get(i);
                     if (ClanwarHelper.isCollect(teamGroupCollectionModel)) {
                         List<TeamModel> teamModels = ClanwarHelper.getTeamGroupCollectionTeamList(teamGroupCollectionModel);
@@ -103,6 +130,9 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
                         list.add(teamGroupListModel);
                     }
                 }
+                if (new SetupPreference().getCollectionsort() == 1) {
+                    list = list.stream().sorted(Comparator.comparing(TeamGroupListModel::getTotaldamage).reversed()).collect(Collectors.toList());
+                }
                 mTeamGroupList.setData(list);
                 if (list != null && !list.isEmpty()) {
                     mEmptyHint.setVisibility(View.INVISIBLE);
@@ -117,16 +147,6 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
         });
     }
 
-    private List<Integer> buildIdlist(TeamModel teamModel) {
-        List<Integer> idlist = new ArrayList<>();
-        idlist.add(teamModel.getCharacterone());
-        idlist.add(teamModel.getCharactertwo());
-        idlist.add(teamModel.getCharacterthree());
-        idlist.add(teamModel.getCharacterfour());
-        idlist.add(teamModel.getCharacterfive());
-        return idlist;
-    }
-
     @Override
     protected void onShow() {
     }
@@ -134,6 +154,30 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
     @Override
     protected void onHide() {
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull @NotNull Menu menu, @NonNull @NotNull MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.fragment_collection_drop_toolbar, menu);
+        menu.getItem(new SetupPreference().getCollectionsort()).setChecked(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_sort_time:
+                item.setChecked(true);
+                new SetupPreference().setCollectionsort(0);
+                showList();
+                break;
+            case R.id.menu_sort_damage:
+                item.setChecked(true);
+                new SetupPreference().setCollectionsort(1);
+                showList();
+                break;
+        }
+        return true;
     }
 
     @Override

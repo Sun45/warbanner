@@ -17,7 +17,7 @@ import cn.sun45.warbanner.framework.MyApplication;
  * 设置数据库
  */
 @Database(entities = {UserModel.class, ScreenCharacterModel.class, TeamListShowModel.class,
-        TeamGroupScreenModel.class, TeamCustomizeModel.class, TeamGroupCollectionModel.class}, version = 5)
+        TeamGroupScreenModel.class, TeamCustomizeModel.class, TeamGroupCollectionModel.class}, version = 6)
 public abstract class SetupDataBase extends RoomDatabase {
     private static SetupDataBase databaseInstance;
 

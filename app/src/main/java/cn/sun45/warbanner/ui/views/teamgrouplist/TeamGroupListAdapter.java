@@ -8,12 +8,10 @@ import android.text.style.StrikethroughSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +24,7 @@ import cn.sun45.warbanner.clanwar.ClanwarHelper;
 import cn.sun45.warbanner.document.database.setup.models.TeamCustomizeModel;
 import cn.sun45.warbanner.document.database.source.models.CharacterModel;
 import cn.sun45.warbanner.document.database.source.models.TeamModel;
-import cn.sun45.warbanner.framework.image.ImageRequester;
+import cn.sun45.warbanner.ui.views.characterview.CharacterView;
 import cn.sun45.warbanner.util.Utils;
 
 /**
@@ -161,21 +159,19 @@ public class TeamGroupListAdapter extends RecyclerView.Adapter<TeamGroupListAdap
     private class TeamHolder {
         private ViewGroup lay;
         private TextView mTitle;
-        private View mAuto;
-        private CharacterHolder mCharacterone;
-        private CharacterHolder mCharactertwo;
-        private CharacterHolder mCharacterthree;
-        private CharacterHolder mCharacterfour;
-        private CharacterHolder mCharacterfive;
+        private CharacterView mCharacterone;
+        private CharacterView mCharactertwo;
+        private CharacterView mCharacterthree;
+        private CharacterView mCharacterfour;
+        private CharacterView mCharacterfive;
 
         public TeamHolder(ViewGroup lay) {
             mTitle = lay.findViewById(R.id.title);
-            mAuto = lay.findViewById(R.id.auto);
-            mCharacterone = new CharacterHolder(lay.findViewById(R.id.characterone_lay), R.id.characterone_icon, R.id.characterone_name);
-            mCharactertwo = new CharacterHolder(lay.findViewById(R.id.charactertwo_lay), R.id.charactertwo_icon, R.id.charactertwo_name);
-            mCharacterthree = new CharacterHolder(lay.findViewById(R.id.characterthree_lay), R.id.characterthree_icon, R.id.characterthree_name);
-            mCharacterfour = new CharacterHolder(lay.findViewById(R.id.characterfour_lay), R.id.characterfour_icon, R.id.characterfour_name);
-            mCharacterfive = new CharacterHolder(lay.findViewById(R.id.characterfive_lay), R.id.characterfive_icon, R.id.characterfive_name);
+            mCharacterone = lay.findViewById(R.id.characterone_lay);
+            mCharactertwo = lay.findViewById(R.id.charactertwo_lay);
+            mCharacterthree = lay.findViewById(R.id.characterthree_lay);
+            mCharacterfour = lay.findViewById(R.id.characterfour_lay);
+            mCharacterfive = lay.findViewById(R.id.characterfive_lay);
         }
 
         public void setdata(TeamModel teamModel, TeamCustomizeModel teamCustomizeModel, List<Integer> idlist, int borrowindex) {
@@ -199,46 +195,22 @@ public class TeamGroupListAdapter extends RecyclerView.Adapter<TeamGroupListAdap
                 }
                 mTitle.setText(builder);
             }
-            if (teamModel.isAuto()) {
-                mAuto.setVisibility(View.VISIBLE);
-            } else {
-                mAuto.setVisibility(View.INVISIBLE);
-            }
-            mCharacterone.setdata(idlist.get(0), borrowindex == 0);
-            mCharactertwo.setdata(idlist.get(1), borrowindex == 1);
-            mCharacterthree.setdata(idlist.get(2), borrowindex == 2);
-            mCharacterfour.setdata(idlist.get(3), borrowindex == 3);
-            mCharacterfive.setdata(idlist.get(4), borrowindex == 4);
+            mCharacterone.setAutoShow(teamModel.isAuto());
+            characterDataSet(mCharacterone, idlist.get(0), borrowindex == 0);
+            characterDataSet(mCharactertwo, idlist.get(1), borrowindex == 1);
+            characterDataSet(mCharacterthree, idlist.get(2), borrowindex == 2);
+            characterDataSet(mCharacterfour, idlist.get(3), borrowindex == 3);
+            characterDataSet(mCharacterfive, idlist.get(4), borrowindex == 4);
         }
     }
 
-    private class CharacterHolder {
-        private CardView lay;
-        private ImageView icon;
-        private TextView name;
-
-        public CharacterHolder(CardView lay, int iconid, int nameid) {
-            this.lay = lay;
-            icon = lay.findViewById(iconid);
-            name = lay.findViewById(nameid);
+    private void characterDataSet(CharacterView characterView, int id, boolean borrow) {
+        CharacterModel characterModel = CharacterHelper.findCharacterById(id, characterModels);
+        if (borrow) {
+            characterView.setBackGroundType(CharacterView.BG_RED);
+        } else {
+            characterView.setBackGroundType(CharacterView.BG_DEFAULT);
         }
-
-        public void setdata(int id, boolean borrow) {
-            CharacterModel characterModel = CharacterHelper.findCharacterById(id, characterModels);
-            if (borrow) {
-                lay.setCardBackgroundColor(Utils.getAttrColor(context, R.attr.colorPrimary));
-            } else {
-                lay.setCardBackgroundColor(Utils.getColor(R.color.gray));
-            }
-            if (characterModel == null) {
-                icon.setImageBitmap(null);
-                name.setVisibility(View.VISIBLE);
-                name.setText(id + "");
-            } else {
-                ImageRequester.request(characterModel.getIconUrl(), R.drawable.ic_character_default).loadRoundImage(icon);
-                name.setVisibility(View.INVISIBLE);
-                name.setText("");
-            }
-        }
+        characterView.setCharacterModel(characterModel, id);
     }
 }

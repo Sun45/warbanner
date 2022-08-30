@@ -1,6 +1,6 @@
 {
-  "versionCode": "38",
-  "versionName": "2.8.2",
+  "versionCode": "39",
+  "versionName": "3.0.1",
   "fource": "false",
-  "content": "1.优化数据加载2.暂时去除数据接口请求缓存"
+  "content": "1.减少下载提示显示时间2.添加收藏列表排序类型3.修复角色图标显示问题并添加自动名称切换功能"
 }

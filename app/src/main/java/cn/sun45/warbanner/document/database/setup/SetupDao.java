@@ -1,7 +1,6 @@
 package cn.sun45.warbanner.document.database.setup;
 
 import androidx.room.Dao;
-import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
@@ -100,6 +99,6 @@ public interface SetupDao {
     @Query("delete from teamgroupcollection where userId=:userId AND teamoneId=:teamoneId AND teamtwoId=:teamtwoId AND teamthreeId=:teamthreeId")
     void deleteTeamGroupCollection(int userId, int teamoneId, int teamtwoId, int teamthreeId);
 
-    @Query("select * from teamgroupcollection where userId=:userId")
+    @Query("select * from teamgroupcollection where userId=:userId ORDER BY time DESC")
     List<TeamGroupCollectionModel> queryAllTeamGroupCollection(int userId);
 }
