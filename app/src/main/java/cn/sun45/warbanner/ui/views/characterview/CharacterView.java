@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 
-import com.google.android.material.card.MaterialCardView;
 import com.squareup.picasso.Callback;
 
 import cn.sun45.warbanner.R;
@@ -23,14 +22,13 @@ import cn.sun45.warbanner.util.Utils;
  * Created by Sun45 on 2022/8/30
  * 角色信息加载控件
  */
-public class CharacterView extends MaterialCardView {
+public class CharacterView extends CardView {
     public static final int BG_DEFAULT = 0;
     public static final int BG_YELLOW = 1;
     public static final int BG_RED = 2;
 
     private CharacterModel characterModel;
 
-    private CardView mLay;
     private ImageView mIcon;
     private TextView mName;
     private View mAuto;
@@ -46,10 +44,12 @@ public class CharacterView extends MaterialCardView {
     }
 
     private void init() {
-        mLay = (CardView) LayoutInflater.from(getContext()).inflate(R.layout.characterview_lay, this, true);
-        mIcon = mLay.findViewById(R.id.character_icon);
-        mName = mLay.findViewById(R.id.character_name);
-        mAuto = mLay.findViewById(R.id.character_auto);
+        setCardBackgroundColor(Utils.getColor(R.color.gray));
+        setRadius(Utils.dip2px(getContext(),5));
+        LayoutInflater.from(getContext()).inflate(R.layout.characterview_lay, this, true);
+        mIcon = findViewById(R.id.character_icon);
+        mName = findViewById(R.id.character_name);
+        mAuto = findViewById(R.id.character_auto);
     }
 
     public void setCharacterModel(CharacterModel characterModel, int id) {
@@ -89,17 +89,19 @@ public class CharacterView extends MaterialCardView {
     }
 
     public void setBackGroundType(int bgType) {
+        int color = 0;
         switch (bgType) {
             case BG_DEFAULT:
-                mLay.setCardBackgroundColor(Utils.getColor(R.color.gray));
+                color = Utils.getColor(R.color.gray);
                 break;
             case BG_YELLOW:
-                mLay.setCardBackgroundColor(Utils.getAttrColor(getContext(), R.attr.colorSecondary));
+                color = Utils.getAttrColor(getContext(), R.attr.colorSecondary);
                 break;
             case BG_RED:
-                mLay.setCardBackgroundColor(Utils.getAttrColor(getContext(), R.attr.colorPrimary));
+                color = Utils.getAttrColor(getContext(), R.attr.colorPrimary);
                 break;
         }
+        setCardBackgroundColor(color);
     }
 
     public void setAutoShow(boolean auto) {
