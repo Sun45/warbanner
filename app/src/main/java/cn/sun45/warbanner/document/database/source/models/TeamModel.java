@@ -314,7 +314,7 @@ public class TeamModel implements Serializable {
                 List<Image> imageList = new ArrayList<>();
                 if (imageJSONArray != null) {
                     for (int j = 0; j < imageJSONArray.length(); j++) {
-                        JSONObject imageJSONObject = imageJSONArray.getJSONObject(i);
+                        JSONObject imageJSONObject = imageJSONArray.getJSONObject(j);
                         String imageurl = imageJSONObject.optString("url");
                         String imagesource = imageJSONObject.optString("source");
                         Image image = new Image(imageurl, imagesource);
