@@ -15,11 +15,13 @@ import cn.sun45.warbanner.util.Utils;
 public class CustomMyAccessibilityService extends AccessibilityService {
     private static final String TAG = "CustomMyAccessibilityService";
 
+    //忽略包名
     private static final String[] SKIP_PACKAGES = new String[]{
             Utils.getPackageName(),
             "com.android.systemui"
     };
 
+    //包名列表
     private static final String[] GAME_PACKAGES = new String[]{
             "com.bilibili.priconne",
             "jp.co.cygames.princessconnectredive",
@@ -28,6 +30,9 @@ public class CustomMyAccessibilityService extends AccessibilityService {
             "com.ini3.PrincessConnectTH",
             "com.crunchyroll.princessconnectredive"
     };
+
+    //渠道服包名通配符
+    private static final String CHANNEL_SERVICE_PACKAGES_WILDCARD = "bilibili.priconne";
 
     @Override
     protected void onServiceConnected() {
@@ -46,7 +51,7 @@ public class CustomMyAccessibilityService extends AccessibilityService {
         }
         if (packageName != null && packageName.length() > 0) {
             if (Arrays.asList(SKIP_PACKAGES).contains(packageName)) {
-            } else if (Arrays.asList(GAME_PACKAGES).contains(packageName)) {
+            } else if (Arrays.asList(GAME_PACKAGES).contains(packageName) || packageName.toString().contains(CHANNEL_SERVICE_PACKAGES_WILDCARD)) {
                 AssistManager.getInstance().startShow();
             } else {
                 AssistManager.getInstance().stopShow();
