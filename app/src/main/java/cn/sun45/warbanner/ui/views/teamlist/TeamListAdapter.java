@@ -34,7 +34,7 @@ import cn.sun45.warbanner.document.preference.SetupPreference;
 import cn.sun45.warbanner.document.statics.StaticHelper;
 import cn.sun45.warbanner.framework.image.ImageRequester;
 import cn.sun45.warbanner.stage.StageManager;
-import cn.sun45.warbanner.ui.views.characterview.CharacterView;
+import cn.sun45.warbanner.ui.views.character.characterview.CharacterView;
 import cn.sun45.warbanner.ui.views.listselectbar.ListSelectItem;
 import cn.sun45.warbanner.util.Utils;
 

@@ -117,11 +117,22 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_nav_teamgroupscreen_to_nav_teamgroupscreenusedcharacter"
+            app:destination="@id/nav_teamgroupscreenusedcharacter"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/nav_teamselect"
         android:name="cn.sun45.warbanner.ui.fragments.team.TeamSelectFragment"
         android:label="fragment_teamselect" />
+    <fragment
+        android:id="@+id/nav_teamgroupscreenusedcharacter"
+        android:name="cn.sun45.warbanner.ui.fragments.teamgroup.TeamGroupScreenUsedCharacterFragment"
+        android:label="fragment_teamgroupscreenusedcharacter" />
     <fragment
         android:id="@+id/nav_teamgroupdetail"
         android:name="cn.sun45.warbanner.ui.fragments.teamgroup.TeamGroupDetailFragment"

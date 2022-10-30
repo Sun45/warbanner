@@ -35,7 +35,7 @@ import cn.sun45.warbanner.framework.ui.BaseActivity;
 import cn.sun45.warbanner.framework.ui.BaseFragment;
 import cn.sun45.warbanner.ui.shared.SharedViewModelClanwar;
 import cn.sun45.warbanner.ui.shared.SharedViewModelSource;
-import cn.sun45.warbanner.ui.views.characterview.CharacterView;
+import cn.sun45.warbanner.ui.views.character.characterview.CharacterView;
 import cn.sun45.warbanner.ui.views.teamdetail.TeamDetailScroll;
 import cn.sun45.warbanner.util.Utils;
 import kotlin.Unit;

@@ -207,7 +207,7 @@ public class DataManager {
         if (iActivityCallBack != null) {
             ErrorRecordManager.getInstance().save(message);
             iActivityCallBack.showSnackBar(R.string.data_update_failed);
-            iActivityCallBack.dataUpdateFinished(false);
+            iActivityCallBack.dataUpdateFinished(true);
         }
         if (progressDialog != null) {
             progressDialog.cancel();

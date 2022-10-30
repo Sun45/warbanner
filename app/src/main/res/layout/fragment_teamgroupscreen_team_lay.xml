@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="5dp"
+    app:cardBackgroundColor="@color/theme"
+    app:cardCornerRadius="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,30 +39,30 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent">
 
-            <cn.sun45.warbanner.ui.views.characterview.CharacterView
+            <cn.sun45.warbanner.ui.views.character.characterview.CharacterView
                 android:id="@+id/characterone_lay"
                 android:layout_width="50dp"
                 android:layout_height="50dp" />
 
-            <cn.sun45.warbanner.ui.views.characterview.CharacterView
+            <cn.sun45.warbanner.ui.views.character.characterview.CharacterView
                 android:id="@+id/charactertwo_lay"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="5dp" />
 
-            <cn.sun45.warbanner.ui.views.characterview.CharacterView
+            <cn.sun45.warbanner.ui.views.character.characterview.CharacterView
                 android:id="@+id/characterthree_lay"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="5dp" />
 
-            <cn.sun45.warbanner.ui.views.characterview.CharacterView
+            <cn.sun45.warbanner.ui.views.character.characterview.CharacterView
                 android:id="@+id/characterfour_lay"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="5dp" />
 
-            <cn.sun45.warbanner.ui.views.characterview.CharacterView
+            <cn.sun45.warbanner.ui.views.character.characterview.CharacterView
                 android:id="@+id/characterfive_lay"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
@@ -73,11 +77,26 @@
         </LinearLayout>
     </LinearLayout>
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/setting"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="right"
-        android:padding="5dp"
-        app:srcCompat="@drawable/ic_baseline_settings_24" />
-</FrameLayout>
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/extra"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/teamgroup_screen_extra"
+            android:textSize="16sp" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/setting"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:padding="5dp"
+            app:srcCompat="@drawable/ic_baseline_settings_24" />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

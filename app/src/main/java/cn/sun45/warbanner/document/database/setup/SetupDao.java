@@ -12,6 +12,7 @@ import cn.sun45.warbanner.document.database.setup.models.ScreenCharacterModel;
 import cn.sun45.warbanner.document.database.setup.models.TeamCustomizeModel;
 import cn.sun45.warbanner.document.database.setup.models.TeamGroupCollectionModel;
 import cn.sun45.warbanner.document.database.setup.models.TeamGroupScreenModel;
+import cn.sun45.warbanner.document.database.setup.models.TeamGroupScreenUsedCharacterModel;
 import cn.sun45.warbanner.document.database.setup.models.TeamListShowModel;
 import cn.sun45.warbanner.document.database.setup.models.UserModel;
 
@@ -75,6 +76,25 @@ public interface SetupDao {
 
     @Query("select * from teamgroupscreen where userId=:userId")
     TeamGroupScreenModel queryAllTeamGroupScreen(int userId);
+
+    //TeamGroupScreenUsedCharacterModel
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void insertTeamGroupScreenUsedCharacter(TeamGroupScreenUsedCharacterModel teamGroupScreenUsedCharacterModel);
+
+    @Query("delete from teamgroupscreenusedcharacter where userId=:userId")
+    void deleteTeamGroupScreenUsedCharacter(int userId);
+
+    @Query("delete from teamgroupscreenusedcharacter where userId=:userId AND characterId=:characterId")
+    void deleteTeamGroupScreenUsedCharacter(int userId, int characterId);
+
+    @Update
+    void updateTeamGroupScreenUsedCharacter(TeamGroupScreenUsedCharacterModel teamGroupScreenUsedCharacterModel);
+
+    @Query("select * from teamgroupscreenusedcharacter where userId=:userId")
+    List<TeamGroupScreenUsedCharacterModel> queryAllTeamGroupScreenUsedCharacter(int userId);
+
+    @Query("select * from teamgroupscreenusedcharacter where userId=:userId AND characterId=:characterId")
+    TeamGroupScreenUsedCharacterModel queryTeamGroupScreenUsedCharacter(int userId, int characterId);
 
     //TeamCustomizeModel
     @Insert(onConflict = OnConflictStrategy.REPLACE)

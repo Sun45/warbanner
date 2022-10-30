@@ -60,6 +60,7 @@ public class UserManager {
         SetupDataBase.getInstance().setupDao().deleteScreenCharacter(userid);
         SetupDataBase.getInstance().setupDao().deleteTeamListShow(userid);
         SetupDataBase.getInstance().setupDao().deleteTeamGroupScreen(userid);
+        SetupDataBase.getInstance().setupDao().deleteTeamGroupScreenUsedCharacter(userid);
         SetupDataBase.getInstance().setupDao().deleteTeamGroupCollection(userid);
     }
 

@@ -92,6 +92,7 @@
     <string name="teamgroup_menu_screen">筛选</string>
 
     <string name="teamgroup_screen_title">分刀筛选</string>
+    <string name="teamgroup_screen_menu_reset">重置</string>
     <string-array name="teamgroup_screen_boss_options">
         <item>一王</item>
         <item>二王</item>
@@ -103,7 +104,15 @@
         <item>不限</item>
         <item>AUTO</item>
         <item>非AUTO</item>
+        <item>尾刀</item>
     </string-array>
+    <string name="teamgroup_screen_extra">补偿刀</string>
+    <string name="teamgroup_screen_used_character">已用角色</string>
+
+    <string name="teamgroup_screen_used_character_title">已用角色</string>
+    <string name="teamgroup_screen_used_character_menu_reset">重置</string>
+    <string name="teamgroup_screen_used_character_using">表示角色已进行实战，只可用于下个补偿刀</string>
+    <string name="teamgroup_screen_used_character_used">表示角色使用限制，已经不可用于分刀</string>
 
     <string name="teamselect_title">阵容选择</string>
     <string name="teamselect_empty_hint">作业数据为空</string>

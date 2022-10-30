@@ -88,7 +88,7 @@ public class ClanwarHelper {
      */
     public static TeamCustomizeModel findCustomizeModel(TeamModel teamModel, List<TeamCustomizeModel> teamCustomizeModels) {
         TeamCustomizeModel teamCustomizeModel = null;
-        if (teamCustomizeModels != null) {
+        if (teamModel != null && teamCustomizeModels != null) {
             for (TeamCustomizeModel model : teamCustomizeModels) {
                 if (model.getTeamId() == teamModel.getId()) {
                     teamCustomizeModel = model;
@@ -208,17 +208,8 @@ public class ClanwarHelper {
     public static List<TeamModel> getTeamGroupCollectionTeamList(TeamGroupCollectionModel teamGroupCollectionModel) {
         List<TeamModel> list = new ArrayList<>();
         TeamModel teamone = SourceDataBase.getInstance().sourceDao().queryTeam(ServerManager.getInstance().getLang(), teamGroupCollectionModel.getTeamoneId());
-        if (teamone == null) {
-            return null;
-        }
         TeamModel teamtwo = SourceDataBase.getInstance().sourceDao().queryTeam(ServerManager.getInstance().getLang(), teamGroupCollectionModel.getTeamtwoId());
-        if (teamtwo == null) {
-            return null;
-        }
         TeamModel teamthree = SourceDataBase.getInstance().sourceDao().queryTeam(ServerManager.getInstance().getLang(), teamGroupCollectionModel.getTeamthreeId());
-        if (teamthree == null) {
-            return null;
-        }
         list.add(teamone);
         list.add(teamtwo);
         list.add(teamthree);
@@ -231,12 +222,15 @@ public class ClanwarHelper {
      * @param teamGroupListModel
      */
     public static boolean isCollect(TeamGroupListModel teamGroupListModel) {
+        TeamModel teamone = teamGroupListModel.getTeamone();
+        TeamModel teamtwo = teamGroupListModel.getTeamtwo();
+        TeamModel teamthree = teamGroupListModel.getTeamthree();
         boolean collected = false;
         List<TeamGroupCollectionModel> collectionlist = getCollectionlist();
         for (TeamGroupCollectionModel teamGroupCollectionModel : collectionlist) {
-            if (teamGroupCollectionModel.getTeamoneId() == teamGroupListModel.getTeamone().getId()) {
-                if (teamGroupCollectionModel.getTeamtwoId() == teamGroupListModel.getTeamtwo().getId()) {
-                    if (teamGroupCollectionModel.getTeamthreeId() == teamGroupListModel.getTeamthree().getId()) {
+            if (teamGroupCollectionModel.getTeamoneId() == (teamone != null ? teamone.getId() : 0)) {
+                if (teamGroupCollectionModel.getTeamtwoId() == (teamtwo != null ? teamtwo.getId() : 0)) {
+                    if (teamGroupCollectionModel.getTeamthreeId() == (teamthree != null ? teamthree.getId() : 0)) {
                         collected = true;
                         break;
                     }
@@ -261,23 +255,32 @@ public class ClanwarHelper {
      * @param collect            收藏
      */
     public static void collect(TeamGroupListModel teamGroupListModel, boolean collect) {
+        TeamModel teamone = teamGroupListModel.getTeamone();
+        TeamModel teamtwo = teamGroupListModel.getTeamtwo();
+        TeamModel teamthree = teamGroupListModel.getTeamthree();
         int userId = UserManager.getInstance().getCurrentUserId();
         if (collect) {
             TeamGroupCollectionModel teamGroupCollectionModel = new TeamGroupCollectionModel();
             teamGroupCollectionModel.setUserId(userId);
-            teamGroupCollectionModel.setTeamoneId(teamGroupListModel.getTeamone().getId());
-            teamGroupCollectionModel.setBorrowindexone(teamGroupListModel.getBorrowindexone());
-            teamGroupCollectionModel.setTeamtwoId(teamGroupListModel.getTeamtwo().getId());
-            teamGroupCollectionModel.setBorrowindextwo(teamGroupListModel.getBorrowindextwo());
-            teamGroupCollectionModel.setTeamthreeId(teamGroupListModel.getTeamthree().getId());
-            teamGroupCollectionModel.setBorrowindexthree(teamGroupListModel.getBorrowindexthree());
+            if (teamone != null) {
+                teamGroupCollectionModel.setTeamoneId(teamone.getId());
+                teamGroupCollectionModel.setBorrowindexone(teamGroupListModel.getBorrowindexone());
+            }
+            if (teamtwo != null) {
+                teamGroupCollectionModel.setTeamtwoId(teamtwo.getId());
+                teamGroupCollectionModel.setBorrowindextwo(teamGroupListModel.getBorrowindextwo());
+            }
+            if (teamthree != null) {
+                teamGroupCollectionModel.setTeamthreeId(teamthree.getId());
+                teamGroupCollectionModel.setBorrowindexthree(teamGroupListModel.getBorrowindexthree());
+            }
             teamGroupCollectionModel.setTime(MyApplication.getTimecurrent() + "");
             SetupDataBase.getInstance().setupDao().insertTeamGroupCollection(teamGroupCollectionModel);
         } else {
             SetupDataBase.getInstance().setupDao().deleteTeamGroupCollection(userId,
-                    teamGroupListModel.getTeamone().getId(),
-                    teamGroupListModel.getTeamtwo().getId(),
-                    teamGroupListModel.getTeamthree().getId());
+                    teamone != null ? teamone.getId() : 0,
+                    teamtwo != null ? teamtwo.getId() : 0,
+                    teamthree != null ? teamthree.getId() : 0);
         }
     }
 

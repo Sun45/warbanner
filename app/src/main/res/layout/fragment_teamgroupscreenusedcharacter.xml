@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/drop_toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:menu="@menu/fragment_teamgroupscreenusedcharacter_drop_toolbar"
+            app:navigationIcon="@drawable/ic_baseline_arrow_back_24"
+            app:title="@string/teamgroup_screen_used_character_title" />
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <cn.sun45.warbanner.ui.views.character.CharacterScroll
+        android:id="@+id/charactershow_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/appbar" />
+
+    <cn.sun45.warbanner.ui.views.character.characterlist.CharacterListLay
+        android:id="@+id/characterlistlay"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/hint_lay"
+        app:layout_constraintTop_toBottomOf="@id/charactershow_scroll" />
+
+    <LinearLayout
+        android:id="@+id/hint_lay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/toolbarPrimary"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:drawableLeft="@drawable/ic_character_screen_type_yellow_hint"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="15dp"
+            android:text="@string/teamgroup_screen_used_character_using"
+            android:textColor="@color/white_50"
+            android:textSize="14sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:drawableLeft="@drawable/ic_character_screen_type_red_hint"
+            android:drawablePadding="8dp"
+            android:gravity="center_vertical"
+            android:paddingHorizontal="15dp"
+            android:text="@string/teamgroup_screen_used_character_used"
+            android:textColor="@color/white_50"
+            android:textSize="14sp" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

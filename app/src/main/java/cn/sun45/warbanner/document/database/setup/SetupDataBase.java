@@ -8,6 +8,7 @@ import cn.sun45.warbanner.document.database.setup.models.ScreenCharacterModel;
 import cn.sun45.warbanner.document.database.setup.models.TeamCustomizeModel;
 import cn.sun45.warbanner.document.database.setup.models.TeamGroupCollectionModel;
 import cn.sun45.warbanner.document.database.setup.models.TeamGroupScreenModel;
+import cn.sun45.warbanner.document.database.setup.models.TeamGroupScreenUsedCharacterModel;
 import cn.sun45.warbanner.document.database.setup.models.TeamListShowModel;
 import cn.sun45.warbanner.document.database.setup.models.UserModel;
 import cn.sun45.warbanner.framework.MyApplication;
@@ -16,8 +17,14 @@ import cn.sun45.warbanner.framework.MyApplication;
  * Created by Sun45 on 2022/6/9
  * 设置数据库
  */
-@Database(entities = {UserModel.class, ScreenCharacterModel.class, TeamListShowModel.class,
-        TeamGroupScreenModel.class, TeamCustomizeModel.class, TeamGroupCollectionModel.class}, version = 6)
+@Database(entities = {
+        UserModel.class,
+        ScreenCharacterModel.class,
+        TeamListShowModel.class,
+        TeamGroupScreenModel.class,
+        TeamGroupScreenUsedCharacterModel.class,
+        TeamCustomizeModel.class,
+        TeamGroupCollectionModel.class}, version = 7)
 public abstract class SetupDataBase extends RoomDatabase {
     private static SetupDataBase databaseInstance;
 

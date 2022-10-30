@@ -30,6 +30,10 @@ public class TeamGroupScreenModel {
     private int teamonecharacterfourid;
     @ColumnInfo
     private int teamonecharacterfiveid;
+    @ColumnInfo
+    private boolean teamoneextra;
+    @ColumnInfo
+    private boolean teamoneenable;
 
     @ColumnInfo
     private int teamtwostage;
@@ -47,6 +51,10 @@ public class TeamGroupScreenModel {
     private int teamtwocharacterfourid;
     @ColumnInfo
     private int teamtwocharacterfiveid;
+    @ColumnInfo
+    private boolean teamtwoextra;
+    @ColumnInfo
+    private boolean teamtwoenable;
 
     @ColumnInfo
     private int teamthreestage;
@@ -64,6 +72,16 @@ public class TeamGroupScreenModel {
     private int teamthreecharacterfourid;
     @ColumnInfo
     private int teamthreecharacterfiveid;
+    @ColumnInfo
+    private boolean teamthreeextra;
+    @ColumnInfo
+    private boolean teamthreeenable;
+
+    public TeamGroupScreenModel() {
+        teamoneenable = true;
+        teamtwoenable = true;
+        teamthreeenable = true;
+    }
 
     public int getUserId() {
         return userId;
@@ -137,6 +155,22 @@ public class TeamGroupScreenModel {
         this.teamonecharacterfiveid = teamonecharacterfiveid;
     }
 
+    public boolean isTeamoneextra() {
+        return teamoneextra;
+    }
+
+    public void setTeamoneextra(boolean teamoneextra) {
+        this.teamoneextra = teamoneextra;
+    }
+
+    public boolean isTeamoneenable() {
+        return teamoneenable;
+    }
+
+    public void setTeamoneenable(boolean teamoneenable) {
+        this.teamoneenable = teamoneenable;
+    }
+
     public int getTeamtwostage() {
         return teamtwostage;
     }
@@ -201,6 +235,22 @@ public class TeamGroupScreenModel {
         this.teamtwocharacterfiveid = teamtwocharacterfiveid;
     }
 
+    public boolean isTeamtwoextra() {
+        return teamtwoextra;
+    }
+
+    public void setTeamtwoextra(boolean teamtwoextra) {
+        this.teamtwoextra = teamtwoextra;
+    }
+
+    public boolean isTeamtwoenable() {
+        return teamtwoenable;
+    }
+
+    public void setTeamtwoenable(boolean teamtwoenable) {
+        this.teamtwoenable = teamtwoenable;
+    }
+
     public int getTeamthreestage() {
         return teamthreestage;
     }
@@ -263,5 +313,21 @@ public class TeamGroupScreenModel {
 
     public void setTeamthreecharacterfiveid(int teamthreecharacterfiveid) {
         this.teamthreecharacterfiveid = teamthreecharacterfiveid;
+    }
+
+    public boolean isTeamthreeextra() {
+        return teamthreeextra;
+    }
+
+    public void setTeamthreeextra(boolean teamthreeextra) {
+        this.teamthreeextra = teamthreeextra;
+    }
+
+    public boolean isTeamthreeenable() {
+        return teamthreeenable;
+    }
+
+    public void setTeamthreeenable(boolean teamthreeenable) {
+        this.teamthreeenable = teamthreeenable;
     }
 }

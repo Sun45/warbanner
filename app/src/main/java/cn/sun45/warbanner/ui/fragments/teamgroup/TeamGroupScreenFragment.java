@@ -1,9 +1,21 @@
 package cn.sun45.warbanner.ui.fragments.teamgroup;
 
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -11,6 +23,11 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.card.MaterialCardView;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.character.CharacterHelper;
@@ -23,7 +40,8 @@ import cn.sun45.warbanner.framework.ui.BaseFragment;
 import cn.sun45.warbanner.stage.StageManager;
 import cn.sun45.warbanner.ui.shared.SharedViewModelSource;
 import cn.sun45.warbanner.ui.shared.SharedViewModelTeamScreenTeam;
-import cn.sun45.warbanner.ui.views.characterview.CharacterView;
+import cn.sun45.warbanner.ui.views.character.CharacterScroll;
+import cn.sun45.warbanner.ui.views.character.characterview.CharacterView;
 import cn.sun45.warbanner.ui.views.selectgroup.SelectGroup;
 import cn.sun45.warbanner.ui.views.selectgroup.SelectGroupListener;
 import cn.sun45.warbanner.util.Utils;
@@ -42,6 +60,9 @@ public class TeamGroupScreenFragment extends BaseFragment {
     private TeamHolder mTeamTwo;
     private TeamHolder mTeamThree;
 
+    private CharacterScroll mCharacterScroll;
+    private AppCompatImageView mUsedCharacterSetting;
+
     @Override
     protected int getContentViewId() {
         return R.layout.fragment_teamgroupscreen;
@@ -49,6 +70,7 @@ public class TeamGroupScreenFragment extends BaseFragment {
 
     @Override
     protected void initData() {
+        setHasOptionsMenu(true);
         if (teamGroupScreenModel == null) {
             teamGroupScreenModel = ClanwarHelper.getScreenModel();
         }
@@ -64,9 +86,20 @@ public class TeamGroupScreenFragment extends BaseFragment {
                 Navigation.findNavController(v).navigateUp();
             }
         });
+
         mTeamOne = new TeamHolder(1, mRoot.findViewById(R.id.teamone));
         mTeamTwo = new TeamHolder(2, mRoot.findViewById(R.id.teamtwo));
         mTeamThree = new TeamHolder(3, mRoot.findViewById(R.id.teamthree));
+
+        mCharacterScroll = mRoot.findViewById(R.id.charactershow_scroll);
+        mUsedCharacterSetting = mRoot.findViewById(R.id.used_character_setting);
+        mUsedCharacterSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavController controller = Navigation.findNavController(getView());
+                controller.navigate(R.id.action_nav_teamgroupscreen_to_nav_teamgroupscreenusedcharacter);
+            }
+        });
     }
 
     @Override
@@ -77,13 +110,24 @@ public class TeamGroupScreenFragment extends BaseFragment {
         mTeamOne.setData();
         mTeamTwo.setData();
         mTeamThree.setData();
+        sharedSource.characterList.observe(requireActivity(), new Observer<List<CharacterModel>>() {
+            @Override
+            public void onChanged(List<CharacterModel> characterModelList) {
+                showUsedCharacter();
+            }
+        });
         sharedTeamScreenTeam.teamOne.observe(requireActivity(), new Observer<TeamModel>() {
             @Override
             public void onChanged(TeamModel teamModel) {
                 if (teamModel != null) {
                     int stage = teamModel.getStage() - 1;
                     int boss = Integer.valueOf(teamModel.getBoss().substring(1, 2)) - 1;
-                    int auto = teamModel.isAuto() ? 1 : 2;
+                    int auto = 2;
+                    if (teamModel.isAuto()) {
+                        auto = 1;
+                    } else if (teamModel.isFinish()) {
+                        auto = 3;
+                    }
                     teamGroupScreenModel.setTeamonestage(stage);
                     teamGroupScreenModel.setTeamoneboss(boss);
                     teamGroupScreenModel.setTeamoneauto(auto);
@@ -147,8 +191,61 @@ public class TeamGroupScreenFragment extends BaseFragment {
     protected void onHide() {
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull @NotNull Menu menu, @NonNull @NotNull MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.fragment_teamgroupscreen_drop_toolbar, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_reset:
+                reset();
+                break;
+        }
+        return true;
+    }
+
+    private void reset() {
+        sharedTeamScreenTeam.teamOne.postValue(null);
+        teamGroupScreenModel.setTeamonecharacteroneid(0);
+        teamGroupScreenModel.setTeamonecharactertwoid(0);
+        teamGroupScreenModel.setTeamonecharacterthreeid(0);
+        teamGroupScreenModel.setTeamonecharacterfourid(0);
+        teamGroupScreenModel.setTeamonecharacterfiveid(0);
+        teamGroupScreenModel.setTeamoneextra(false);
+        teamGroupScreenModel.setTeamoneenable(true);
+        mTeamOne.setData();
+        sharedTeamScreenTeam.teamTwo.postValue(null);
+        teamGroupScreenModel.setTeamtwocharacteroneid(0);
+        teamGroupScreenModel.setTeamtwocharactertwoid(0);
+        teamGroupScreenModel.setTeamtwocharacterthreeid(0);
+        teamGroupScreenModel.setTeamtwocharacterfourid(0);
+        teamGroupScreenModel.setTeamtwocharacterfiveid(0);
+        teamGroupScreenModel.setTeamtwoextra(false);
+        teamGroupScreenModel.setTeamtwoenable(true);
+        mTeamTwo.setData();
+        sharedTeamScreenTeam.teamThree.postValue(null);
+        teamGroupScreenModel.setTeamthreecharacteroneid(0);
+        teamGroupScreenModel.setTeamthreecharactertwoid(0);
+        teamGroupScreenModel.setTeamthreecharacterthreeid(0);
+        teamGroupScreenModel.setTeamthreecharacterfourid(0);
+        teamGroupScreenModel.setTeamthreecharacterfiveid(0);
+        teamGroupScreenModel.setTeamthreeextra(false);
+        teamGroupScreenModel.setTeamthreeenable(true);
+        mTeamThree.setData();
+        CharacterHelper.clearUsedCharacterList();
+        showUsedCharacter();
+    }
+
+    private void showUsedCharacter() {
+        mCharacterScroll.showUsedCharacters(sharedSource.characterList.getValue());
+    }
+
     private class TeamHolder {
-        private int team;
+        public int team;
+        private MaterialCardView mLay;
         private SelectGroup mStage;
         private SelectGroup mBoss;
         private SelectGroup mAuto;
@@ -160,9 +257,11 @@ public class TeamGroupScreenFragment extends BaseFragment {
         private CharacterView mCharacterfive;
         private AppCompatImageView mClean;
         private AppCompatImageView mSetting;
+        public TextView mExtra;
 
-        public TeamHolder(int team, ViewGroup lay) {
+        public TeamHolder(int team, MaterialCardView lay) {
             this.team = team;
+            mLay = lay;
             mStage = lay.findViewById(R.id.stage);
             mBoss = lay.findViewById(R.id.boss);
             mAuto = lay.findViewById(R.id.auto);
@@ -174,7 +273,31 @@ public class TeamGroupScreenFragment extends BaseFragment {
             mCharacterfive = lay.findViewById(R.id.characterfive_lay);
             mClean = lay.findViewById(R.id.clean);
             mSetting = lay.findViewById(R.id.setting);
+            mExtra = lay.findViewById(R.id.extra);
 
+            mLay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean enable = getEnable();
+                    enable = !enable;
+                    int enablecount = 0;
+                    if (teamGroupScreenModel.isTeamoneenable()) {
+                        enablecount++;
+                    }
+                    if (teamGroupScreenModel.isTeamtwoenable()) {
+                        enablecount++;
+                    }
+                    if (teamGroupScreenModel.isTeamthreeenable()) {
+                        enablecount++;
+                    }
+                    if (enablecount == 1) {
+                        if (!enable) {
+                            return;
+                        }
+                    }
+                    setEnable(enable);
+                }
+            });
             mStage.setListener(new SelectGroupListener() {
                 @Override
                 public void select(int position) {
@@ -239,6 +362,25 @@ public class TeamGroupScreenFragment extends BaseFragment {
                     controller.navigate(R.id.action_nav_teamgroupscreen_to_nav_teamselect, bundle);
                 }
             });
+            mExtra.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    boolean extra = getExtra();
+                    extra = !extra;
+                    setExtra(extra);
+                    if (extra) {
+                        if (mTeamOne.team != team) {
+                            mTeamOne.setExtra(false);
+                        }
+                        if (mTeamTwo.team != team) {
+                            mTeamTwo.setExtra(false);
+                        }
+                        if (mTeamThree.team != team) {
+                            mTeamThree.setExtra(false);
+                        }
+                    }
+                }
+            });
         }
 
         public void setData() {
@@ -246,6 +388,8 @@ public class TeamGroupScreenFragment extends BaseFragment {
             mBoss.setData(Utils.getStringArray(R.array.teamgroup_screen_boss_options), getBoss());
             mAuto.setData(Utils.getStringArray(R.array.teamgroup_screen_auto_options), getAuto());
             setCharacterData();
+            setExtra(getExtra());
+            setEnable(getEnable());
         }
 
         private void setCharacterData() {
@@ -375,6 +519,87 @@ public class TeamGroupScreenFragment extends BaseFragment {
                     break;
             }
         }
+
+        private boolean getExtra() {
+            boolean extra = false;
+            switch (team) {
+                case 1:
+                    extra = teamGroupScreenModel.isTeamoneextra();
+                    break;
+                case 2:
+                    extra = teamGroupScreenModel.isTeamtwoextra();
+                    break;
+                case 3:
+                    extra = teamGroupScreenModel.isTeamthreeextra();
+                    break;
+                default:
+                    break;
+            }
+            return extra;
+        }
+
+        public void setExtra(boolean extra) {
+            switch (team) {
+                case 1:
+                    teamGroupScreenModel.setTeamoneextra(extra);
+                    break;
+                case 2:
+                    teamGroupScreenModel.setTeamtwoextra(extra);
+                    break;
+                case 3:
+                    teamGroupScreenModel.setTeamthreeextra(extra);
+                    break;
+                default:
+                    break;
+            }
+            String str = mExtra.getText().toString();
+            if (extra) {
+                SpannableStringBuilder builder = new SpannableStringBuilder(str);
+                builder.setSpan(new ForegroundColorSpan(Utils.getAttrColor(getContext(), R.attr.colorSecondary)), 0, str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                mExtra.setText(builder);
+            } else {
+                mExtra.setText(str);
+            }
+        }
+
+        private boolean getEnable() {
+            boolean enable = false;
+            switch (team) {
+                case 1:
+                    enable = teamGroupScreenModel.isTeamoneenable();
+                    break;
+                case 2:
+                    enable = teamGroupScreenModel.isTeamtwoenable();
+                    break;
+                case 3:
+                    enable = teamGroupScreenModel.isTeamthreeenable();
+                    break;
+                default:
+                    break;
+            }
+            return enable;
+        }
+
+        public void setEnable(boolean enable) {
+            switch (team) {
+                case 1:
+                    teamGroupScreenModel.setTeamoneenable(enable);
+                    break;
+                case 2:
+                    teamGroupScreenModel.setTeamtwoenable(enable);
+                    break;
+                case 3:
+                    teamGroupScreenModel.setTeamthreeenable(enable);
+                    break;
+                default:
+                    break;
+            }
+            if (enable) {
+                mLay.setCardBackgroundColor(Utils.getColor(R.color.theme));
+            } else {
+                mLay.setCardBackgroundColor(Color.BLACK);
+            }
+        }
     }
 
     private void characterDataSet(CharacterView characterView, int id) {
@@ -390,6 +615,7 @@ public class TeamGroupScreenFragment extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         ClanwarHelper.setScreenModel(teamGroupScreenModel);
+        sharedSource.characterList.removeObservers(requireActivity());
         sharedTeamScreenTeam.teamOne.removeObservers(requireActivity());
         sharedTeamScreenTeam.teamTwo.removeObservers(requireActivity());
         sharedTeamScreenTeam.teamThree.removeObservers(requireActivity());

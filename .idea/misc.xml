@@ -10,6 +10,7 @@
       <map>
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/assist_pannel_bg.xml" value="0.3215" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/auto_click_showlay_bg.xml" value="0.3185" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/card_item_bg.xml" value="0.227" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_assist_character_hint.xml" value="0.3085" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_assist_character_select_hint.xml" value="0.1425" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.2365" />
@@ -28,6 +29,8 @@
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_star_yellow.xml" value="0.38229166666666664" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_baseline_sync_alt_24.xml" value="0.3215" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_character_screen_lack_hint.xml" value="0.3085" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_character_screen_type_yellow_hint.xml" value="0.249" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/ic_teamgroupscreen_teamdivider.xml" value="0.227" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/listselectbar_bg.xml" value="0.2365" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/selectgroup_item_center_bg.xml" value="0.3185" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/drawable/selectgroup_item_left_bg.xml" value="0.2145" />
@@ -38,17 +41,21 @@
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/autoclick_showlay.xml" value="0.31666666666666665" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/character_lay.xml" value="0.2833333333333333" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/characterlist_item.xml" value="0.2484375" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/characterlistlay_lay.xml" value="0.14" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/characterview_lay.xml" value="0.2484375" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/fragment_about.xml" value="0.24270833333333333" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/fragment_autoclick.xml" value="0.253125" />
-        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/fragment_characterscreen.xml" value="0.36614583333333334" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/fragment_characterscreen.xml" value="0.22" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/fragment_collection.xml" value="0.24375" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/fragment_permission.xml" value="0.36614583333333334" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/fragment_recordtext.xml" value="0.24270833333333333" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/fragment_teamdetail.xml" value="0.25" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/fragment_teamgroup.xml" value="0.246875" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/fragment_teamgroupdetail.xml" value="0.26614583333333336" />
-        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/fragment_teamgroupscreen.xml" value="0.23645833333333333" />
-        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/fragment_teamgroupscreen_team_lay.xml" value="0.15625" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/fragment_teamgroupscreen.xml" value="0.33" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/fragment_teamgroupscreen_team_lay.xml" value="0.33" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/fragment_teamgroupscreen_used_character.xml" value="0.36614583333333334" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/fragment_teamgroupscreenusedcharacter.xml" value="0.2" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/fragment_teamlist.xml" value="0.36614583333333334" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/fragment_teamselect.xml" value="0.2864583333333333" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/layout/fragment_usermanager.xml" value="0.24270833333333333" />
@@ -59,6 +66,9 @@
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/menu/fragment_collection_drop_toolbar.xml" value="0.36614583333333334" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/menu/fragment_record_text_drop_toolbar.xml" value="0.36614583333333334" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/menu/fragment_teamdetail_drop_toolbar.xml" value="0.36614583333333334" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/menu/fragment_teamgroup_drop_toolbar.xml" value="0.246875" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/menu/fragment_teamgroupscreen_drop_toolbar.xml" value="0.246875" />
+        <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/menu/fragment_teamgroupscreenusedcharacter_drop_toolbar.xml" value="0.36614583333333334" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/menu/fragment_teamlist_drop_toolbar.xml" value="0.36614583333333334" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/menu/fragment_teamselect_drop_toolbar.xml" value="0.36614583333333334" />
         <entry key="..\:/AndroidStudioWorkspace/warbanner/app/src/main/res/xml/accessibility.xml" value="0.321875" />

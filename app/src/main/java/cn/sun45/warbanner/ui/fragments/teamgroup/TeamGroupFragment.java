@@ -109,7 +109,7 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
                                         super.run();
                                         long start = MyApplication.getTimecurrent();
                                         logD("teamGroup build");
-                                        list = teamGroupHelper.build(CharacterHelper.getScreenCharacterList(), teamModels, teamCustomizeModels);
+                                        list = teamGroupHelper.build(teamModels, teamCustomizeModels);
                                         logD("teamGroup finish:" + (list != null ? list.size() : 0) + " " + (MyApplication.getTimecurrent() - start) + "ms");
                                         Activity activity = getActivity();
                                         if (activity != null) {

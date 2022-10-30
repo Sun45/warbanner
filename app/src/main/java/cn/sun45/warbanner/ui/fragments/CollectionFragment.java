@@ -101,11 +101,13 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
 
     private List<Integer> buildIdlist(TeamModel teamModel) {
         List<Integer> idlist = new ArrayList<>();
-        idlist.add(teamModel.getCharacterone());
-        idlist.add(teamModel.getCharactertwo());
-        idlist.add(teamModel.getCharacterthree());
-        idlist.add(teamModel.getCharacterfour());
-        idlist.add(teamModel.getCharacterfive());
+        if (teamModel != null) {
+            idlist.add(teamModel.getCharacterone());
+            idlist.add(teamModel.getCharactertwo());
+            idlist.add(teamModel.getCharacterthree());
+            idlist.add(teamModel.getCharacterfour());
+            idlist.add(teamModel.getCharacterfive());
+        }
         return idlist;
     }
 

@@ -71,18 +71,29 @@ public class TeamList extends RecyclerView {
     }
 
     private void dataNotify() {
-        adapter.notifyDataSetChanged();
-        if (listener != null) {
-            listener.dataSet(adapter.getItemCount(), adapter.getListSelectItemList());
+        if (adapter.getItemCount() > 0) {
+            adapter.notifyDataSetChanged();
+            if (listener != null) {
+                listener.dataSet(adapter.getItemCount(), adapter.getListSelectItemList());
+            }
+            onScrolled();
         }
-        onScrolled();
     }
 
     public void setData(TeamGroupListModel teamGroupListModel, List<CharacterModel> characterModels) {
         List<TeamListTeamModel> list = new ArrayList<>();
-        list.add(new TeamListTeamModel(teamGroupListModel.getTeamone(), teamGroupListModel.getBorrowindexone()));
-        list.add(new TeamListTeamModel(teamGroupListModel.getTeamtwo(), teamGroupListModel.getBorrowindextwo()));
-        list.add(new TeamListTeamModel(teamGroupListModel.getTeamthree(), teamGroupListModel.getBorrowindexthree()));
+        TeamModel teamone = teamGroupListModel.getTeamone();
+        TeamModel teamtwo = teamGroupListModel.getTeamtwo();
+        TeamModel teamthree = teamGroupListModel.getTeamthree();
+        if (teamone != null) {
+            list.add(new TeamListTeamModel(teamone, teamGroupListModel.getBorrowindexone()));
+        }
+        if (teamtwo != null) {
+            list.add(new TeamListTeamModel(teamtwo, teamGroupListModel.getBorrowindextwo()));
+        }
+        if (teamthree != null) {
+            list.add(new TeamListTeamModel(teamthree, teamGroupListModel.getBorrowindexthree()));
+        }
         adapter.setList(list);
         adapter.setCharacterModels(characterModels);
         adapter.setShowlink(true);

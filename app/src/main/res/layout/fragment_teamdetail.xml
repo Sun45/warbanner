@@ -78,30 +78,30 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title">
 
-            <cn.sun45.warbanner.ui.views.characterview.CharacterView
+            <cn.sun45.warbanner.ui.views.character.characterview.CharacterView
                 android:id="@+id/characterone_lay"
                 android:layout_width="50dp"
                 android:layout_height="50dp"/>
 
-            <cn.sun45.warbanner.ui.views.characterview.CharacterView
+            <cn.sun45.warbanner.ui.views.character.characterview.CharacterView
                 android:id="@+id/charactertwo_lay"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="5dp" />
 
-            <cn.sun45.warbanner.ui.views.characterview.CharacterView
+            <cn.sun45.warbanner.ui.views.character.characterview.CharacterView
                 android:id="@+id/characterthree_lay"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="5dp" />
 
-            <cn.sun45.warbanner.ui.views.characterview.CharacterView
+            <cn.sun45.warbanner.ui.views.character.characterview.CharacterView
                 android:id="@+id/characterfour_lay"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="5dp" />
 
-            <cn.sun45.warbanner.ui.views.characterview.CharacterView
+            <cn.sun45.warbanner.ui.views.character.characterview.CharacterView
                 android:id="@+id/characterfive_lay"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
