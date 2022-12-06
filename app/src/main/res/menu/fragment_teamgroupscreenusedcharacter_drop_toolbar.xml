@@ -3,6 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <group android:checkableBehavior="none">
         <item
+            android:id="@+id/menu_used"
+            android:title="@string/teamgroup_screen_used_character_menu_used"
+            app:showAsAction="always" />
+        <item
             android:id="@+id/menu_reset"
             android:title="@string/teamgroup_screen_used_character_menu_reset"
             app:showAsAction="always" />

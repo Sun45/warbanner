@@ -110,6 +110,7 @@
     <string name="teamgroup_screen_used_character">已用角色</string>
 
     <string name="teamgroup_screen_used_character_title">已用角色</string>
+    <string name="teamgroup_screen_used_character_menu_used">已用</string>
     <string name="teamgroup_screen_used_character_menu_reset">重置</string>
     <string name="teamgroup_screen_used_character_using">表示角色已进行实战，只可用于下个补偿刀</string>
     <string name="teamgroup_screen_used_character_used">表示角色使用限制，已经不可用于分刀</string>

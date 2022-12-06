@@ -31,6 +31,8 @@ public class TeamGroupScreenModel {
     @ColumnInfo
     private int teamonecharacterfiveid;
     @ColumnInfo
+    private int teamoneborrowindex;
+    @ColumnInfo
     private boolean teamoneextra;
     @ColumnInfo
     private boolean teamoneenable;
@@ -51,6 +53,8 @@ public class TeamGroupScreenModel {
     private int teamtwocharacterfourid;
     @ColumnInfo
     private int teamtwocharacterfiveid;
+    @ColumnInfo
+    private int teamtwoborrowindex;
     @ColumnInfo
     private boolean teamtwoextra;
     @ColumnInfo
@@ -73,13 +77,20 @@ public class TeamGroupScreenModel {
     @ColumnInfo
     private int teamthreecharacterfiveid;
     @ColumnInfo
+    private int teamthreeborrowindex;
+    @ColumnInfo
     private boolean teamthreeextra;
     @ColumnInfo
     private boolean teamthreeenable;
 
     public TeamGroupScreenModel() {
+        teamoneborrowindex = -1;
         teamoneenable = true;
+
+        teamtwoborrowindex = -1;
         teamtwoenable = true;
+
+        teamthreeborrowindex = -1;
         teamthreeenable = true;
     }
 
@@ -153,6 +164,14 @@ public class TeamGroupScreenModel {
 
     public void setTeamonecharacterfiveid(int teamonecharacterfiveid) {
         this.teamonecharacterfiveid = teamonecharacterfiveid;
+    }
+
+    public int getTeamoneborrowindex() {
+        return teamoneborrowindex;
+    }
+
+    public void setTeamoneborrowindex(int teamoneborrowindex) {
+        this.teamoneborrowindex = teamoneborrowindex;
     }
 
     public boolean isTeamoneextra() {
@@ -235,6 +254,14 @@ public class TeamGroupScreenModel {
         this.teamtwocharacterfiveid = teamtwocharacterfiveid;
     }
 
+    public int getTeamtwoborrowindex() {
+        return teamtwoborrowindex;
+    }
+
+    public void setTeamtwoborrowindex(int teamtwoborrowindex) {
+        this.teamtwoborrowindex = teamtwoborrowindex;
+    }
+
     public boolean isTeamtwoextra() {
         return teamtwoextra;
     }
@@ -313,6 +340,14 @@ public class TeamGroupScreenModel {
 
     public void setTeamthreecharacterfiveid(int teamthreecharacterfiveid) {
         this.teamthreecharacterfiveid = teamthreecharacterfiveid;
+    }
+
+    public int getTeamthreeborrowindex() {
+        return teamthreeborrowindex;
+    }
+
+    public void setTeamthreeborrowindex(int teamthreeborrowindex) {
+        this.teamthreeborrowindex = teamthreeborrowindex;
     }
 
     public boolean isTeamthreeextra() {

@@ -24,7 +24,7 @@ import cn.sun45.warbanner.framework.MyApplication;
         TeamGroupScreenModel.class,
         TeamGroupScreenUsedCharacterModel.class,
         TeamCustomizeModel.class,
-        TeamGroupCollectionModel.class}, version = 7)
+        TeamGroupCollectionModel.class}, version = 8)
 public abstract class SetupDataBase extends RoomDatabase {
     private static SetupDataBase databaseInstance;
 

@@ -30,10 +30,13 @@ import cn.sun45.warbanner.util.Utils;
 public class CharacterListLay extends LinearLayout implements CharacterListListener {
     private View mPositionFrontLay;
     private TextView mPositionFrontText;
+    private TextView mPositionFrontHint;
     private View mPositionMiddleLay;
     private TextView mPositionMiddleText;
+    private TextView mPositionMiddleHint;
     private View mPositionBackLay;
     private TextView mPositionBackText;
+    private TextView mPositionBackHint;
     private CharacterList mCharacterList;
     private TextView mEmptyHint;
 
@@ -52,10 +55,13 @@ public class CharacterListLay extends LinearLayout implements CharacterListListe
 
         mPositionFrontLay = findViewById(R.id.position_front_lay);
         mPositionFrontText = findViewById(R.id.position_front_text);
+        mPositionFrontHint = findViewById(R.id.position_front_hint);
         mPositionMiddleLay = findViewById(R.id.position_middle_lay);
         mPositionMiddleText = findViewById(R.id.position_middle_text);
+        mPositionMiddleHint = findViewById(R.id.position_middle_hint);
         mPositionBackLay = findViewById(R.id.position_back_lay);
         mPositionBackText = findViewById(R.id.position_back_text);
+        mPositionBackHint = findViewById(R.id.position_back_hint);
         mCharacterList = findViewById(R.id.characterlist);
         mEmptyHint = findViewById(R.id.empty_hint);
 
@@ -114,7 +120,44 @@ public class CharacterListLay extends LinearLayout implements CharacterListListe
                 showTextSelect(true, mPositionBackText);
                 break;
         }
+        showHint();
         showList();
+    }
+
+    private void showHint() {
+        int positionFrontHint = 0;
+        for (CharacterListModel characterListModel : characterListModelListOne) {
+            if (characterListModel.getCharacterScreenType() != CharacterScreenType.TYPE_DEFAULT) {
+                positionFrontHint++;
+            }
+        }
+        if (positionFrontHint != 0) {
+            mPositionFrontHint.setText(positionFrontHint + "");
+        } else {
+            mPositionFrontHint.setText("");
+        }
+        int positionMiddleHint = 0;
+        for (CharacterListModel characterListModel : characterListModelListTwo) {
+            if (characterListModel.getCharacterScreenType() != CharacterScreenType.TYPE_DEFAULT) {
+                positionMiddleHint++;
+            }
+        }
+        if (positionMiddleHint != 0) {
+            mPositionMiddleHint.setText(positionMiddleHint + "");
+        } else {
+            mPositionMiddleHint.setText("");
+        }
+        int positionBackHint = 0;
+        for (CharacterListModel characterListModel : characterListModelListThree) {
+            if (characterListModel.getCharacterScreenType() != CharacterScreenType.TYPE_DEFAULT) {
+                positionBackHint++;
+            }
+        }
+        if (positionBackHint != 0) {
+            mPositionBackHint.setText(positionBackHint + "");
+        } else {
+            mPositionBackHint.setText("");
+        }
     }
 
     private void showList() {
@@ -152,6 +195,7 @@ public class CharacterListLay extends LinearLayout implements CharacterListListe
 
     @Override
     public void changeState(CharacterModel characterModel, CharacterScreenType characterScreenType) {
+        showHint();
         characterListLayListener.changeState(characterModel, characterScreenType);
     }
 }

@@ -105,12 +105,25 @@ public class TeamGroupDetailFragment extends BaseFragment implements TeamListLis
     public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_share:
+                StringBuilder sb = new StringBuilder();
+                if (teamGroupListModel.getTeamone() != null) {
+                    sb.append(teamGroupListModel.getTeamone().getShare(sharedSource.characterList.getValue()));
+                }
+                if (teamGroupListModel.getTeamtwo() != null) {
+                    if (!sb.toString().isEmpty()) {
+                        sb.append("\n\n");
+                    }
+                    sb.append(teamGroupListModel.getTeamtwo().getShare(sharedSource.characterList.getValue()));
+                }
+                if (teamGroupListModel.getTeamthree() != null) {
+                    if (!sb.toString().isEmpty()) {
+                        sb.append("\n\n");
+                    }
+                    sb.append(teamGroupListModel.getTeamthree().getShare(sharedSource.characterList.getValue()));
+                }
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_SEND);
-                intent.putExtra(Intent.EXTRA_TEXT,
-                        teamGroupListModel.getTeamone().getShare(sharedSource.characterList.getValue())
-                                + "\n\n" + teamGroupListModel.getTeamtwo().getShare(sharedSource.characterList.getValue())
-                                + "\n\n" + teamGroupListModel.getTeamthree().getShare(sharedSource.characterList.getValue()));
+                intent.putExtra(Intent.EXTRA_TEXT, sb.toString());
                 intent.putExtra(Intent.EXTRA_SUBJECT, "share");
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.setType("text/plain");

@@ -46,6 +46,15 @@
                     android:text="@string/character_screen_position_front"
                     android:textSize="14sp" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/position_front_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="13dp"
+                android:textColor="@color/white_50"
+                android:textSize="14sp" />
         </FrameLayout>
 
         <FrameLayout
@@ -82,6 +91,15 @@
                     android:text="@string/character_screen_position_middle"
                     android:textSize="14sp" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/position_middle_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="13dp"
+                android:textColor="@color/white_50"
+                android:textSize="14sp" />
         </FrameLayout>
 
         <FrameLayout
@@ -118,6 +136,15 @@
                     android:text="@string/character_screen_position_back"
                     android:textSize="14sp" />
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/position_back_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
+                android:layout_marginRight="13dp"
+                android:textColor="@color/white_50"
+                android:textSize="14sp" />
         </FrameLayout>
     </LinearLayout>
 

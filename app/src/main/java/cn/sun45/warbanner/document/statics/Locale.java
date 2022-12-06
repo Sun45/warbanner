@@ -5,7 +5,7 @@ package cn.sun45.warbanner.document.statics;
  * 语言地区
  */
 public enum Locale {
-    ZH_CN(0, StaticHelper.ZH_CN_LANG, StaticHelper.ZH_CN_SERVERNAME, new int[][]{{1}, {2}, {3}, {4}}),
+    ZH_CN(0, StaticHelper.ZH_CN_LANG, StaticHelper.ZH_CN_SERVERNAME, new int[][]{{1}, {2}, {3}, {4}, {5}}),
     ZH_TW(1, StaticHelper.ZH_TW_LANG, StaticHelper.ZH_TW_SERVERNAME, new int[][]{{1, 2}, {3}, {4, 5}});
 
     private int id;

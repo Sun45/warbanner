@@ -105,6 +105,19 @@ public class CharacterHelper {
     }
 
     /**
+     * 将已用角色都设为使用限制
+     */
+    public static void swipUsedCharacterList() {
+        int userId = UserManager.getInstance().getCurrentUserId();
+        List<TeamGroupScreenUsedCharacterModel> teamGroupScreenUsedCharacterModels =
+                SetupDataBase.getInstance().setupDao().queryAllTeamGroupScreenUsedCharacter(userId);
+        for (TeamGroupScreenUsedCharacterModel teamGroupScreenUsedCharacterModel : teamGroupScreenUsedCharacterModels) {
+            teamGroupScreenUsedCharacterModel.setType(CharacterUseType.TYPE_USED.getScreenType().getType());
+            SetupDataBase.getInstance().setupDao().updateTeamGroupScreenUsedCharacter(teamGroupScreenUsedCharacterModel);
+        }
+    }
+
+    /**
      * 清空已用角色列表
      */
     public static void clearUsedCharacterList() {

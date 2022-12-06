@@ -67,7 +67,7 @@ public class TeamGroupScreenUsedCharacterFragment extends BaseFragment implement
             }
         });
 
-        mCharacterScroll=mRoot.findViewById(R.id.charactershow_scroll);
+        mCharacterScroll = mRoot.findViewById(R.id.charactershow_scroll);
         mCharacterListLay = mRoot.findViewById(R.id.characterlistlay);
 
         mCharacterListLay.setCharacterListLayListener(this);
@@ -105,11 +105,20 @@ public class TeamGroupScreenUsedCharacterFragment extends BaseFragment implement
     @Override
     public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.menu_used:
+                used();
+                break;
             case R.id.menu_reset:
                 reset();
                 break;
         }
         return true;
+    }
+
+    private void used() {
+        CharacterHelper.swipUsedCharacterList();
+        showScroll();
+        showList();
     }
 
     private void reset() {
@@ -129,15 +138,14 @@ public class TeamGroupScreenUsedCharacterFragment extends BaseFragment implement
         List<ScreenCharacterModel> screenCharacterList = CharacterHelper.getScreenCharacterList();
         List<TeamGroupScreenUsedCharacterModel> teamGroupScreenUsedCharacterList = CharacterHelper.getUsedCharacterList();
         for (CharacterModel characterModel : characterModels) {
-            boolean skip = false;
+            boolean notown = false;
             for (ScreenCharacterModel screenCharacterModel : screenCharacterList) {
-                if (characterModel.getId() == screenCharacterModel.getCharacterId() &&
-                        screenCharacterModel.getType() == CharacterOwnType.TYPE_SKIP.getScreenType().getType()) {
-                    skip = true;
+                if (characterModel.getId() == screenCharacterModel.getCharacterId()) {
+                    notown = true;
                     break;
                 }
             }
-            if (skip) {
+            if (notown) {
                 continue;
             }
             characterModelList.add(characterModel);

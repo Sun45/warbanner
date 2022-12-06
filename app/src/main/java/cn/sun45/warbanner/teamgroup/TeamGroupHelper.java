@@ -119,11 +119,32 @@ public class TeamGroupHelper {
         }
         List<TeamGroupElementModel> elementModelListOne = new ArrayList<>();
         if (teamGroupScreenModel.isTeamoneenable()) {
+            int borrowid = 0;
+            switch (teamGroupScreenModel.getTeamoneborrowindex()) {
+                case 0:
+                    borrowid = teamGroupScreenModel.getTeamonecharacteroneid();
+                    break;
+                case 1:
+                    borrowid = teamGroupScreenModel.getTeamonecharactertwoid();
+                    break;
+                case 2:
+                    borrowid = teamGroupScreenModel.getTeamonecharacterthreeid();
+                    break;
+                case 3:
+                    borrowid = teamGroupScreenModel.getTeamonecharacterfourid();
+                    break;
+                case 4:
+                    borrowid = teamGroupScreenModel.getTeamonecharacterfiveid();
+                    break;
+                default:
+                    break;
+            }
             for (TeamGroupElementModel teamGroupElementModel : elementModels) {
                 if (fit(teamGroupElementModel,
                         teamGroupScreenModel.isTeamoneextra(), usingList,
                         teamGroupScreenModel.getTeamonestage(), teamGroupScreenModel.getTeamoneboss(), teamGroupScreenModel.getTeamoneauto(),
-                        teamGroupScreenModel.getTeamonecharacteroneid(), teamGroupScreenModel.getTeamonecharactertwoid(), teamGroupScreenModel.getTeamonecharacterthreeid(), teamGroupScreenModel.getTeamonecharacterfourid(), teamGroupScreenModel.getTeamonecharacterfiveid())) {
+                        teamGroupScreenModel.getTeamonecharacteroneid(), teamGroupScreenModel.getTeamonecharactertwoid(), teamGroupScreenModel.getTeamonecharacterthreeid(), teamGroupScreenModel.getTeamonecharacterfourid(), teamGroupScreenModel.getTeamonecharacterfiveid(),
+                        borrowid)) {
                     elementModelListOne.add(teamGroupElementModel);
                 }
             }
@@ -133,11 +154,32 @@ public class TeamGroupHelper {
         }
         List<TeamGroupElementModel> elementModelListTwo = new ArrayList<>();
         if (teamGroupScreenModel.isTeamtwoenable()) {
+            int borrowid = 0;
+            switch (teamGroupScreenModel.getTeamtwoborrowindex()) {
+                case 0:
+                    borrowid = teamGroupScreenModel.getTeamtwocharacteroneid();
+                    break;
+                case 1:
+                    borrowid = teamGroupScreenModel.getTeamtwocharactertwoid();
+                    break;
+                case 2:
+                    borrowid = teamGroupScreenModel.getTeamtwocharacterthreeid();
+                    break;
+                case 3:
+                    borrowid = teamGroupScreenModel.getTeamtwocharacterfourid();
+                    break;
+                case 4:
+                    borrowid = teamGroupScreenModel.getTeamtwocharacterfiveid();
+                    break;
+                default:
+                    break;
+            }
             for (TeamGroupElementModel teamGroupElementModel : elementModels) {
                 if (fit(teamGroupElementModel,
                         teamGroupScreenModel.isTeamtwoextra(), usingList,
                         teamGroupScreenModel.getTeamtwostage(), teamGroupScreenModel.getTeamtwoboss(), teamGroupScreenModel.getTeamtwoauto(),
-                        teamGroupScreenModel.getTeamtwocharacteroneid(), teamGroupScreenModel.getTeamtwocharactertwoid(), teamGroupScreenModel.getTeamtwocharacterthreeid(), teamGroupScreenModel.getTeamtwocharacterfourid(), teamGroupScreenModel.getTeamtwocharacterfiveid())) {
+                        teamGroupScreenModel.getTeamtwocharacteroneid(), teamGroupScreenModel.getTeamtwocharactertwoid(), teamGroupScreenModel.getTeamtwocharacterthreeid(), teamGroupScreenModel.getTeamtwocharacterfourid(), teamGroupScreenModel.getTeamtwocharacterfiveid(),
+                        borrowid)) {
                     elementModelListTwo.add(teamGroupElementModel);
                 }
             }
@@ -147,11 +189,32 @@ public class TeamGroupHelper {
         }
         List<TeamGroupElementModel> elementModelListThree = new ArrayList<>();
         if (teamGroupScreenModel.isTeamthreeenable()) {
+            int borrowid = 0;
+            switch (teamGroupScreenModel.getTeamthreeborrowindex()) {
+                case 0:
+                    borrowid = teamGroupScreenModel.getTeamthreecharacteroneid();
+                    break;
+                case 1:
+                    borrowid = teamGroupScreenModel.getTeamthreecharactertwoid();
+                    break;
+                case 2:
+                    borrowid = teamGroupScreenModel.getTeamthreecharacterthreeid();
+                    break;
+                case 3:
+                    borrowid = teamGroupScreenModel.getTeamthreecharacterfourid();
+                    break;
+                case 4:
+                    borrowid = teamGroupScreenModel.getTeamthreecharacterfiveid();
+                    break;
+                default:
+                    break;
+            }
             for (TeamGroupElementModel teamGroupElementModel : elementModels) {
                 if (fit(teamGroupElementModel,
                         teamGroupScreenModel.isTeamthreeextra(), usingList,
                         teamGroupScreenModel.getTeamthreestage(), teamGroupScreenModel.getTeamthreeboss(), teamGroupScreenModel.getTeamthreeauto(),
-                        teamGroupScreenModel.getTeamthreecharacteroneid(), teamGroupScreenModel.getTeamthreecharactertwoid(), teamGroupScreenModel.getTeamthreecharacterthreeid(), teamGroupScreenModel.getTeamthreecharacterfourid(), teamGroupScreenModel.getTeamthreecharacterfiveid())) {
+                        teamGroupScreenModel.getTeamthreecharacteroneid(), teamGroupScreenModel.getTeamthreecharactertwoid(), teamGroupScreenModel.getTeamthreecharacterthreeid(), teamGroupScreenModel.getTeamthreecharacterfourid(), teamGroupScreenModel.getTeamthreecharacterfiveid(),
+                        borrowid)) {
                     elementModelListThree.add(teamGroupElementModel);
                 }
             }
@@ -203,9 +266,19 @@ public class TeamGroupHelper {
     private boolean fit(TeamGroupElementModel teamGroupElementModel,
                         boolean extra, List<Integer> usingList,
                         int stage, int boss, int auto,
-                        int characteroneid, int charactertwoid, int characterthreeid, int characterfourid, int characterfiveid) {
+                        int characteroneid, int charactertwoid, int characterthreeid, int characterfourid, int characterfiveid,
+                        int borrowid) {
         List<Integer> idlist = teamGroupElementModel.getIdlist();
         int screencharacter = teamGroupElementModel.getScreencharacter();
+        if (borrowid != 0) {
+            if (screencharacter != 0) {
+                if (screencharacter != borrowid) {
+                    return false;
+                }
+            } else {
+                screencharacter = borrowid;
+            }
+        }
         TeamModel teamModel = teamGroupElementModel.getTeamModel();
         if (!StageManager.getInstance().matchTeamModel(teamModel, stage)) {
             return false;
@@ -243,6 +316,7 @@ public class TeamGroupHelper {
             for (int id : idlist) {
                 for (int usingId : usingList) {
                     if (id == usingId) {
+                        //不需要考虑全局需要借的角色和已使用的角色重复的情况，因为全局需要借的角色说明不拥有
                         if (screencharacter != 0) {
                             return false;
                         } else {
@@ -251,8 +325,8 @@ public class TeamGroupHelper {
                     }
                 }
             }
-            teamGroupElementModel.setScreencharacter(screencharacter);
         }
+        teamGroupElementModel.setScreencharacter(screencharacter);
         return true;
     }
 
