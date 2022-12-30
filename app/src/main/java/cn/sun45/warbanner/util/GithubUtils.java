@@ -6,7 +6,7 @@ package cn.sun45.warbanner.util;
  */
 public class GithubUtils {
     //GitHub Pages
-    public static final int TYPE_GITHUBPAGES =0;
+    public static final int TYPE_GITHUBPAGES = 0;
     //cloudflare
     public static final int TYPE_CLOUDFLARE = 1;
     //JsDeliver
@@ -14,7 +14,7 @@ public class GithubUtils {
     //Github Raw
     public static final int TYPE_RAW = 3;
 
-    public static final String getFileUrl(int type, String owner, String repository, String path) {
+    public static final String getFileUrl(int type, String owner, String repository, String branch, String path) {
         StringBuilder sb = new StringBuilder();
         switch (type) {
             case TYPE_GITHUBPAGES:
@@ -29,14 +29,14 @@ public class GithubUtils {
             case TYPE_CLOUDFLARE:
                 sb.append("https://round-union-edb0.sun45.workers.dev/");
                 sb.append("/");
-                sb.append(getFileUrl(TYPE_RAW, owner, repository, path));
+                sb.append(getFileUrl(TYPE_RAW, owner, repository, branch, path));
                 break;
             case TYPE_JSDELIVR:
                 sb.append("https://cdn.jsdelivr.net/gh/");
                 sb.append(owner);
                 sb.append("/");
                 sb.append(repository);
-                sb.append("@master");
+                sb.append("@"+branch);
                 sb.append("/");
                 sb.append(path);
                 break;
@@ -45,7 +45,9 @@ public class GithubUtils {
                 sb.append(owner);
                 sb.append("/");
                 sb.append(repository);
-                sb.append("/master/");
+                sb.append("/");
+                sb.append(branch);
+                sb.append("/");
                 sb.append(path);
                 break;
             default:

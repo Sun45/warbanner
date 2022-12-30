@@ -1,6 +1,7 @@
 package cn.sun45.warbanner.teamgroup;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import cn.sun45.warbanner.document.database.setup.models.TeamCustomizeModel;
 import cn.sun45.warbanner.document.database.source.models.TeamModel;
@@ -53,6 +54,15 @@ public class TeamGroupElementModel {
         } else {
             return teamModel.getDamage();
         }
+    }
+
+    public TeamGroupElementModel getCopy() {
+        TeamGroupElementModel model = new TeamGroupElementModel();
+        model.setIdlist(idlist.stream().collect(Collectors.toList()));
+        model.setScreencharacter(screencharacter);
+        model.setTeamModel(getTeamModel());
+        model.setTeamCustomizeModel(teamCustomizeModel);
+        return model;
     }
 
     @Override

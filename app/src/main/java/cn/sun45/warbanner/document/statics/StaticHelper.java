@@ -15,11 +15,10 @@ public class StaticHelper {
     public static final String ZH_TW_SERVERNAME = "台服";
 
     //  App URL
-    public static final String APP_RAW_BASE = "https://cdn.jsdelivr.net/gh/";
-    public static final String APP_RAW = "https://cdn.jsdelivr.net/gh/Sun45/warbanner@master";
-    public static final String APP_UPDATE_LOG = APP_RAW + "/update_log.json";
     public static final String APK_OWNER = "Sun45";
     public static final String APK_REPOSITORY = "warbanner";
+    public static final String APK_BRANCH = "caimogu";
+    public static final String APP_UPDATE_LOG_PATH = "update_log.json";
     public static final String APK_PATH = "apk/warbanner-release.apk";
     public static final String APK_NAME = "update.apk";
 

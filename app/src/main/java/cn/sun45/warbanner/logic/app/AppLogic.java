@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import cn.sun45.warbanner.document.statics.StaticHelper;
 import cn.sun45.warbanner.framework.logic.BaseLogic;
 import cn.sun45.warbanner.framework.logic.RequestListener;
+import cn.sun45.warbanner.util.GithubUtils;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,7 +26,8 @@ public class AppLogic extends BaseLogic {
     }
 
     public Call<JSONObject> checkAppVersion(final RequestListener<AppModel> listener) {
-        Call<JSONObject> call = retrofit(StaticHelper.APP_RAW_BASE).create(Api.class).checkAppVersion(getUserAgent(), StaticHelper.APP_UPDATE_LOG);
+        String url = GithubUtils.getFileUrl(GithubUtils.TYPE_RAW, StaticHelper.APK_OWNER, StaticHelper.APK_REPOSITORY, StaticHelper.APK_BRANCH, StaticHelper.APP_UPDATE_LOG_PATH);
+        Call<JSONObject> call = retrofit(url).create(Api.class).checkAppVersion(getUserAgent(), url);
         call.enqueue(new Callback<JSONObject>() {
             @Override
             public void onResponse(Call<JSONObject> call, Response<JSONObject> response) {

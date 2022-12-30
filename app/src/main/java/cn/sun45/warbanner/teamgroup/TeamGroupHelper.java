@@ -140,12 +140,13 @@ public class TeamGroupHelper {
                     break;
             }
             for (TeamGroupElementModel teamGroupElementModel : elementModels) {
-                if (fit(teamGroupElementModel,
+                TeamGroupElementModel copyTeamGroupElementModel = teamGroupElementModel.getCopy();
+                if (fit(copyTeamGroupElementModel,
                         teamGroupScreenModel.isTeamoneextra(), usingList,
                         teamGroupScreenModel.getTeamonestage(), teamGroupScreenModel.getTeamoneboss(), teamGroupScreenModel.getTeamoneauto(),
                         teamGroupScreenModel.getTeamonecharacteroneid(), teamGroupScreenModel.getTeamonecharactertwoid(), teamGroupScreenModel.getTeamonecharacterthreeid(), teamGroupScreenModel.getTeamonecharacterfourid(), teamGroupScreenModel.getTeamonecharacterfiveid(),
                         borrowid)) {
-                    elementModelListOne.add(teamGroupElementModel);
+                    elementModelListOne.add(copyTeamGroupElementModel);
                 }
             }
             if (elementModelListOne.isEmpty()) {
@@ -175,12 +176,13 @@ public class TeamGroupHelper {
                     break;
             }
             for (TeamGroupElementModel teamGroupElementModel : elementModels) {
-                if (fit(teamGroupElementModel,
+                TeamGroupElementModel copyTeamGroupElementModel = teamGroupElementModel.getCopy();
+                if (fit(copyTeamGroupElementModel,
                         teamGroupScreenModel.isTeamtwoextra(), usingList,
                         teamGroupScreenModel.getTeamtwostage(), teamGroupScreenModel.getTeamtwoboss(), teamGroupScreenModel.getTeamtwoauto(),
                         teamGroupScreenModel.getTeamtwocharacteroneid(), teamGroupScreenModel.getTeamtwocharactertwoid(), teamGroupScreenModel.getTeamtwocharacterthreeid(), teamGroupScreenModel.getTeamtwocharacterfourid(), teamGroupScreenModel.getTeamtwocharacterfiveid(),
                         borrowid)) {
-                    elementModelListTwo.add(teamGroupElementModel);
+                    elementModelListTwo.add(copyTeamGroupElementModel);
                 }
             }
             if (elementModelListTwo.isEmpty()) {
@@ -210,12 +212,13 @@ public class TeamGroupHelper {
                     break;
             }
             for (TeamGroupElementModel teamGroupElementModel : elementModels) {
-                if (fit(teamGroupElementModel,
+                TeamGroupElementModel copyTeamGroupElementModel = teamGroupElementModel.getCopy();
+                if (fit(copyTeamGroupElementModel,
                         teamGroupScreenModel.isTeamthreeextra(), usingList,
                         teamGroupScreenModel.getTeamthreestage(), teamGroupScreenModel.getTeamthreeboss(), teamGroupScreenModel.getTeamthreeauto(),
                         teamGroupScreenModel.getTeamthreecharacteroneid(), teamGroupScreenModel.getTeamthreecharactertwoid(), teamGroupScreenModel.getTeamthreecharacterthreeid(), teamGroupScreenModel.getTeamthreecharacterfourid(), teamGroupScreenModel.getTeamthreecharacterfiveid(),
                         borrowid)) {
-                    elementModelListThree.add(teamGroupElementModel);
+                    elementModelListThree.add(copyTeamGroupElementModel);
                 }
             }
             if (elementModelListThree.isEmpty()) {

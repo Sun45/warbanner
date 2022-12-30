@@ -1,6 +1,6 @@
 {
-  "versionCode": "44",
-  "versionName": "3.4.1",
-  "fource": "true",
-  "content": "1.添加指定阵容后指定借人位功能2.添加已进行实战角色转为使用限制角色按钮3.添加角色筛选数量提示4.国服添加5阶段"
+  "versionCode": "45",
+  "versionName": "3.4.2",
+  "fource": "false",
+  "content": "1.分刀bug修复2.升级方式调整回github直连，不经过CDN"
 }

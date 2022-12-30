@@ -188,7 +188,7 @@ public class UpdateManager {
         String path = FileUtil.getExternalFilesDir("update");
         String name = StaticHelper.APK_NAME;
         new File(path + File.separator + name).deleteOnExit();
-        String fileUrl = GithubUtils.getFileUrl(GithubUtils.TYPE_CLOUDFLARE, StaticHelper.APK_OWNER, StaticHelper.APK_REPOSITORY, StaticHelper.APK_PATH);
+        String fileUrl = GithubUtils.getFileUrl(GithubUtils.TYPE_RAW, StaticHelper.APK_OWNER, StaticHelper.APK_REPOSITORY, StaticHelper.APK_BRANCH, StaticHelper.APK_PATH);
         FileRequester.request(fileUrl, path, name, true, new FileRequestListenerWithProgress() {
             @Override
             public void progress(long currentOffset, long totalLength, float percent, int progress) {
