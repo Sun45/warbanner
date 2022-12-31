@@ -52,5 +52,6 @@ boss筛选弹框确认按钮异常，不影响使用
 [图文教程链接](https://docs.qq.com/doc/DQ0J3VmNEeWRTZmRX)
 
 使用方式及功能
+<pic><pic><pic>
 
 现在算是第一个公开版吧，还在完善中，欢迎提出意见和建议
