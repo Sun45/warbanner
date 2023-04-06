@@ -119,12 +119,15 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
                     TeamGroupCollectionModel teamGroupCollectionModel = teamGroupCollectionModels.get(i);
                     if (ClanwarHelper.isCollect(teamGroupCollectionModel)) {
                         List<TeamModel> teamModels = ClanwarHelper.getTeamGroupCollectionTeamList(teamGroupCollectionModel);
-                        if (teamModels == null) {
+                        if (teamModels == null || teamModels.isEmpty()) {
                             continue;
                         }
                         TeamModel teamone = teamModels.get(0);
                         TeamModel teamtwo = teamModels.get(1);
                         TeamModel teamthree = teamModels.get(2);
+                        if (teamone == null && teamtwo == null && teamthree == null) {
+                            continue;
+                        }
                         TeamGroupListModel teamGroupListModel = new TeamGroupListModel(
                                 teamone, buildIdlist(teamone), teamGroupCollectionModel.getBorrowindexone(),
                                 teamtwo, buildIdlist(teamtwo), teamGroupCollectionModel.getBorrowindextwo(),

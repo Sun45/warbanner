@@ -1,2 +1,3 @@
 rootProject.name = "warbanner"
 include ':app'
+include ':PCRTeamAnalyser'

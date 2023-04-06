@@ -130,7 +130,7 @@ public class TeamGroupScreenFragment extends BaseFragment {
             if (teamModel != null) {
                 int stage = teamModel.getStage() - 1;
                 int boss = Integer.valueOf(teamModel.getBoss().substring(1, 2)) - 1;
-                int auto = teamModel.isAuto() ? 1 : 2;
+                int auto = teamModel.isFinish() ? 3 : teamModel.isAuto() ? 1 : 2;
                 teamGroupScreenModel.setTeamtwostage(stage);
                 teamGroupScreenModel.setTeamtwoboss(boss);
                 teamGroupScreenModel.setTeamtwoauto(auto);

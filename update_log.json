@@ -1,6 +1,6 @@
 {
-  "versionCode": "45",
-  "versionName": "3.4.2",
+  "versionCode": "46",
+  "versionName": "3.7.1",
   "fource": "false",
-  "content": "1.分刀bug修复2.升级方式调整回github直连，不经过CDN"
+  "content": "1.优化分刀算法,提取为第三方库"
 }

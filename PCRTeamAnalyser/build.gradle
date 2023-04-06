@@ -1,0 +1,21 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+apply from: rootProject.file("dependencies.gradle")
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_7
+    targetCompatibility = JavaVersion.VERSION_1_7
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId = 'cn.sun45.warbanner'
+            artifactId = 'PCRTeamAnalyser'
+            version = versions.publish_version
+        }
+    }
+}

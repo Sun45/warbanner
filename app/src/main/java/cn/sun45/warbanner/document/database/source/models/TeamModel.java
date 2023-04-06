@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -16,7 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.sun45.warbanner.character.CharacterHelper;
-import cn.sun45.warbanner.clanwar.ClanwarHelper;
 import cn.sun45.warbanner.document.statics.TeamType;
 
 /**
@@ -24,7 +22,7 @@ import cn.sun45.warbanner.document.statics.TeamType;
  * 阵容信息数据模型
  */
 @Entity(tableName = "team", primaryKeys = {"lang", "id"})
-public class TeamModel implements Serializable {
+public class TeamModel implements Serializable  {
     @NonNull
     @ColumnInfo
     public String lang;

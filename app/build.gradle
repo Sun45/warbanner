@@ -1,15 +1,16 @@
 plugins {
     id 'com.android.application'
 }
+apply from: rootProject.file("dependencies.gradle")
 android {
     compileSdkVersion 30
 
     defaultConfig {
         applicationId "cn.sun45.warbanner"
-        minSdkVersion 24
-        targetSdkVersion 30
-        versionCode 45
-        versionName "3.4.2"
+        minSdkVersion versions.min_sdk
+        targetSdkVersion versions.compile_sdk
+        versionCode versions.publish_version_code
+        versionName versions.publish_version
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -40,6 +41,8 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation project(path: ':PCRTeamAnalyser')
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'

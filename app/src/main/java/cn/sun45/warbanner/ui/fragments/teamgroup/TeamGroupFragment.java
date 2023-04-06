@@ -21,7 +21,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import cn.sun45.warbanner.R;
-import cn.sun45.warbanner.character.CharacterHelper;
 import cn.sun45.warbanner.clanwar.ClanwarHelper;
 import cn.sun45.warbanner.document.database.setup.models.TeamCustomizeModel;
 import cn.sun45.warbanner.document.database.source.models.CharacterModel;
@@ -110,7 +109,7 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
                                         long start = MyApplication.getTimecurrent();
                                         logD("teamGroup build");
                                         list = teamGroupHelper.build(teamModels, teamCustomizeModels);
-                                        logD("teamGroup finish:" + (list != null ? list.size() : 0) + " " + (MyApplication.getTimecurrent() - start) + "ms");
+                                        logD("teamGroup finish count:" + (list != null ? list.size() : 0) + " " + (MyApplication.getTimecurrent() - start) + "ms");
                                         Activity activity = getActivity();
                                         if (activity != null) {
                                             activity.runOnUiThread(() -> showResult());
