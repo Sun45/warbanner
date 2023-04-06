@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.sun45.warbanner.R;
-import cn.sun45.warbanner.assist.AssistManager;
 import cn.sun45.warbanner.datamanager.data.DataManager;
 import cn.sun45.warbanner.datamanager.update.UpdateManager;
 import cn.sun45.warbanner.document.preference.DataPreference;
@@ -39,10 +38,6 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
 
     //数据
     private Preference update;
-
-    //辅助功能
-    private Preference permission;
-    private Preference autoClick;
 
     //设置
     private Preference user;
@@ -83,20 +78,6 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
         update.setOnPreferenceClickListener(preference -> {
             DataManager.getInstance().showConfirmDialogCaimogu();
             btnRestore(preference);
-            return true;
-        });
-
-        permission = findPreference("permission");
-        permission.setOnPreferenceClickListener(preference -> {
-            NavController controller = Navigation.findNavController(getView());
-            controller.navigate(R.id.action_nav_main_to_nav_permission);
-            return true;
-        });
-
-        autoClick = findPreference("auto_click");
-        autoClick.setOnPreferenceClickListener(preference -> {
-            NavController controller = Navigation.findNavController(getView());
-            controller.navigate(R.id.action_nav_main_to_nav_autoclick);
             return true;
         });
 
@@ -220,13 +201,6 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
         Utils.logD(TAG, "onResume");
         super.onResume();
         update.setSummary(DataManager.getInstance().getUpdateInfo());
-        if (AssistManager.hasPermission()) {
-            autoClick.setEnabled(true);
-            autoClick.setSummary(null);
-        } else {
-            autoClick.setEnabled(false);
-            autoClick.setSummary(Utils.getString(R.string.user_permission_notgranted));
-        }
         user.setSummary(UserManager.getInstance().getCurrentUserName());
         server.setSummary(ServerManager.getInstance().getServerName());
         app.setSummary(Utils.getVersionName());

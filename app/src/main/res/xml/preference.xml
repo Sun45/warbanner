@@ -12,19 +12,6 @@
     </PreferenceCategory>
     <PreferenceCategory
         android:theme="@style/AppTheme"
-        app:key="setting_assist"
-        app:title="@string/menu_assist">
-        <Preference
-            app:icon="@drawable/ic_baseline_security_24"
-            app:key="permission"
-            app:title="@string/menu_permission" />
-        <Preference
-            app:icon="@drawable/ic_baseline_touch_app_24"
-            app:key="auto_click"
-            app:title="@string/menu_auto_click" />
-    </PreferenceCategory>
-    <PreferenceCategory
-        android:theme="@style/AppTheme"
         app:key="setting_category"
         app:title="@string/menu_setting">
         <Preference

@@ -1,6 +1,6 @@
 {
-  "versionCode": "46",
-  "versionName": "3.7.1",
+  "versionCode": "47",
+  "versionName": "3.7.2",
   "fource": "false",
-  "content": "1.优化分刀算法,提取为第三方库"
+  "content": "1.删除连点功能"
 }

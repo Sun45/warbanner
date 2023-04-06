@@ -61,9 +61,6 @@
 
     <string name="menu_data">数据</string>
     <string name="menu_data_update">数据更新</string>
-    <string name="menu_assist">辅助功能</string>
-    <string name="menu_permission">权限设置</string>
-    <string name="menu_auto_click">连点设置</string>
     <string name="menu_setting">设置</string>
     <string name="menu_user">本地用户</string>
     <string name="menu_character_screen">角色筛选</string>
@@ -126,28 +123,6 @@
     <string name="team_detail_menu_share">分享</string>
     <string name="team_detail_damage_dialog_title">自定轴伤</string>
     <string name="team_detail_damage_dialog_hint">自定义阵容伤害(%1$s)</string>
-
-    <string name="user_permission_title">权限设置</string>
-    <string name="user_permission_alert_window">系统弹框权限</string>
-    <string name="user_permission_accessibility">无障碍权限</string>
-    <string name="user_permission_accessibility_description">开启此服务以授权辅助功能</string>
-    <string name="user_permission_granted">已授权</string>
-    <string name="user_permission_notgranted">未授权</string>
-
-    <string name="auto_click_title">连点设置</string>
-    <string name="auto_click_enable">是否启用</string>
-    <string name="auto_click_enable_on">已启用</string>
-    <string name="auto_click_enable_off">未启用</string>
-    <string name="auto_click_tapinterval">连点间隔</string>
-    <string name="auto_click_tapinterval_dialog_title">连点间隔</string>
-    <string name="auto_click_tapinterval_dialog_hint">连点间隔，大于0，默认10</string>
-    <string name="auto_click_tapinterval_dialog_confirm">确定</string>
-
-    <string name="auto_click_character_one">角色一</string>
-    <string name="auto_click_character_two">角色二</string>
-    <string name="auto_click_character_three">角色三</string>
-    <string name="auto_click_character_four">角色四</string>
-    <string name="auto_click_character_five">角色五</string>
 
     <string name="user_manager_title">本地用户管理</string>
     <string name="user_manager_hint">用户贮存设置收藏及筛选配置</string>
