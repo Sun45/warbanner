@@ -37,6 +37,11 @@ android {
             outputFileName = "warbanner-release.apk"
         }
     }
+
+    aaptOptions {
+        cruncherEnabled = false
+        useNewCruncher = false
+    }
 }
 
 dependencies {
