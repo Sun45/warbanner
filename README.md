@@ -29,11 +29,11 @@ Android端BCR会战作业查询记录工具
 或者来QQ群找我 <a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=pdrSNNu4dfCfcT92WBGbivz_DFQtT3ci&jump_from=webapi&authKey=9G6X7RZXehOT2FL93Gpv4YzQQ9A7RcPdEUZ3OJ6p23kvRjoNlkBFrMRNUoRnDKAS"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="花舞-公主连结交流一" title="花舞-公主连结交流一"></a>
 
 ## 导入分刀算法
-PCRTeamAnalyser
+[![](https://jitpack.io/v/Sun45/warbanner.svg)](https://jitpack.io/#Sun45/warbanner) PCRTeamAnalyser
 ```gradle
 dependencies {
   ...
-  implementation 'com.github.Sun45:warbanner:3.7.1'
+  implementation 'com.github.Sun45:warbanner:3.7.2'
 }
 ```
 
