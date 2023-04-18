@@ -26,35 +26,26 @@ public class SharedViewModelSource extends ViewModel {
     public MutableLiveData<List<TeamModel>> teamList = new MutableLiveData<>();
 
     public void loadData() {
-        boolean succeeded = true;
         List<CharacterModel> characterModelList = SourceDataBase.getInstance().sourceDao().queryAllCharacter(ServerManager.getInstance().getLang());
-        if (characterModelList == null || characterModelList.isEmpty()) {
-            succeeded = false;
-        }
-        List<BossModel> bossModelList = SourceDataBase.getInstance().sourceDao().queryAllBoss(ServerManager.getInstance().getLang());
-        if (bossModelList == null || bossModelList.isEmpty()) {
-            succeeded = false;
-        }
-        List<TeamModel> teamModelList = SourceDataBase.getInstance().sourceDao().queryAllTeam(ServerManager.getInstance().getLang());
-        if (teamModelList == null || teamModelList.isEmpty()) {
-            succeeded = false;
-        }
-
-        if (succeeded) {
-            bossList.postValue(bossModelList);
-            if (MyApplication.testing) {
-                for (BossModel bossModel : bossModelList) {
-                    Utils.logD(TAG, bossModel.toString());
-                }
-            }
-
+        if (characterModelList != null && !characterModelList.isEmpty()) {
             characterList.postValue(characterModelList);
             if (MyApplication.testing) {
                 for (CharacterModel characterModel : characterModelList) {
                     Utils.logD(TAG, characterModel.toString());
                 }
             }
-
+        }
+        List<BossModel> bossModelList = SourceDataBase.getInstance().sourceDao().queryAllBoss(ServerManager.getInstance().getLang());
+        if (bossModelList != null && !bossModelList.isEmpty()) {
+            bossList.postValue(bossModelList);
+            if (MyApplication.testing) {
+                for (BossModel bossModel : bossModelList) {
+                    Utils.logD(TAG, bossModel.toString());
+                }
+            }
+        }
+        List<TeamModel> teamModelList = SourceDataBase.getInstance().sourceDao().queryAllTeam(ServerManager.getInstance().getLang());
+        if (teamModelList != null && !teamModelList.isEmpty()) {
             teamList.postValue(teamModelList);
             if (MyApplication.testing) {
                 for (TeamModel teamModel : teamModelList) {

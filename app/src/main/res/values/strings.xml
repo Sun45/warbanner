@@ -40,9 +40,9 @@
 
     <string name="teamlist_empty_hint">作业数据为空</string>
     <string name="teamlist_menu_link">链接</string>
-    <string name="teamlist_menu_link_screen">链接</string>
-    <string name="teamlist_menu_link_show">展示作业链接</string>
-    <string name="teamlist_menu_link_screen_dialog_confirm">确定</string>
+    <string name="teamlist_menu_link_dialog_title">链接</string>
+    <string name="teamlist_menu_link_dialog_message">展示作业链接</string>
+    <string name="teamlist_menu_link_dialog_confirm">确定</string>
     <string name="teamlist_menu_screen">筛选</string>
     <string-array name="teamlist_screen_boss_options">
         <item>全部</item>
@@ -90,6 +90,9 @@
 
     <string name="teamgroup_screen_title">分刀筛选</string>
     <string name="teamgroup_screen_menu_reset">重置</string>
+    <string name="teamgroup_screen_menu_reset_dialog_title">重置</string>
+    <string name="teamgroup_screen_menu_reset_dialog_message">重置该页面所有进阶筛选设置？</string>
+    <string name="teamgroup_screen_menu_reset_dialog_confirm">确定</string>
     <string-array name="teamgroup_screen_boss_options">
         <item>一王</item>
         <item>二王</item>

@@ -1,6 +1,6 @@
 {
-  "versionCode": "47",
-  "versionName": "3.7.2",
+  "versionCode": "48",
+  "versionName": "3.7.3",
   "fource": "false",
-  "content": "1.删除连点功能"
+  "content": "1.添加筛选重置确认弹框2.调整数据源数据加载逻辑"
 }

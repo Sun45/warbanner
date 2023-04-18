@@ -136,8 +136,8 @@ public class TeamListFragment extends BaseFragment implements TeamListListener, 
 
     private void showlinkdialog() {
         MaterialDialog dialog = new MaterialDialog(getContext(), MaterialDialog.getDEFAULT_BEHAVIOR());
-        dialog.title(R.string.teamlist_menu_link_screen, null);
-        DialogCheckboxExtKt.checkBoxPrompt(dialog, R.string.teamlist_menu_link_show, null, ClanwarHelper.getTeamListShowModel().isLinkShow(), new Function1<Boolean, Unit>() {
+        dialog.title(R.string.teamlist_menu_link_dialog_title, null);
+        DialogCheckboxExtKt.checkBoxPrompt(dialog, R.string.teamlist_menu_link_dialog_message, null, ClanwarHelper.getTeamListShowModel().isLinkShow(), new Function1<Boolean, Unit>() {
             @Override
             public Unit invoke(Boolean aBoolean) {
                 ClanwarHelper.setTeamListShowLinkShow(aBoolean);
@@ -145,7 +145,7 @@ public class TeamListFragment extends BaseFragment implements TeamListListener, 
                 return null;
             }
         });
-        dialog.positiveButton(R.string.teamlist_menu_link_screen_dialog_confirm, null, null);
+        dialog.positiveButton(R.string.teamlist_menu_link_dialog_confirm, null, null);
         dialog.show();
     }
 

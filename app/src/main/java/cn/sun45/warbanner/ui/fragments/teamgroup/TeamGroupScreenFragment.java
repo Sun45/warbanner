@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.card.MaterialCardView;
 
@@ -38,6 +39,8 @@ import cn.sun45.warbanner.ui.views.character.CharacterScroll;
 import cn.sun45.warbanner.ui.views.character.characterview.CharacterView;
 import cn.sun45.warbanner.ui.views.selectgroup.SelectGroup;
 import cn.sun45.warbanner.util.Utils;
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 /**
  * Created by Sun45 on 2021/7/3
@@ -180,7 +183,17 @@ public class TeamGroupScreenFragment extends BaseFragment {
     public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_reset:
-                reset();
+                MaterialDialog dialog = new MaterialDialog(getContext(), MaterialDialog.getDEFAULT_BEHAVIOR());
+                dialog.title(R.string.teamgroup_screen_menu_reset_dialog_title, null);
+                dialog.message(R.string.teamgroup_screen_menu_reset_dialog_message, null, null);
+                dialog.positiveButton(R.string.teamgroup_screen_menu_reset_dialog_confirm, null, new Function1<MaterialDialog, Unit>() {
+                    @Override
+                    public Unit invoke(MaterialDialog materialDialog) {
+                        reset();
+                        return null;
+                    }
+                });
+                dialog.show();
                 break;
         }
         return true;
