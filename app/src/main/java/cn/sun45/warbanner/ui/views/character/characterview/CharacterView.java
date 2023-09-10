@@ -32,6 +32,7 @@ public class CharacterView extends CardView {
     private ImageView mIcon;
     private TextView mName;
     private View mAuto;
+    private View mHalf;
 
     public CharacterView(@NonNull Context context) {
         this(context, null);
@@ -53,6 +54,7 @@ public class CharacterView extends CardView {
         mIcon = findViewById(R.id.character_icon);
         mName = findViewById(R.id.character_name);
         mAuto = findViewById(R.id.character_auto);
+        mHalf = findViewById(R.id.character_half);
     }
 
     public void setCharacterModel(CharacterModel characterModel, int id) {
@@ -112,6 +114,14 @@ public class CharacterView extends CardView {
             mAuto.setVisibility(VISIBLE);
         } else {
             mAuto.setVisibility(INVISIBLE);
+        }
+    }
+
+    public void setHalfShow(boolean half) {
+        if (half) {
+            mHalf.setVisibility(VISIBLE);
+        } else {
+            mHalf.setVisibility(INVISIBLE);
         }
     }
 }

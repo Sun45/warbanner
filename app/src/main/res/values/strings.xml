@@ -7,6 +7,7 @@
     <string name="default_user">默认用户</string>
     <string name="all">全部</string>
     <string name="auto">AUTO</string>
+    <string name="half">HALF</string>
     <string name="user_tip">视频和轴是UP主心血的结晶，抄完作业记得至少给点个赞哦👍</string>
 
     <string name="app_update_check_noneed">应用为最新版本，无需更新</string>
@@ -61,6 +62,7 @@
 
     <string name="menu_data">数据</string>
     <string name="menu_data_update">数据更新</string>
+    <string name="menu_data_boss">BOSS数据监听</string>
     <string name="menu_setting">设置</string>
     <string name="menu_user">本地用户</string>
     <string name="menu_character_screen">角色筛选</string>
@@ -155,4 +157,6 @@
     <string name="record_text_menu_copy_hint">已将文字复制至剪贴板</string>
 
     <string name="user_about_title">关于</string>
+
+    <string name="boss_data_title">BOSS数据监听</string>
 </resources>

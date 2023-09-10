@@ -310,8 +310,7 @@ public class TeamGroupHelper {
             for (int id : idlist) {
                 for (int usingId : usingList) {
                     if (id == usingId) {
-                        //不需要考虑全局需要借的角色和已使用的角色重复的情况，因为全局需要借的角色说明不拥有
-                        if (screencharacter != 0) {
+                        if (screencharacter != 0 && screencharacter != id) {
                             return false;
                         } else {
                             screencharacter = id;

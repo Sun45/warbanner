@@ -346,6 +346,9 @@ public class TeamGroupScreenFragment extends BaseFragment {
                 NavController controller = Navigation.findNavController(getView());
                 Bundle bundle = new Bundle();
                 bundle.putSerializable("team", team);
+                bundle.putSerializable("stageSelection", getStage() + 1);
+                bundle.putSerializable("bossSelection", getBoss() + 1);
+                bundle.putSerializable("typeSelection", getAuto());
                 controller.navigate(R.id.action_nav_teamgroupscreen_to_nav_teamselect, bundle);
             });
             mExtra.setOnClickListener(v -> {

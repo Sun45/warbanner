@@ -136,6 +136,7 @@ public class TeamDetailFragment extends BaseFragment {
             }
         });
         mCharacterone.setAutoShow(teamModel.isAuto());
+        mCharacterone.setHalfShow(teamModel.isFinish());
         characterDataSet(mCharacterone, teamModel.getCharacterone());
         characterDataSet(mCharactertwo, teamModel.getCharactertwo());
         characterDataSet(mCharacterthree, teamModel.getCharacterthree());

@@ -180,7 +180,15 @@ public class Analyser<M, R> {
      * @return 比对通过
      */
     public boolean compareTwo(AnalyseTeam teamOne, AnalyseTeam teamTwo, int[]... borrowIds) {
-        if (teamOne.isEmpty() || teamTwo.isEmpty()) {
+        if (teamOne.isEmpty()) {
+            if (borrowIds.length == 1) {
+                borrowIds[0][1] = teamTwo.getBorrowId();
+            }
+            return true;
+        } else if (teamTwo.isEmpty()) {
+            if (borrowIds.length == 1) {
+                borrowIds[0][0] = teamOne.getBorrowId();
+            }
             return true;
         }
         List<Integer> repeatIdList = getRepeatIds(teamOne.getIds(), teamTwo.getIds());
@@ -202,17 +210,18 @@ public class Analyser<M, R> {
         if (borrowDemand > 2) {
             return false;
         }
+        //需要生成借人位唯一Id列表
         if (borrowIds.length == 1) {
-            if (borrowIdOne != 0) {
-                if (repeatIdList.size() > 0) {
+            if (repeatIdList.size() > 0) {
+                if (borrowIdOne == 0) {
                     borrowIdOne = repeatIdList.get(0);
                     repeatIdList.remove(0);
                 }
-            }
-            if (borrowIdTwo != 0) {
                 if (repeatIdList.size() > 0) {
-                    borrowIdTwo = repeatIdList.get(0);
-                    repeatIdList.remove(0);
+                    if (borrowIdTwo == 0) {
+                        borrowIdTwo = repeatIdList.get(0);
+                        repeatIdList.remove(0);
+                    }
                 }
             }
             borrowIds[0][0] = borrowIdOne;

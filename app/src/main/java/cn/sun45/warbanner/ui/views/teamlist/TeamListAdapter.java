@@ -307,6 +307,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 mTitle.setText(builder);
             }
             mCharacterone.setAutoShow(teamModel.isAuto());
+            mCharacterone.setHalfShow(teamModel.isFinish());
             if (borrowindex == -1) {
                 characterDataSet(mCharacterone, teamModel.getCharacterone());
                 characterDataSet(mCharactertwo, teamModel.getCharactertwo());

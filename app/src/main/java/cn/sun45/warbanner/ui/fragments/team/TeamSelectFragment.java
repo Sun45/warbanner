@@ -11,7 +11,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
@@ -27,9 +26,6 @@ import java.util.List;
 
 import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.character.CharacterHelper;
-import cn.sun45.warbanner.clanwar.ClanwarHelper;
-import cn.sun45.warbanner.document.database.setup.models.TeamCustomizeModel;
-import cn.sun45.warbanner.document.database.setup.models.TeamListShowModel;
 import cn.sun45.warbanner.document.database.source.models.BossModel;
 import cn.sun45.warbanner.document.database.source.models.CharacterModel;
 import cn.sun45.warbanner.document.database.source.models.TeamModel;
@@ -54,6 +50,7 @@ import cn.sun45.warbanner.util.Utils;
  */
 public class TeamSelectFragment extends BaseFragment implements TeamListListener, ListSelectBarListener {
     private int team;
+    private int stageSelection, bossSelection, typeSelection;
 
     private SharedViewModelSource sharedSource;
     private SharedViewModelClanwar sharedClanwar;
@@ -72,6 +69,9 @@ public class TeamSelectFragment extends BaseFragment implements TeamListListener
     protected void initData() {
         Bundle bundle = getArguments();
         team = bundle.getInt("team");
+        stageSelection = bundle.getInt("stageSelection");
+        bossSelection = bundle.getInt("bossSelection");
+        typeSelection = bundle.getInt("typeSelection");
         setHasOptionsMenu(true);
     }
 
@@ -105,9 +105,9 @@ public class TeamSelectFragment extends BaseFragment implements TeamListListener
             if (teamModels != null && !teamModels.isEmpty()) {
                 List<BossModel> bossModels = sharedSource.bossList.getValue();
                 List<CharacterModel> characterModels = sharedSource.characterList.getValue();
-                TeamListShowModel teamListShowModel = ClanwarHelper.getTeamListShowModel();
                 mTeamList.setData(teamModels, bossModels, characterModels,
-                        false, teamListShowModel.getTeamListStage(), teamListShowModel.getTeamListBoss(), teamListShowModel.getTeamListType(),
+                        false,
+                        stageSelection, bossSelection, typeSelection,
                         new SetupPreference().isCharacterscreenenable(), CharacterHelper.getScreenCharacterList());
                 if (teamModels != null && !teamModels.isEmpty()) {
                     mEmptyHint.setVisibility(View.INVISIBLE);
@@ -149,27 +149,23 @@ public class TeamSelectFragment extends BaseFragment implements TeamListListener
         LinearLayout lay = new LinearLayout(getContext());
         lay.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         lay.setOrientation(LinearLayout.VERTICAL);
-        TeamListShowModel teamListShowModel = ClanwarHelper.getTeamListShowModel();
         SelectGroup stage = new SelectGroup(getContext());
         List<String> stageDescriptionList = StageManager.getInstance().getStageDescriptionList();
         stageDescriptionList.add(0, Utils.getString(R.string.all));
-        stage.setData(stageDescriptionList, teamListShowModel.getTeamListStage());
+        stage.setData(stageDescriptionList, stageSelection);
         stage.setListener(position -> {
-            ClanwarHelper.setTeamListShowStage(position);
             mTeamList.notifyStageSelect(position);
         });
         lay.addView(stage);
         SelectGroup boss = new SelectGroup(getContext());
-        boss.setData(Utils.getStringArray(R.array.teamlist_screen_boss_options), teamListShowModel.getTeamListBoss());
+        boss.setData(Utils.getStringArray(R.array.teamlist_screen_boss_options), bossSelection);
         boss.setListener(position -> {
-            ClanwarHelper.setTeamListShowBoss(position);
             mTeamList.notifyBossSelect(position);
         });
         lay.addView(boss);
         SelectGroup type = new SelectGroup(getContext());
-        type.setData(Utils.getStringArray(R.array.teamlist_screen_type_options), teamListShowModel.getTeamListType());
+        type.setData(Utils.getStringArray(R.array.teamlist_screen_type_options), typeSelection);
         type.setListener(position -> {
-            ClanwarHelper.setTeamListShowType(position);
             mTeamList.notifyTypeSelect(position);
         });
         lay.addView(type);

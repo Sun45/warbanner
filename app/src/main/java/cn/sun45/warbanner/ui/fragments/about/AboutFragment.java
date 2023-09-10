@@ -59,9 +59,6 @@ public class AboutFragment extends BaseFragment {
         appendStr(builder, " ");
         appendLink(builder, "花舞攻略组的在线作业文档", "https://docs.qq.com/sheet/DWkdtR2djbnFiUGRk?tab=ltc6xo");
         appendStr(builder, "\n");
-        appendStr(builder, " ");
-        appendQQLink(builder, "\n花舞交流群：", "700350785");
-        appendStr(builder, "\n");
         appendStr(builder, "\n作业数据网站踩蘑菇");
         appendStr(builder, " ");
         appendLink(builder, "轴区网站", "https://www.caimogu.cc/gzlj.html");
@@ -79,6 +76,10 @@ public class AboutFragment extends BaseFragment {
         appendStr(builder, "\n数据来源干炸里脊资源站");
         appendStr(builder, " ");
         appendLink(builder, "干炸里脊资源站", "https://redive.estertion.win/");
+        appendStr(builder, "\n");
+        appendQQLink(builder, "\nbcrlog交流&问题反馈群：", "916313266");
+        appendStr(builder, "\n");
+        appendStr(builder, "\n本群的密码是？ 公主连结国服版号");
         appendStr(builder, "\n");
         appendLink(builder, "\n开源地址", "https://github.com/Sun45/warbanner");
         appendStr(builder, "\n");
@@ -123,15 +124,15 @@ public class AboutFragment extends BaseFragment {
         builder.setSpan(new ClickableSpan() {
             @Override
             public void onClick(@NonNull View widget) {
-                joinQQGroup("jCLm9JM1niDgz5N5V9tu5EjBKPqGbLOD");
+                joinQQGroup("T6KJI0ztPfO1GeJfsdSrSNIbyWSR5zc0");
             }
         }, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
     /****************
      *
-     * 发起添加群流程。群号：花舞-九州界新正双鱼(700350785) 的 key 为： jCLm9JM1niDgz5N5V9tu5EjBKPqGbLOD
-     * 调用 joinQQGroup(jCLm9JM1niDgz5N5V9tu5EjBKPqGbLOD) 即可发起手Q客户端申请加群 花舞-九州界新正双鱼(700350785)
+     * 发起添加群流程。群号：bcrlog交流&amp;问题反馈群(916313266) 的 key 为： T6KJI0ztPfO1GeJfsdSrSNIbyWSR5zc0
+     * 调用 joinQQGroup(T6KJI0ztPfO1GeJfsdSrSNIbyWSR5zc0) 即可发起手Q客户端申请加群 bcrlog交流&amp;问题反馈群(916313266)
      *
      * @param key 由官网生成的key
      * @return 返回true表示呼起手Q成功，返回false表示呼起失败

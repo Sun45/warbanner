@@ -225,6 +225,7 @@ public class TeamGroupListAdapter extends RecyclerView.Adapter<TeamGroupListAdap
                 mTitle.setText(builder);
             }
             mCharacterone.setAutoShow(teamModel.isAuto());
+            mCharacterone.setHalfShow(teamModel.isFinish());
             characterDataSet(mCharacterone, idlist.get(0), borrowindex == 0);
             characterDataSet(mCharactertwo, idlist.get(1), borrowindex == 1);
             characterDataSet(mCharacterthree, idlist.get(2), borrowindex == 2);

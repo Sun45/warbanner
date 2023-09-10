@@ -12,6 +12,7 @@ import java.util.List;
 import cn.sun45.warbanner.document.database.source.models.BossModel;
 import cn.sun45.warbanner.document.database.source.models.CharacterModel;
 import cn.sun45.warbanner.document.database.source.models.TeamModel;
+import cn.sun45.warbanner.document.preference.BossConfigPreference;
 import cn.sun45.warbanner.document.statics.StaticHelper;
 import cn.sun45.warbanner.framework.logic.BaseLogic;
 import cn.sun45.warbanner.framework.logic.RequestListener;
@@ -141,6 +142,9 @@ public class CaimoguLogic extends BaseLogic {
                         JSONArray dataJsonArray = object.optJSONArray("data");
                         for (int i = 0; i < dataJsonArray.length(); i++) {
                             JSONObject dataJsonArrayObject = dataJsonArray.optJSONObject(i);
+                            if (lang.equals("zh-cn")) {
+                                fillBossConfigPreference(dataJsonArrayObject, i);
+                            }
                             JSONArray homeworkJsonArray = dataJsonArrayObject.optJSONArray("homework");
                             for (int j = 0; j < homeworkJsonArray.length(); j++) {
                                 JSONObject jsonObject = homeworkJsonArray.optJSONObject(j);
@@ -216,5 +220,89 @@ public class CaimoguLogic extends BaseLogic {
             }
         });
         return call;
+    }
+
+    private void fillBossConfigPreference(JSONObject dataJsonArrayObject, int i) {
+        JSONArray detailJsonArray = dataJsonArrayObject.optJSONArray("detail");
+        JSONArray hpJsonArray = detailJsonArray.optJSONArray(1);
+        long hp = hpJsonArray.optLong(1);
+        switch (i) {
+            case 0:
+                new BossConfigPreference().setBossOneStageOneHp(hp);
+                break;
+            case 1:
+                new BossConfigPreference().setBossOneStageTwoHp(hp);
+                break;
+            case 2:
+                new BossConfigPreference().setBossOneStageThreeHp(hp);
+                break;
+            case 3:
+                new BossConfigPreference().setBossOneStageFourHp(hp);
+                break;
+            case 4:
+                new BossConfigPreference().setBossOneStageFiveHp(hp);
+                break;
+            case 5:
+                new BossConfigPreference().setBossTwoStageOneHp(hp);
+                break;
+            case 6:
+                new BossConfigPreference().setBossTwoStageTwoHp(hp);
+                break;
+            case 7:
+                new BossConfigPreference().setBossTwoStageThreeHp(hp);
+                break;
+            case 8:
+                new BossConfigPreference().setBossTwoStageFourHp(hp);
+                break;
+            case 9:
+                new BossConfigPreference().setBossTwoStageFiveHp(hp);
+                break;
+            case 10:
+                new BossConfigPreference().setBossThreeStageOneHp(hp);
+                break;
+            case 11:
+                new BossConfigPreference().setBossThreeStageTwoHp(hp);
+                break;
+            case 12:
+                new BossConfigPreference().setBossThreeStageThreeHp(hp);
+                break;
+            case 13:
+                new BossConfigPreference().setBossThreeStageFourHp(hp);
+                break;
+            case 14:
+                new BossConfigPreference().setBossThreeStageFiveHp(hp);
+                break;
+            case 15:
+                new BossConfigPreference().setBossFourStageOneHp(hp);
+                break;
+            case 16:
+                new BossConfigPreference().setBossFourStageTwoHp(hp);
+                break;
+            case 17:
+                new BossConfigPreference().setBossFourStageThreeHp(hp);
+                break;
+            case 18:
+                new BossConfigPreference().setBossFourStageFourHp(hp);
+                break;
+            case 19:
+                new BossConfigPreference().setBossFourStageFiveHp(hp);
+                break;
+            case 20:
+                new BossConfigPreference().setBossFiveStageOneHp(hp);
+                break;
+            case 21:
+                new BossConfigPreference().setBossFiveStageTwoHp(hp);
+                break;
+            case 22:
+                new BossConfigPreference().setBossFiveStageThreeHp(hp);
+                break;
+            case 23:
+                new BossConfigPreference().setBossFiveStageFourHp(hp);
+                break;
+            case 24:
+                new BossConfigPreference().setBossFiveStageFiveHp(hp);
+            default:
+                break;
+        }
     }
 }

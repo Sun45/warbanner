@@ -28,4 +28,16 @@
         android:textSize="8sp"
         android:textStyle="bold"
         android:visibility="invisible" />
+
+    <cn.sun45.warbanner.ui.views.portraittextview.PortraitTextView
+        android:id="@+id/character_half"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/purple_600"
+        android:gravity="center"
+        android:text="@string/half"
+        android:textColor="@color/white_50"
+        android:textSize="8sp"
+        android:textStyle="bold"
+        android:visibility="invisible" />
 </merge>

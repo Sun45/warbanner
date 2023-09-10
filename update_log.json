@@ -1,6 +1,6 @@
 {
-  "versionCode": "48",
-  "versionName": "3.7.3",
+  "versionCode": "49",
+  "versionName": "4.3.1",
   "fource": "false",
-  "content": "1.添加筛选重置确认弹框2.调整数据源数据加载逻辑"
+  "content": "1.算法bug处理2.界面以及逻辑调整3.添加BOSS数据监听界面"
 }

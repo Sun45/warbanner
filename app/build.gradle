@@ -88,4 +88,6 @@ dependencies {
     implementation files('libs/commons-compress-1.19.jar')
 
     implementation 'com.github.wanglu1209:PhotoViewer:0.50'
+
+    implementation files('libs/bcrloglib-release.aar')
 }
