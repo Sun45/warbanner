@@ -1,6 +1,6 @@
 {
-  "versionCode": "49",
-  "versionName": "4.3.1",
+  "versionCode": "50",
+  "versionName": "4.3.2",
   "fource": "false",
-  "content": "1.算法bug处理2.界面以及逻辑调整3.添加BOSS数据监听界面"
+  "content": "1.bcrlog版本更新，修改图标"
 }

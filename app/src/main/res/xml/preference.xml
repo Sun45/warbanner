@@ -10,7 +10,7 @@
             app:key="data_update"
             app:title="@string/menu_data_update" />
         <Preference
-            app:icon="@drawable/ic_data_boss"
+            app:icon="@drawable/bcrlog_logo"
             app:key="data_boss"
             app:title="@string/menu_data_boss" />
     </PreferenceCategory>
