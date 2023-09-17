@@ -26,16 +26,21 @@ Android端BCR会战作业查询记录工具
 ## 使用教程及反馈
 [使用教程wiki](https://github.com/Sun45/warbanner/wiki) [问题反馈和建议](https://github.com/Sun45/warbanner/issues/new)
 
-或者来QQ群找我 <a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=pdrSNNu4dfCfcT92WBGbivz_DFQtT3ci&jump_from=webapi&authKey=9G6X7RZXehOT2FL93Gpv4YzQQ9A7RcPdEUZ3OJ6p23kvRjoNlkBFrMRNUoRnDKAS"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="花舞-公主连结交流一" title="花舞-公主连结交流一"></a>
-
 ## 导入分刀算法
 PCRTeamAnalyser [![](https://jitpack.io/v/Sun45/warbanner.svg)](https://jitpack.io/#Sun45/warbanner)
 ```gradle
 dependencies {
   ...
-  implementation 'com.github.Sun45:warbanner:3.7.2'
+  implementation 'com.github.Sun45:warbanner:4.3.1'
 }
 ```
+
+## BOSS数据监听
+界面导入方式见炽旗源码
+
+有什么问题或者建议可以加群 <a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=qwMoxYsp8DRSlDQ2XdHA_UwoyTlJY78b&jump_from=webapi&authKey=Io/jiDCVJIz3y6e3qKtFbPlnuEiW42QE8HvKQmQCzYGo8kSIbsddrAAFUoBU5Z7G"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="bcrlog交流&amp;问题反馈群" title="bcrlog交流&amp;问题反馈群"></a>
+
+本群的密码是？ 公主连结国服版号
 
 ## 许可证
 使用、改造、分发炽旗时请遵循 Apache License 2.0 开源许可证.
