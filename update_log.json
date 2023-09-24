@@ -1,6 +1,6 @@
 {
-  "versionCode": "50",
-  "versionName": "4.3.2",
+  "versionCode": "51",
+  "versionName": "4.3.3",
   "fource": "false",
-  "content": "1.bcrlog版本更新，修改图标"
+  "content": "1.修改BOSS数据监听界面入口2.添加套餐功能"
 }

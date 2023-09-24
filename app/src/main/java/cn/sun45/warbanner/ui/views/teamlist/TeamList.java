@@ -19,6 +19,7 @@ import cn.sun45.warbanner.document.database.source.models.TeamModel;
 import cn.sun45.warbanner.document.statics.StaticHelper;
 import cn.sun45.warbanner.document.statics.TeamType;
 import cn.sun45.warbanner.stage.StageManager;
+import cn.sun45.warbanner.ui.views.combinationlist.CombinationListModel;
 import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListModel;
 import cn.sun45.warbanner.util.Utils;
 
@@ -78,6 +79,38 @@ public class TeamList extends RecyclerView {
             }
             onScrolled();
         }
+    }
+
+    public void setData(CombinationListModel combinationListModel, List<CharacterModel> characterModels) {
+        List<TeamListTeamModel> list = new ArrayList<>();
+        TeamModel teamone = combinationListModel.getTeamone();
+        TeamModel teamtwo = combinationListModel.getTeamtwo();
+        TeamModel teamthree = combinationListModel.getTeamthree();
+        TeamModel teamfour = combinationListModel.getTeamfour();
+        TeamModel teamfive = combinationListModel.getTeamfive();
+        TeamModel teamsix = combinationListModel.getTeamsix();
+        if (teamone != null) {
+            list.add(new TeamListTeamModel(teamone, combinationListModel.getBorrowindexone()));
+        }
+        if (teamtwo != null) {
+            list.add(new TeamListTeamModel(teamtwo, combinationListModel.getBorrowindextwo()));
+        }
+        if (teamthree != null) {
+            list.add(new TeamListTeamModel(teamthree, combinationListModel.getBorrowindexthree()));
+        }
+        if (teamfour != null) {
+            list.add(new TeamListTeamModel(teamfour, combinationListModel.getBorrowindexfour()));
+        }
+        if (teamfive != null) {
+            list.add(new TeamListTeamModel(teamfive, combinationListModel.getBorrowindexfive()));
+        }
+        if (teamsix != null) {
+            list.add(new TeamListTeamModel(teamsix, combinationListModel.getBorrowindexsix()));
+        }
+        adapter.setList(list);
+        adapter.setCharacterModels(characterModels);
+        adapter.setShowlink(true);
+        dataNotify();
     }
 
     public void setData(TeamGroupListModel teamGroupListModel, List<CharacterModel> characterModels) {

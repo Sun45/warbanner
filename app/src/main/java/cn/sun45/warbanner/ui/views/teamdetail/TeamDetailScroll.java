@@ -85,6 +85,7 @@ public class TeamDetailScroll extends ScrollView {
 
         public RemarkHolder(TeamModel.TimeLine timeLine) {
             String title = timeLine.getTitle();
+            int returnTime = timeLine.getReturnTime();
             String description = timeLine.getDescription();
             String videoUrl = timeLine.getVideoUrl();
             List<TeamModel.Image> imageList = timeLine.getImageList();
@@ -96,7 +97,13 @@ public class TeamDetailScroll extends ScrollView {
             TextView titleText = new TextView(getContext());
             titleText.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             titleText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-            titleText.setText(title);
+            if (returnTime == 0) {
+                titleText.setText(title);
+            } else {
+                SpannableStringBuilder builder = new SpannableStringBuilder(title + " " + returnTime);
+                builder.setSpan(new ForegroundColorSpan(Utils.getAttrColor(getContext(), R.attr.colorSecondary)), title.length() + 1, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                titleText.setText(builder);
+            }
             contentlay.addView(titleText);
             if (!TextUtils.isEmpty(description)) {
                 TextView descriptionText = new TextView(getContext());

@@ -51,7 +51,8 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
     private TeamGroupList mTeamGroupList;
     private TextView mEmptyHint;
 
-    private FloatingActionButton mProgressingButton;
+    private FloatingActionButton mBcrlogButton;
+    private FloatingActionButton mCombinationButton;
     private FloatingActionButton mSearchButton;
 
     @Override
@@ -70,7 +71,8 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
         ((BaseActivity) getActivity()).setSupportActionBar(toolbar);
         mTeamGroupList = mRoot.findViewById(R.id.teamgrouplist);
         mEmptyHint = mRoot.findViewById(R.id.empty_hint);
-        mProgressingButton = mRoot.findViewById(R.id.progressing_btn);
+        mBcrlogButton = mRoot.findViewById(R.id.bcrlog_btn);
+        mCombinationButton = mRoot.findViewById(R.id.combination_btn);
         mSearchButton = mRoot.findViewById(R.id.search_btn);
 
         mTeamGroupList.setListener(this);
@@ -87,8 +89,13 @@ public class CollectionFragment extends BaseFragment implements TeamGroupListLis
         mEmptyHint.setText(builder);
 
         sharedSource.characterList.observe(requireActivity(), characterModels -> {
-            mProgressingButton.setOnClickListener(v -> {
-                ((MainActivity) getActivity()).showSnackBar(R.string.progressing);
+            mBcrlogButton.setOnClickListener(v -> {
+                NavController controller = Navigation.findNavController(getView());
+                controller.navigate(R.id.action_nav_main_to_nav_bossdata);
+            });
+            mCombinationButton.setOnClickListener(v -> {
+                NavController controller = Navigation.findNavController(getView());
+                controller.navigate(R.id.action_nav_main_to_nav_combination);
             });
             mSearchButton.setOnClickListener(v -> {
                 NavController controller = Navigation.findNavController(getView());

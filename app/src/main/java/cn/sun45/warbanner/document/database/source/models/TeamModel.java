@@ -13,6 +13,8 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import cn.sun45.warbanner.character.CharacterHelper;
 import cn.sun45.warbanner.document.statics.TeamType;
@@ -22,7 +24,7 @@ import cn.sun45.warbanner.document.statics.TeamType;
  * 阵容信息数据模型
  */
 @Entity(tableName = "team", primaryKeys = {"lang", "id"})
-public class TeamModel implements Serializable  {
+public class TeamModel implements Serializable {
     @NonNull
     @ColumnInfo
     public String lang;
@@ -188,8 +190,9 @@ public class TeamModel implements Serializable  {
         }
     }
 
-    public class TimeLine {
+    public class TimeLine implements Serializable {
         private String title;
+        private int returnTime;
         private String description;
         private String videoUrl;
         private List<Image> imageList;
@@ -203,6 +206,27 @@ public class TeamModel implements Serializable  {
 
         public void setTitle(String title) {
             this.title = title;
+            Matcher matcher = Pattern.compile("[0-9]+~[0-9]+s").matcher(title);
+            if (matcher.find()) {
+                String str = matcher.group();
+                try {
+                    returnTime = Integer.parseInt(str.substring(0, str.indexOf("~")));
+                } catch (NullPointerException e) {
+                }
+            } else {
+                matcher = Pattern.compile("[0-9]+s").matcher(title);
+                if (matcher.find()) {
+                    String str = matcher.group();
+                    try {
+                        returnTime = Integer.parseInt(str.substring(0, str.length() - 1));
+                    } catch (NullPointerException e) {
+                    }
+                }
+            }
+        }
+
+        public int getReturnTime() {
+            return returnTime;
         }
 
         public String getDescription() {

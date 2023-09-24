@@ -15,6 +15,7 @@ import cn.sun45.warbanner.framework.ui.BaseFragment;
 
 /**
  * Created by Sun45 on 2023/9/10
+ * boss数据监听Fragment
  */
 public class BossDataFragment extends BaseFragment {
     private BcrLog mBcrLog;

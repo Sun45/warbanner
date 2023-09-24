@@ -39,8 +39,6 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
     //数据
     private Preference update;
 
-    private Preference boss;
-
     //设置
     private Preference user;
     private Preference characterScreen;
@@ -80,13 +78,6 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
         update.setOnPreferenceClickListener(preference -> {
             DataManager.getInstance().showConfirmDialogCaimogu();
             btnRestore(preference);
-            return true;
-        });
-
-        boss = findPreference("data_boss");
-        boss.setOnPreferenceClickListener(preference -> {
-            NavController controller = Navigation.findNavController(getView());
-            controller.navigate(R.id.action_nav_main_to_nav_bossdata);
             return true;
         });
 

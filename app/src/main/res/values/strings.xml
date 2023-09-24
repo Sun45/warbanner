@@ -62,7 +62,6 @@
 
     <string name="menu_data">数据</string>
     <string name="menu_data_update">数据更新</string>
-    <string name="menu_data_boss">BOSS数据监听</string>
     <string name="menu_setting">设置</string>
     <string name="menu_user">本地用户</string>
     <string name="menu_character_screen">角色筛选</string>
@@ -159,4 +158,14 @@
     <string name="user_about_title">关于</string>
 
     <string name="boss_data_title">BOSS数据监听</string>
+
+    <string name="combination_title">套餐</string>
+    <string name="combination_analysing">数据生成中</string>
+
+    <string name="combination_detail_title">套餐详情</string>
+    <string name="combination_detail_menu_share">分享</string>
+    <string name="combination_detail_stage_a">A面</string>
+    <string name="combination_detail_stage_b">B面</string>
+    <string name="combination_detail_auto_yes">AUTO</string>
+    <string name="combination_detail_auto_mix">不限</string>
 </resources>

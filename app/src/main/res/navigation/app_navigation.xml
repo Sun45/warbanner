@@ -63,6 +63,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_nav_main_to_nav_combination"
+            app:destination="@id/nav_combination"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/nav_collection"
@@ -174,4 +181,28 @@
         android:id="@+id/nav_bossdata"
         android:name="cn.sun45.warbanner.ui.fragments.BossDataFragment"
         android:label="fragment_bossdata" />
+    <fragment
+        android:id="@+id/nav_combination"
+        android:name="cn.sun45.warbanner.ui.fragments.combination.CombinationFragment"
+        android:label="fragment_combination">
+        <action
+            android:id="@+id/action_nav_combination_to_nav_combinationdetail"
+            app:destination="@id/nav_combinationdetail"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_combinationdetail"
+        android:name="cn.sun45.warbanner.ui.fragments.combination.CombinationDetailFragment"
+        android:label="fragment_combination">
+        <action
+            android:id="@+id/action_nav_combinationdetail_to_nav_teamdetail"
+            app:destination="@id/nav_teamdetail"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
 </navigation>
