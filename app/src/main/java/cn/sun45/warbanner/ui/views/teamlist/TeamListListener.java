@@ -15,4 +15,6 @@ public interface TeamListListener {
     void onScrolled(int first, int last);
 
     void select(TeamModel teamModel);
+
+    void reCalucate(TeamListReCalucateModel teamListReCalucateModel);
 }

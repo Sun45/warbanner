@@ -41,16 +41,7 @@ public class TeamGroupHelper {
     }
 
     public List<TeamGroupListModel> build(List<TeamModel> teamModels, List<TeamCustomizeModel> teamCustomizeModels) {
-        Utils.logD(TAG, "build");
-        List<ScreenCharacterModel> screenCharacterModelList = CharacterHelper.getScreenCharacterList();
         List<TeamGroupScreenUsedCharacterModel> usedCharacterModelList = CharacterHelper.getUsedCharacterList();
-        TeamGroupScreenModel teamGroupScreenModel = ClanwarHelper.getScreenModel();
-        Map<Integer, Integer> screenCharacterMap = new TreeMap<>();
-        if (characterscreenenable) {
-            for (ScreenCharacterModel screenCharacterModel : screenCharacterModelList) {
-                screenCharacterMap.put(screenCharacterModel.getCharacterId(), screenCharacterModel.getType());
-            }
-        }
         List<Integer> usingList = new ArrayList<>();
         List<Integer> usedList = new ArrayList<>();
         for (TeamGroupScreenUsedCharacterModel teamGroupScreenUsedCharacterModel : usedCharacterModelList) {
@@ -58,6 +49,45 @@ public class TeamGroupHelper {
                 usingList.add(teamGroupScreenUsedCharacterModel.getCharacterId());
             } else if (teamGroupScreenUsedCharacterModel.getType() == CharacterUseType.TYPE_USED.getScreenType().getType()) {
                 usedList.add(teamGroupScreenUsedCharacterModel.getCharacterId());
+            }
+        }
+        TeamGroupScreenModel teamGroupScreenModel = ClanwarHelper.getScreenModel();
+        TeamGroupConfigureModel teamGroupConfigureModel = new TeamGroupConfigureModel();
+        if (teamGroupScreenModel.isTeamoneenable()) {
+            TeamGroupConfigureModel.Configure teamOneConfigure = teamGroupConfigureModel.new Configure(
+                    teamGroupScreenModel.getTeamonestage(), teamGroupScreenModel.getTeamoneboss() + 1, teamGroupScreenModel.getTeamoneauto(),
+                    teamGroupScreenModel.getTeamonecharacteroneid(), teamGroupScreenModel.getTeamonecharactertwoid(), teamGroupScreenModel.getTeamonecharacterthreeid(), teamGroupScreenModel.getTeamonecharacterfourid(), teamGroupScreenModel.getTeamonecharacterfiveid(),
+                    teamGroupScreenModel.getTeamoneborrowindex(), teamGroupScreenModel.isTeamoneextra()
+            );
+            teamGroupConfigureModel.setTeamOneConfigure(teamOneConfigure);
+        }
+        if (teamGroupScreenModel.isTeamtwoenable()) {
+            TeamGroupConfigureModel.Configure teamtwoConfigure = teamGroupConfigureModel.new Configure(
+                    teamGroupScreenModel.getTeamtwostage(), teamGroupScreenModel.getTeamtwoboss() + 1, teamGroupScreenModel.getTeamtwoauto(),
+                    teamGroupScreenModel.getTeamtwocharacteroneid(), teamGroupScreenModel.getTeamtwocharactertwoid(), teamGroupScreenModel.getTeamtwocharacterthreeid(), teamGroupScreenModel.getTeamtwocharacterfourid(), teamGroupScreenModel.getTeamtwocharacterfiveid(),
+                    teamGroupScreenModel.getTeamtwoborrowindex(), teamGroupScreenModel.isTeamtwoextra()
+            );
+            teamGroupConfigureModel.setTeamTwoConfigure(teamtwoConfigure);
+        }
+        if (teamGroupScreenModel.isTeamthreeenable()) {
+            TeamGroupConfigureModel.Configure teamthreeConfigure = teamGroupConfigureModel.new Configure(
+                    teamGroupScreenModel.getTeamthreestage(), teamGroupScreenModel.getTeamthreeboss() + 1, teamGroupScreenModel.getTeamthreeauto(),
+                    teamGroupScreenModel.getTeamthreecharacteroneid(), teamGroupScreenModel.getTeamthreecharactertwoid(), teamGroupScreenModel.getTeamthreecharacterthreeid(), teamGroupScreenModel.getTeamthreecharacterfourid(), teamGroupScreenModel.getTeamthreecharacterfiveid(),
+                    teamGroupScreenModel.getTeamthreeborrowindex(), teamGroupScreenModel.isTeamthreeextra()
+            );
+            teamGroupConfigureModel.setTeamThreeConfigure(teamthreeConfigure);
+        }
+        return build(teamModels, teamCustomizeModels, usingList, usedList, teamGroupConfigureModel);
+    }
+
+    public List<TeamGroupListModel> build(List<TeamModel> teamModels, List<TeamCustomizeModel> teamCustomizeModels,
+                                          List<Integer> usingList, List<Integer> usedList, TeamGroupConfigureModel teamGroupConfigureModel) {
+        Utils.logD(TAG, "build");
+        List<ScreenCharacterModel> screenCharacterModelList = CharacterHelper.getScreenCharacterList();
+        Map<Integer, Integer> screenCharacterMap = new TreeMap<>();
+        if (characterscreenenable) {
+            for (ScreenCharacterModel screenCharacterModel : screenCharacterModelList) {
+                screenCharacterMap.put(screenCharacterModel.getCharacterId(), screenCharacterModel.getType());
             }
         }
         List<TeamGroupElementModel> elementModels = new ArrayList<>();
@@ -84,7 +114,7 @@ public class TeamGroupHelper {
                         break;
                     }
                 }
-                if (usedList.contains(id)) {
+                if (usedList != null && usedList.contains(id)) {
                     if (screencharacter != 0) {
                         notuseable = true;
                         break;
@@ -107,23 +137,24 @@ public class TeamGroupHelper {
             return null;
         }
         List<TeamGroupElementModel> elementModelListOne = new ArrayList<>();
-        if (teamGroupScreenModel.isTeamoneenable()) {
+        TeamGroupConfigureModel.Configure teamOneConfigure = teamGroupConfigureModel.getTeamOneConfigure();
+        if (teamOneConfigure != null) {
             int borrowid = 0;
-            switch (teamGroupScreenModel.getTeamoneborrowindex()) {
+            switch (teamOneConfigure.getBorrowindex()) {
                 case 0:
-                    borrowid = teamGroupScreenModel.getTeamonecharacteroneid();
+                    borrowid = teamOneConfigure.getCharacteroneid();
                     break;
                 case 1:
-                    borrowid = teamGroupScreenModel.getTeamonecharactertwoid();
+                    borrowid = teamOneConfigure.getCharactertwoid();
                     break;
                 case 2:
-                    borrowid = teamGroupScreenModel.getTeamonecharacterthreeid();
+                    borrowid = teamOneConfigure.getCharacterthreeid();
                     break;
                 case 3:
-                    borrowid = teamGroupScreenModel.getTeamonecharacterfourid();
+                    borrowid = teamOneConfigure.getCharacterfourid();
                     break;
                 case 4:
-                    borrowid = teamGroupScreenModel.getTeamonecharacterfiveid();
+                    borrowid = teamOneConfigure.getCharacterfiveid();
                     break;
                 default:
                     break;
@@ -131,9 +162,9 @@ public class TeamGroupHelper {
             for (TeamGroupElementModel teamGroupElementModel : elementModels) {
                 TeamGroupElementModel copyTeamGroupElementModel = teamGroupElementModel.getCopy();
                 if (fit(copyTeamGroupElementModel,
-                        teamGroupScreenModel.isTeamoneextra(), usingList,
-                        teamGroupScreenModel.getTeamonestage(), teamGroupScreenModel.getTeamoneboss(), teamGroupScreenModel.getTeamoneauto(),
-                        teamGroupScreenModel.getTeamonecharacteroneid(), teamGroupScreenModel.getTeamonecharactertwoid(), teamGroupScreenModel.getTeamonecharacterthreeid(), teamGroupScreenModel.getTeamonecharacterfourid(), teamGroupScreenModel.getTeamonecharacterfiveid(),
+                        teamOneConfigure.isExtra(), usingList,
+                        teamOneConfigure.getStage(), teamOneConfigure.getBoss(), teamOneConfigure.getAuto(),
+                        teamOneConfigure.getCharacteroneid(), teamOneConfigure.getCharactertwoid(), teamOneConfigure.getCharacterthreeid(), teamOneConfigure.getCharacterfourid(), teamOneConfigure.getCharacterfiveid(),
                         borrowid)) {
                     elementModelListOne.add(copyTeamGroupElementModel);
                 }
@@ -143,23 +174,24 @@ public class TeamGroupHelper {
             }
         }
         List<TeamGroupElementModel> elementModelListTwo = new ArrayList<>();
-        if (teamGroupScreenModel.isTeamtwoenable()) {
+        TeamGroupConfigureModel.Configure teamTwoConfigure = teamGroupConfigureModel.getTeamTwoConfigure();
+        if (teamTwoConfigure != null) {
             int borrowid = 0;
-            switch (teamGroupScreenModel.getTeamtwoborrowindex()) {
+            switch (teamTwoConfigure.getBorrowindex()) {
                 case 0:
-                    borrowid = teamGroupScreenModel.getTeamtwocharacteroneid();
+                    borrowid = teamTwoConfigure.getCharacteroneid();
                     break;
                 case 1:
-                    borrowid = teamGroupScreenModel.getTeamtwocharactertwoid();
+                    borrowid = teamTwoConfigure.getCharactertwoid();
                     break;
                 case 2:
-                    borrowid = teamGroupScreenModel.getTeamtwocharacterthreeid();
+                    borrowid = teamTwoConfigure.getCharacterthreeid();
                     break;
                 case 3:
-                    borrowid = teamGroupScreenModel.getTeamtwocharacterfourid();
+                    borrowid = teamTwoConfigure.getCharacterfourid();
                     break;
                 case 4:
-                    borrowid = teamGroupScreenModel.getTeamtwocharacterfiveid();
+                    borrowid = teamTwoConfigure.getCharacterfiveid();
                     break;
                 default:
                     break;
@@ -167,9 +199,9 @@ public class TeamGroupHelper {
             for (TeamGroupElementModel teamGroupElementModel : elementModels) {
                 TeamGroupElementModel copyTeamGroupElementModel = teamGroupElementModel.getCopy();
                 if (fit(copyTeamGroupElementModel,
-                        teamGroupScreenModel.isTeamtwoextra(), usingList,
-                        teamGroupScreenModel.getTeamtwostage(), teamGroupScreenModel.getTeamtwoboss(), teamGroupScreenModel.getTeamtwoauto(),
-                        teamGroupScreenModel.getTeamtwocharacteroneid(), teamGroupScreenModel.getTeamtwocharactertwoid(), teamGroupScreenModel.getTeamtwocharacterthreeid(), teamGroupScreenModel.getTeamtwocharacterfourid(), teamGroupScreenModel.getTeamtwocharacterfiveid(),
+                        teamTwoConfigure.isExtra(), usingList,
+                        teamTwoConfigure.getStage(), teamTwoConfigure.getBoss(), teamTwoConfigure.getAuto(),
+                        teamTwoConfigure.getCharacteroneid(), teamTwoConfigure.getCharactertwoid(), teamTwoConfigure.getCharacterthreeid(), teamTwoConfigure.getCharacterfourid(), teamTwoConfigure.getCharacterfiveid(),
                         borrowid)) {
                     elementModelListTwo.add(copyTeamGroupElementModel);
                 }
@@ -179,23 +211,24 @@ public class TeamGroupHelper {
             }
         }
         List<TeamGroupElementModel> elementModelListThree = new ArrayList<>();
-        if (teamGroupScreenModel.isTeamthreeenable()) {
+        TeamGroupConfigureModel.Configure teamThreeConfigure = teamGroupConfigureModel.getTeamThreeConfigure();
+        if (teamThreeConfigure != null) {
             int borrowid = 0;
-            switch (teamGroupScreenModel.getTeamthreeborrowindex()) {
+            switch (teamThreeConfigure.getBorrowindex()) {
                 case 0:
-                    borrowid = teamGroupScreenModel.getTeamthreecharacteroneid();
+                    borrowid = teamThreeConfigure.getCharacteroneid();
                     break;
                 case 1:
-                    borrowid = teamGroupScreenModel.getTeamthreecharactertwoid();
+                    borrowid = teamThreeConfigure.getCharactertwoid();
                     break;
                 case 2:
-                    borrowid = teamGroupScreenModel.getTeamthreecharacterthreeid();
+                    borrowid = teamThreeConfigure.getCharacterthreeid();
                     break;
                 case 3:
-                    borrowid = teamGroupScreenModel.getTeamthreecharacterfourid();
+                    borrowid = teamThreeConfigure.getCharacterfourid();
                     break;
                 case 4:
-                    borrowid = teamGroupScreenModel.getTeamthreecharacterfiveid();
+                    borrowid = teamThreeConfigure.getCharacterfiveid();
                     break;
                 default:
                     break;
@@ -203,9 +236,9 @@ public class TeamGroupHelper {
             for (TeamGroupElementModel teamGroupElementModel : elementModels) {
                 TeamGroupElementModel copyTeamGroupElementModel = teamGroupElementModel.getCopy();
                 if (fit(copyTeamGroupElementModel,
-                        teamGroupScreenModel.isTeamthreeextra(), usingList,
-                        teamGroupScreenModel.getTeamthreestage(), teamGroupScreenModel.getTeamthreeboss(), teamGroupScreenModel.getTeamthreeauto(),
-                        teamGroupScreenModel.getTeamthreecharacteroneid(), teamGroupScreenModel.getTeamthreecharactertwoid(), teamGroupScreenModel.getTeamthreecharacterthreeid(), teamGroupScreenModel.getTeamthreecharacterfourid(), teamGroupScreenModel.getTeamthreecharacterfiveid(),
+                        teamThreeConfigure.isExtra(), usingList,
+                        teamThreeConfigure.getStage(), teamThreeConfigure.getBoss(), teamThreeConfigure.getAuto(),
+                        teamThreeConfigure.getCharacteroneid(), teamThreeConfigure.getCharactertwoid(), teamThreeConfigure.getCharacterthreeid(), teamThreeConfigure.getCharacterfourid(), teamThreeConfigure.getCharacterfiveid(),
                         borrowid)) {
                     elementModelListThree.add(copyTeamGroupElementModel);
                 }
@@ -277,7 +310,7 @@ public class TeamGroupHelper {
         if (!StageManager.getInstance().matchTeamModel(teamModel, stage)) {
             return false;
         }
-        if (Integer.valueOf(teamModel.getBoss().substring(1, 2)) != boss + 1) {
+        if (boss != 0 && Integer.valueOf(teamModel.getBoss().substring(1, 2)) != boss) {
             return false;
         }
         if (auto != 0) {
@@ -307,13 +340,15 @@ public class TeamGroupHelper {
             return false;
         }
         if (!extra) {
-            for (int id : idlist) {
-                for (int usingId : usingList) {
-                    if (id == usingId) {
-                        if (screencharacter != 0 && screencharacter != id) {
-                            return false;
-                        } else {
-                            screencharacter = id;
+            if (usingList != null) {
+                for (int id : idlist) {
+                    for (int usingId : usingList) {
+                        if (id == usingId) {
+                            if (screencharacter != 0 && screencharacter != id) {
+                                return false;
+                            } else {
+                                screencharacter = id;
+                            }
                         }
                     }
                 }

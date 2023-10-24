@@ -6,17 +6,18 @@ import android.util.AttributeSet;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import cn.sun45.warbanner.framework.ui.BaseVerticalRecyclerView;
+
 /**
  * Created by Sun45 on 2021/6/16
  * 用户列表
  */
-public class UserList extends RecyclerView {
+public class UserList extends BaseVerticalRecyclerView {
     private UserListAdapter adapter;
 
     public UserList(@NonNull @NotNull Context context, @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs) {
@@ -38,6 +39,7 @@ public class UserList extends RecyclerView {
         adapter.setList(list);
         adapter.notifyDataSetChanged();
     }
+
     public void notifyDataSetChanged() {
         adapter.notifyDataSetChanged();
     }

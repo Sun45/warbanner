@@ -42,6 +42,7 @@ import cn.sun45.warbanner.ui.views.listselectbar.ListSelectItem;
 import cn.sun45.warbanner.ui.views.selectgroup.SelectGroup;
 import cn.sun45.warbanner.ui.views.teamlist.TeamList;
 import cn.sun45.warbanner.ui.views.teamlist.TeamListListener;
+import cn.sun45.warbanner.ui.views.teamlist.TeamListReCalucateModel;
 import cn.sun45.warbanner.util.Utils;
 
 /**
@@ -79,12 +80,7 @@ public class TeamSelectFragment extends BaseFragment implements TeamListListener
     protected void initView() {
         MaterialToolbar toolbar = mRoot.findViewById(R.id.drop_toolbar);
         ((BaseActivity) getActivity()).setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(v).navigateUp();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> Navigation.findNavController(v).navigateUp());
         mTeamList = mRoot.findViewById(R.id.teamlist);
         mListSelectBar = mRoot.findViewById(R.id.listselectbar);
         mEmptyHint = mRoot.findViewById(R.id.empty_hint);
@@ -197,6 +193,11 @@ public class TeamSelectFragment extends BaseFragment implements TeamListListener
                 break;
         }
         Navigation.findNavController(getView()).navigateUp();
+    }
+
+    @Override
+    public void reCalucate(TeamListReCalucateModel teamListReCalucateModel) {
+
     }
 
     @Override

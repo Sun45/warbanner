@@ -1,10 +1,11 @@
 package cn.sun45.warbanner.ui.views.combinationlist;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
+import cn.sun45.warbanner.combination.CombinationElementModel;
 import cn.sun45.warbanner.document.database.source.models.TeamModel;
-import cn.sun45.warbanner.ui.fragments.combination.CombinationElementModel;
 
 /**
  * Created by Sun45 on 2023/9/23
@@ -71,11 +72,60 @@ public class CombinationListModel implements Serializable {
         timelinesfive = elementfive.getTimeLines();
         idlistfive = elementfive.getIdlist();
         borrowindexfive = idlistfive.indexOf((Object) borrowIds[4]);
-        teamsix = elementsix.getTeamModel();
-        returntimesix = elementsix.getReturnTime();
-        timelinessix = elementsix.getTimeLines();
-        idlistsix = elementsix.getIdlist();
-        borrowindexsix = idlistsix.indexOf((Object) borrowIds[5]);
+        if (elementsix != null) {
+            teamsix = elementsix.getTeamModel();
+            returntimesix = elementsix.getReturnTime();
+            timelinessix = elementsix.getTimeLines();
+            idlistsix = elementsix.getIdlist();
+            borrowindexsix = idlistsix.indexOf((Object) borrowIds[5]);
+        }
+    }
+
+    public ArrayList<Integer> getUsedCharacterList() {
+        ArrayList<Integer> usedCharacterList = new ArrayList<>();
+        if (idlistone != null) {
+            for (Integer id : idlistone) {
+                if (!usedCharacterList.contains(id)) {
+                    usedCharacterList.add(id);
+                }
+            }
+        }
+        if (idlisttwo != null) {
+            for (Integer id : idlisttwo) {
+                if (!usedCharacterList.contains(id)) {
+                    usedCharacterList.add(id);
+                }
+            }
+        }
+        if (idlistthree != null) {
+            for (Integer id : idlistthree) {
+                if (!usedCharacterList.contains(id)) {
+                    usedCharacterList.add(id);
+                }
+            }
+        }
+        if (idlistfour != null) {
+            for (Integer id : idlistfour) {
+                if (!usedCharacterList.contains(id)) {
+                    usedCharacterList.add(id);
+                }
+            }
+        }
+        if (idlistfive != null) {
+            for (Integer id : idlistfive) {
+                if (!usedCharacterList.contains(id)) {
+                    usedCharacterList.add(id);
+                }
+            }
+        }
+        if (idlistsix != null) {
+            for (Integer id : idlistsix) {
+                if (!usedCharacterList.contains(id)) {
+                    usedCharacterList.add(id);
+                }
+            }
+        }
+        return usedCharacterList;
     }
 
     public TeamModel getTeamone() {

@@ -131,7 +131,6 @@
         </FrameLayout>
     </LinearLayout>
 
-
     <cn.sun45.warbanner.ui.views.combinationlist.CombinationList
         android:id="@+id/combinationlist"
         android:layout_width="match_parent"
@@ -141,11 +140,26 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/auto_lay" />
 
-    <cn.sun45.warbanner.ui.views.combinationlist.selectbar.CombinationListSelectBar
+    <TextView
+        android:id="@+id/empty_hint"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:gravity="center"
+        android:lineSpacingMultiplier="1.2"
+        android:text="@string/combination_empty"
+        android:textColor="@color/white_50"
+        android:textSize="24sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/combinationlist"
+        app:layout_constraintLeft_toLeftOf="@id/combinationlist"
+        app:layout_constraintRight_toRightOf="@id/combinationlist"
+        app:layout_constraintTop_toTopOf="@id/combinationlist" />
+
+    <cn.sun45.warbanner.ui.views.listselectbar.ListSelectBar
         android:id="@+id/listselectbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@id/combinationlist"
+        app:layout_constraintRight_toRightOf="@id/combinationlist"
+        app:layout_constraintTop_toTopOf="@id/combinationlist" />
 </androidx.constraintlayout.widget.ConstraintLayout>

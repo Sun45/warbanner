@@ -60,12 +60,7 @@ public class TeamGroupScreenUsedCharacterFragment extends BaseFragment implement
     protected void initView() {
         MaterialToolbar toolbar = mRoot.findViewById(R.id.drop_toolbar);
         ((BaseActivity) getActivity()).setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(v).navigateUp();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> Navigation.findNavController(v).navigateUp());
 
         mCharacterScroll = mRoot.findViewById(R.id.charactershow_scroll);
         mCharacterListLay = mRoot.findViewById(R.id.characterlistlay);

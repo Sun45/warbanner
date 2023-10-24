@@ -2,12 +2,19 @@ package cn.sun45.warbanner.ui.views.listselectbar;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
@@ -37,7 +44,7 @@ public class ListSelectBar extends FrameLayout {
     public ListSelectBar(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         Utils.logD(TAG, "ListSelectBar");
-        halfsize = Utils.dip2px(getContext(), 10);
+        halfsize = Utils.dip2px(getContext(), 13);
         totalheight = Utils.getScreenSize()[0] * 2 / 3;
         setBackgroundResource(R.drawable.listselectbar_bg);
     }
@@ -103,7 +110,6 @@ public class ListSelectBar extends FrameLayout {
 
         public Holder(ListSelectItem listSelectItem) {
             this.listSelectItem = listSelectItem;
-            pic = new ImageView(getContext());
             FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(halfsize * 2, halfsize * 2);
             int margintop = 0;
             if (count == 1) {
@@ -112,11 +118,18 @@ public class ListSelectBar extends FrameLayout {
                 margintop = (int) (totalheight * 1.0f / (count - 1) * listSelectItem.getPosition());
             }
             layoutParams.setMargins(0, margintop, 0, 0);
+            String picUrl = listSelectItem.getPicUrl();
+            int picSrc = listSelectItem.getPicSrc();
+            pic = new ImageView(getContext());
             pic.setLayoutParams(layoutParams);
-            ImageRequester.request(listSelectItem.getPicUrl(), R.drawable.ic_character_default).loadRoundImage(pic);
+            if (!TextUtils.isEmpty(picUrl)) {
+                ImageRequester.request(picUrl, R.drawable.ic_character_default).loadRoundImage(pic);
+            } else if (picSrc != 0) {
+                pic.setImageResource(picSrc);
+            }
         }
 
-        public View getView() {
+        public ImageView getView() {
             return pic;
         }
     }

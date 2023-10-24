@@ -161,6 +161,7 @@
 
     <string name="combination_title">套餐</string>
     <string name="combination_analysing">数据生成中</string>
+    <string name="combination_empty">套餐生成为空，请修改屏蔽器设置</string>
 
     <string name="combination_detail_title">套餐详情</string>
     <string name="combination_detail_menu_share">分享</string>
@@ -168,4 +169,23 @@
     <string name="combination_detail_stage_b">B面</string>
     <string name="combination_detail_auto_yes">AUTO</string>
     <string name="combination_detail_auto_mix">不限</string>
+
+    <string name="re_calucate_title">再生成</string>
+    <string name="re_calucate_menu_screen">筛选</string>
+    <string-array name="re_calucate_boss_options">
+        <item>全部</item>
+        <item>一王</item>
+        <item>二王</item>
+        <item>三王</item>
+        <item>四王</item>
+        <item>五王</item>
+    </string-array>
+    <string-array name="re_calucate_auto_options">
+        <item>不限</item>
+        <item>AUTO</item>
+        <item>非AUTO</item>
+        <item>尾刀</item>
+    </string-array>
+    <string name="re_calucate_analysing">数据生成中</string>
+    <string name="re_calucate_empty">生成数据为空，请修改筛选条件</string>
 </resources>

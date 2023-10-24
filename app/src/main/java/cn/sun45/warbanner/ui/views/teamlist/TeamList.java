@@ -18,6 +18,7 @@ import cn.sun45.warbanner.document.database.source.models.CharacterModel;
 import cn.sun45.warbanner.document.database.source.models.TeamModel;
 import cn.sun45.warbanner.document.statics.StaticHelper;
 import cn.sun45.warbanner.document.statics.TeamType;
+import cn.sun45.warbanner.framework.ui.BaseVerticalRecyclerView;
 import cn.sun45.warbanner.stage.StageManager;
 import cn.sun45.warbanner.ui.views.combinationlist.CombinationListModel;
 import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListModel;
@@ -27,7 +28,7 @@ import cn.sun45.warbanner.util.Utils;
  * Created by Sun45 on 2021/5/20
  * 阵容列表
  */
-public class TeamList extends RecyclerView {
+public class TeamList extends BaseVerticalRecyclerView {
     private static final String TAG = "TeamList";
     private LinearLayoutManager layoutManager;
     private TeamListAdapter adapter;
@@ -81,8 +82,15 @@ public class TeamList extends RecyclerView {
         }
     }
 
+    public void setData(List<TeamListTeamModel> list, List<CharacterModel> characterModels) {
+        adapter.setList(list);
+        adapter.setCharacterModels(characterModels);
+        adapter.setShowlink(true);
+        dataNotify();
+    }
+
     public void setData(CombinationListModel combinationListModel, List<CharacterModel> characterModels) {
-        List<TeamListTeamModel> list = new ArrayList<>();
+        List<Object> list = new ArrayList<>();
         TeamModel teamone = combinationListModel.getTeamone();
         TeamModel teamtwo = combinationListModel.getTeamtwo();
         TeamModel teamthree = combinationListModel.getTeamthree();
@@ -95,19 +103,23 @@ public class TeamList extends RecyclerView {
         if (teamtwo != null) {
             list.add(new TeamListTeamModel(teamtwo, combinationListModel.getBorrowindextwo()));
         }
+        list.add(null);
         if (teamthree != null) {
             list.add(new TeamListTeamModel(teamthree, combinationListModel.getBorrowindexthree()));
         }
         if (teamfour != null) {
             list.add(new TeamListTeamModel(teamfour, combinationListModel.getBorrowindexfour()));
         }
+        list.add(null);
         if (teamfive != null) {
             list.add(new TeamListTeamModel(teamfive, combinationListModel.getBorrowindexfive()));
         }
         if (teamsix != null) {
             list.add(new TeamListTeamModel(teamsix, combinationListModel.getBorrowindexsix()));
+        } else {
+            list.add(new TeamListReCalucateModel(combinationListModel.getUsedCharacterList()));
         }
-        adapter.setList(list);
+        adapter.setTeamWithReCalucate(list);
         adapter.setCharacterModels(characterModels);
         adapter.setShowlink(true);
         dataNotify();

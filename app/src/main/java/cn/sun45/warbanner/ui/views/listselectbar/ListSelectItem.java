@@ -7,21 +7,31 @@ import java.util.Objects;
  * 列表选择元素
  */
 public class ListSelectItem {
+    private int position;
     private String picUrl;
 
-    private int position;
+    private int picSrc;
 
-    public ListSelectItem(String picUrl, int position) {
-        this.picUrl = picUrl;
+    public ListSelectItem(int position, String picUrl) {
         this.position = position;
+        this.picUrl = picUrl;
+    }
+
+    public ListSelectItem(int position, int picSrc) {
+        this.position = position;
+        this.picSrc = picSrc;
+    }
+
+    public int getPosition() {
+        return position;
     }
 
     public String getPicUrl() {
         return picUrl;
     }
 
-    public int getPosition() {
-        return position;
+    public int getPicSrc() {
+        return picSrc;
     }
 
     @Override

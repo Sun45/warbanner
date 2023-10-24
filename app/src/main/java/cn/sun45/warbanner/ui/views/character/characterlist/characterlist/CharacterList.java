@@ -6,17 +6,18 @@ import android.util.AttributeSet;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+import cn.sun45.warbanner.framework.ui.BaseVerticalRecyclerView;
+
 /**
  * Created by Sun45 on 2021/5/30
  * 角色列表
  */
-public class CharacterList extends RecyclerView {
+public class CharacterList extends BaseVerticalRecyclerView {
     private CharacterListAdapter adapter;
 
     public CharacterList(@NonNull @NotNull Context context, @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs) {

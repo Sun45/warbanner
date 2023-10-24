@@ -1,6 +1,8 @@
 package cn.sun45.warbanner.ui.views.combinationlist;
 
 import android.content.Context;
+import android.text.SpannableString;
+import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +21,14 @@ import cn.sun45.warbanner.character.CharacterHelper;
 import cn.sun45.warbanner.document.database.source.models.CharacterModel;
 import cn.sun45.warbanner.document.database.source.models.TeamModel;
 import cn.sun45.warbanner.ui.views.character.characterview.CharacterView;
-import cn.sun45.warbanner.ui.views.combinationlist.selectbar.CombinationListSelectItem;
+import cn.sun45.warbanner.ui.views.listselectbar.ListSelectItem;
+import cn.sun45.warbanner.util.Utils;
 
 /**
  * Created by Sun45 on 2023/9/23
  * 套餐列表Adapter
  */
-public class CombinationListAdapter extends RecyclerView.Adapter<CombinationListAdapter.Holder> {
+public class CombinationListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = "CombinationListAdapter";
 
     private Context context;
@@ -34,7 +37,7 @@ public class CombinationListAdapter extends RecyclerView.Adapter<CombinationList
 
     private List<CharacterModel> characterModels;
 
-    private List<CombinationListModel> list;
+    private List<CombinationGroupModel> list;
 
     public CombinationListAdapter(Context context) {
         this.context = context;
@@ -48,44 +51,102 @@ public class CombinationListAdapter extends RecyclerView.Adapter<CombinationList
         this.characterModels = characterModels;
     }
 
-    public void setList(List<CombinationListModel> list) {
+    public void setList(List<CombinationGroupModel> list) {
         this.list = list;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        Object item = getItem(position);
+        return item instanceof CombinationGroupModel ? 0 : 1;
     }
 
     @NotNull
     @Override
-    public Holder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.combinationlist_item, parent, false);
-        return new Holder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+        RecyclerView.ViewHolder holder = null;
+        switch (viewType) {
+            case 0:
+                holder = new CombinationListAdapter.DescriptionHolder(LayoutInflater.from(context).inflate(R.layout.combinationlist_descriptionitem, parent, false));
+                break;
+            case 1:
+                holder = new CombinationListAdapter.CombinationHolder(LayoutInflater.from(context).inflate(R.layout.combinationlist_combinationitem, parent, false));
+                break;
+        }
+        return holder;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull @NotNull Holder holder, int position) {
-        holder.setData(list.get(position));
+    public void onBindViewHolder(@NonNull @NotNull RecyclerView.ViewHolder holder, int position) {
+        switch (getItemViewType(position)) {
+            case 0:
+                ((DescriptionHolder) holder).setData((CombinationGroupModel) getItem(position));
+                break;
+            case 1:
+                ((CombinationHolder) holder).setData((CombinationListModel) getItem(position));
+                break;
+        }
     }
 
     @Override
     public int getItemCount() {
-        return list != null ? list.size() : 0;
+        if (list == null) {
+            return 0;
+        } else {
+            int count = 0;
+            for (CombinationGroupModel combinationGroupModel : list) {
+                count++;
+                count += combinationGroupModel.getList().size();
+            }
+            return count;
+        }
     }
 
-    public List<CombinationListSelectItem> getListSelectItemList() {
-        List<CombinationListSelectItem> listSelectItems = new ArrayList<>();
-        String lasttitle = null;
-        for (int i = 0; i < list.size(); i++) {
-            CombinationListModel combinationListModel = list.get(i);
-            String title = buildTitle(combinationListModel);
-            if (title.equals(lasttitle)) {
-                continue;
-            }
-            lasttitle = title;
-            CombinationListSelectItem listSelectItem = new CombinationListSelectItem(buildShortTitle(combinationListModel), i);
+    public List<ListSelectItem> getListSelectItemList() {
+        List<ListSelectItem> listSelectItems = new ArrayList<>();
+        int position = 0;
+        for (int i = 0; i < list.size(); i++, position++) {
+            CombinationGroupModel combinationGroupModel = list.get(i);
+            ListSelectItem listSelectItem = new ListSelectItem(position, combinationGroupModel.getPicSrc());
             listSelectItems.add(listSelectItem);
+            position += combinationGroupModel.getList().size();
         }
         return listSelectItems;
     }
 
-    public class Holder extends RecyclerView.ViewHolder {
+    private Object getItem(int position) {
+        if (list != null) {
+            for (CombinationGroupModel combinationGroupModel : list) {
+                if (position == 0) {
+                    return combinationGroupModel;
+                } else {
+                    position--;
+                    int count = combinationGroupModel.getList().size();
+                    if (position < count) {
+                        return combinationGroupModel.getList().get(position);
+                    } else {
+                        position -= count;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public class DescriptionHolder extends RecyclerView.ViewHolder {
+        private TextView mDescription;
+
+        public DescriptionHolder(@NonNull View itemView) {
+            super(itemView);
+            mDescription = itemView.findViewById(R.id.describtion);
+        }
+
+        public void setData(CombinationGroupModel combinationGroupModel) {
+            mDescription.setText(combinationGroupModel.getDescription());
+        }
+    }
+
+    public class CombinationHolder extends RecyclerView.ViewHolder {
         private TextView mTitle;
         private TeamHolder mTeamOne;
         private TeamHolder mTeamTwo;
@@ -93,10 +154,11 @@ public class CombinationListAdapter extends RecyclerView.Adapter<CombinationList
         private TeamHolder mTeamFour;
         private TeamHolder mTeamFive;
         private TeamHolder mTeamSix;
+        private TextView reCalucate;
 
         private CombinationListModel model;
 
-        public Holder(@NonNull View itemView) {
+        public CombinationHolder(@NonNull View itemView) {
             super(itemView);
             mTitle = itemView.findViewById(R.id.title);
             mTeamOne = new TeamHolder(itemView.findViewById(R.id.teamone));
@@ -105,12 +167,19 @@ public class CombinationListAdapter extends RecyclerView.Adapter<CombinationList
             mTeamFour = new TeamHolder(itemView.findViewById(R.id.teamfour));
             mTeamFive = new TeamHolder(itemView.findViewById(R.id.teamfive));
             mTeamSix = new TeamHolder(itemView.findViewById(R.id.teamsix));
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        listener.open(model);
-                    }
+            reCalucate = itemView.findViewById(R.id.recalucate);
+            itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.open(model);
+                }
+            });
+            String text = Utils.getString(R.string.re_calucate_title) + "--->";
+            SpannableString content = new SpannableString(text);
+            content.setSpan(new UnderlineSpan(), 0, text.length(), 0);
+            reCalucate.setText(content);
+            reCalucate.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.reCalucate(model);
                 }
             });
         }
@@ -124,6 +193,11 @@ public class CombinationListAdapter extends RecyclerView.Adapter<CombinationList
             mTeamFour.setData(combinationListModel.getTeamfour(), combinationListModel.getReturntimefour(), combinationListModel.getIdlistfour(), combinationListModel.getBorrowindexfour());
             mTeamFive.setData(combinationListModel.getTeamfive(), combinationListModel.getReturntimefive(), combinationListModel.getIdlistfive(), combinationListModel.getBorrowindexfive());
             mTeamSix.setData(combinationListModel.getTeamsix(), combinationListModel.getReturntimesix(), combinationListModel.getIdlistsix(), combinationListModel.getBorrowindexsix());
+            if (model.getTeamsix() != null) {
+                reCalucate.setVisibility(View.GONE);
+            } else {
+                reCalucate.setVisibility(View.VISIBLE);
+            }
         }
     }
 
@@ -136,19 +210,7 @@ public class CombinationListAdapter extends RecyclerView.Adapter<CombinationList
         TeamModel teamsix = combinationListModel.getTeamsix();
         return teamone.getBoss() + "+" + teamtwo.getBoss() +
                 "   " + teamthree.getBoss() + "+" + teamfour.getBoss() +
-                "   " + teamfive.getBoss() + "+" + teamsix.getBoss();
-    }
-
-    private String buildShortTitle(CombinationListModel combinationListModel) {
-        TeamModel teamone = combinationListModel.getTeamone();
-        TeamModel teamtwo = combinationListModel.getTeamtwo();
-        TeamModel teamthree = combinationListModel.getTeamthree();
-        TeamModel teamfour = combinationListModel.getTeamfour();
-        TeamModel teamfive = combinationListModel.getTeamfive();
-        TeamModel teamsix = combinationListModel.getTeamsix();
-        return teamone.getBoss().substring(1, 2) + "+" + teamtwo.getBoss().substring(1, 2) +
-                "/" + teamthree.getBoss().substring(1, 2) + "+" + teamfour.getBoss().substring(1, 2) +
-                "/" + teamfive.getBoss().substring(1, 2) + "+" + teamsix.getBoss().substring(1, 2);
+                "   " + teamfive.getBoss() + "+" + (teamsix != null ? teamsix.getBoss() : "?");
     }
 
     private class TeamHolder {

@@ -5,10 +5,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -20,19 +18,16 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import cn.sun45.warbanner.R;
-import cn.sun45.warbanner.document.database.setup.models.TeamCustomizeModel;
-import cn.sun45.warbanner.document.database.source.models.CharacterModel;
 import cn.sun45.warbanner.document.database.source.models.TeamModel;
 import cn.sun45.warbanner.framework.ui.BaseActivity;
 import cn.sun45.warbanner.framework.ui.BaseFragment;
 import cn.sun45.warbanner.ui.shared.SharedViewModelClanwar;
 import cn.sun45.warbanner.ui.shared.SharedViewModelSource;
-import cn.sun45.warbanner.ui.views.listselectbar.ListSelectBar;
-import cn.sun45.warbanner.ui.views.listselectbar.ListSelectBarListener;
 import cn.sun45.warbanner.ui.views.listselectbar.ListSelectItem;
 import cn.sun45.warbanner.ui.views.teamgrouplist.TeamGroupListModel;
 import cn.sun45.warbanner.ui.views.teamlist.TeamList;
 import cn.sun45.warbanner.ui.views.teamlist.TeamListListener;
+import cn.sun45.warbanner.ui.views.teamlist.TeamListReCalucateModel;
 import cn.sun45.warbanner.util.Utils;
 
 /**
@@ -63,12 +58,7 @@ public class TeamGroupDetailFragment extends BaseFragment implements TeamListLis
     protected void initView() {
         MaterialToolbar toolbar = mRoot.findViewById(R.id.drop_toolbar);
         ((BaseActivity) getActivity()).setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(v).navigateUp();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> Navigation.findNavController(v).navigateUp());
         mTeamList = mRoot.findViewById(R.id.teamlist);
 
         mTeamList.setListener(this);
@@ -147,6 +137,11 @@ public class TeamGroupDetailFragment extends BaseFragment implements TeamListLis
         Bundle bundle = new Bundle();
         bundle.putSerializable("teamModel", teamModel);
         controller.navigate(R.id.action_nav_teamgroupdetail_to_nav_teamdetail, bundle);
+    }
+
+    @Override
+    public void reCalucate(TeamListReCalucateModel teamListReCalucateModel) {
+
     }
 
     @Override

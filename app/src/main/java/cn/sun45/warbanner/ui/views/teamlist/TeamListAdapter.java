@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -11,6 +12,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StrikethroughSpan;
+import android.text.style.UnderlineSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,6 +60,8 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private List<TeamListBossModel> teamWithBossList;
 
+    private List<Object> teamWithReCalucate;
+
     //阵容自定义信息
     private List<TeamCustomizeModel> teamCustomizeModels;
 
@@ -100,6 +104,10 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         this.teamWithBossList = teamWithBossList;
     }
 
+    public void setTeamWithReCalucate(List<Object> teamWithReCalucate) {
+        this.teamWithReCalucate = teamWithReCalucate;
+    }
+
     public void setTeamCustomizeModels(List<TeamCustomizeModel> teamCustomizeModels) {
         this.teamCustomizeModels = teamCustomizeModels;
     }
@@ -119,19 +127,32 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public int getItemViewType(int position) {
         Object item = getItem(position);
-        return item instanceof TeamListBossModel ? 0 : 1;
+        if (item instanceof TeamListBossModel) {
+            return 0;
+        } else if (item instanceof TeamListTeamModel) {
+            return 1;
+        } else if (item instanceof TeamListReCalucateModel) {
+            return 2;
+        }
+        return -1;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        RecyclerView.ViewHolder holder = null;
+        RecyclerView.ViewHolder holder;
         switch (viewType) {
             case 0:
                 holder = new BossHolder(LayoutInflater.from(context).inflate(R.layout.teamlist_bossitem, parent, false));
                 break;
             case 1:
                 holder = new TeamHolder(LayoutInflater.from(context).inflate(R.layout.teamlist_teamitem, parent, false));
+                break;
+            case 2:
+                holder = new ReCalucateHolder(LayoutInflater.from(context).inflate(R.layout.teamlist_recalucateitem, parent, false));
+                break;
+            default:
+                holder = new DividerHolder(LayoutInflater.from(context).inflate(R.layout.teamlist_divideritem, parent, false));
                 break;
         }
         return holder;
@@ -146,6 +167,11 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             case 1:
                 ((TeamHolder) holder).setData((TeamListTeamModel) getItem(position));
                 break;
+            case 2:
+                ((ReCalucateHolder) holder).setData((TeamListReCalucateModel) getItem(position));
+                break;
+            default:
+                break;
         }
     }
 
@@ -153,7 +179,7 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public int getItemCount() {
         if (list != null) {
             return list.size();
-        } else {
+        } else if (teamWithBossList != null) {
             int count = 0;
             if (teamWithBossList != null && !teamWithBossList.isEmpty()) {
                 int position = 0;
@@ -172,13 +198,16 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             }
 //            Utils.logD(TAG, "getItemCount count:" + count);
             return count;
+        } else if (teamWithReCalucate != null) {
+            return teamWithReCalucate.size();
         }
+        return 0;
     }
 
     public List<ListSelectItem> getListSelectItemList() {
         if (list != null) {
             return null;
-        } else {
+        } else if (teamWithBossList != null) {
             List<ListSelectItem> list = new ArrayList<>();
             int position = 0;
             int bossposition = 0;
@@ -191,19 +220,20 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                         continue;
                     }
                     TeamListBossModel teamListBossModel = teamWithBossList.get(bossposition);
-                    ListSelectItem listSelectItem = new ListSelectItem(teamListBossModel.getIconUrl(), position);
+                    ListSelectItem listSelectItem = new ListSelectItem(position, teamListBossModel.getIconUrl());
                     list.add(listSelectItem);
                     position += (teamListBossModel.getModelCount(typeSelection) + 1);
                 }
             }
             return list;
         }
+        return null;
     }
 
     private Object getItem(int position) {
         if (list != null) {
             return list.get(position);
-        } else {
+        } else if (teamWithBossList != null) {
             int bossposition = 0;
             for (int stage = 1; stage <= StageManager.getInstance().getStageCount(); stage++) {
                 for (int boss = 1; boss <= StaticHelper.BOSS_COUNT; boss++, bossposition++) {
@@ -227,8 +257,10 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                     }
                 }
             }
-            return null;
+        } else if (teamWithReCalucate != null) {
+            return teamWithReCalucate.get(position);
         }
+        return null;
     }
 
     public class BossHolder extends RecyclerView.ViewHolder {
@@ -269,12 +301,9 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             mCharacterfour = itemView.findViewById(R.id.characterfour_lay);
             mCharacterfive = itemView.findViewById(R.id.characterfive_lay);
             mRemarks = itemView.findViewById(R.id.remarks);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        listener.select(model.getTeamModel());
-                    }
+            itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.select(model.getTeamModel());
                 }
             });
         }
@@ -404,6 +433,36 @@ public class TeamListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 characterView.setBackGroundType(CharacterView.BG_DEFAULT);
             }
             characterView.setCharacterModel(characterModel, id);
+        }
+    }
+
+    public class ReCalucateHolder extends RecyclerView.ViewHolder {
+        private TextView mText;
+
+        private TeamListReCalucateModel model;
+
+        public ReCalucateHolder(@NonNull View itemView) {
+            super(itemView);
+            mText = itemView.findViewById(R.id.recalucate);
+            String text = Utils.getString(R.string.re_calucate_title) + "--->";
+            SpannableString content = new SpannableString(text);
+            content.setSpan(new UnderlineSpan(), 0, text.length(), 0);
+            mText.setText(content);
+            itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.reCalucate(model);
+                }
+            });
+        }
+
+        public void setData(TeamListReCalucateModel teamListReCalucateModel) {
+            model = teamListReCalucateModel;
+        }
+    }
+
+    public class DividerHolder extends RecyclerView.ViewHolder {
+        public DividerHolder(@NonNull View itemView) {
+            super(itemView);
         }
     }
 }

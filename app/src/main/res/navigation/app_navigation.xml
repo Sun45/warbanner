@@ -192,6 +192,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_nav_combination_to_nav_recalucate"
+            app:destination="@id/nav_recalucate"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/nav_combinationdetail"
@@ -199,6 +206,25 @@
         android:label="fragment_combination">
         <action
             android:id="@+id/action_nav_combinationdetail_to_nav_teamdetail"
+            app:destination="@id/nav_teamdetail"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_nav_combinationdetail_to_nav_recalucate"
+            app:destination="@id/nav_recalucate"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_recalucate"
+        android:name="cn.sun45.warbanner.ui.fragments.recalucate.ReCalucateFragment"
+        android:label="fragment_recalucate">
+        <action
+            android:id="@+id/action_nav_recalucate_to_nav_teamdetail"
             app:destination="@id/nav_teamdetail"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"

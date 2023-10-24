@@ -42,12 +42,7 @@ public class CharacterScreenFragment extends BaseFragment implements CharacterLi
     @Override
     protected void initView() {
         MaterialToolbar toolbar = mRoot.findViewById(R.id.toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(v).navigateUp();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> Navigation.findNavController(v).navigateUp());
 
         mCharacterListLay = mRoot.findViewById(R.id.characterlistlay);
         mCharacterListLay.setCharacterListLayListener(this);

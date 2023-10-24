@@ -67,12 +67,7 @@ public class TeamGroupFragment extends BaseFragment implements TeamGroupListList
     protected void initView() {
         MaterialToolbar toolbar = mRoot.findViewById(R.id.drop_toolbar);
         ((BaseActivity) getActivity()).setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(v).navigateUp();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> Navigation.findNavController(v).navigateUp());
 
         mTeamGroupList = mRoot.findViewById(R.id.teamgrouplist);
         mTeamGroupList.setListener(this);

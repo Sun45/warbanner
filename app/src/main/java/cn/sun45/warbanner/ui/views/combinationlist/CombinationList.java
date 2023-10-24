@@ -13,13 +13,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import cn.sun45.warbanner.document.database.source.models.CharacterModel;
+import cn.sun45.warbanner.framework.ui.BaseVerticalRecyclerView;
 import cn.sun45.warbanner.util.Utils;
 
 /**
  * Created by Sun45 on 2023/9/23
  * 套餐列表
  */
-public class CombinationList extends RecyclerView {
+public class CombinationList extends BaseVerticalRecyclerView {
     private static final String TAG = "CombinationList";
     private LinearLayoutManager layoutManager;
 
@@ -78,7 +79,7 @@ public class CombinationList extends RecyclerView {
         adapter.setCharacterModels(characterModels);
     }
 
-    public void setData(List<CombinationListModel> list) {
+    public void setData(List<CombinationGroupModel> list) {
         scrollToPosition(0);
         adapter.setList(list);
         dataNotify();

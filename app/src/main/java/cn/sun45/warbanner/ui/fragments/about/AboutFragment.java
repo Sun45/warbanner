@@ -42,12 +42,7 @@ public class AboutFragment extends BaseFragment {
     protected void initView() {
         MaterialToolbar toolbar = mRoot.findViewById(R.id.drop_toolbar);
         ((BaseActivity) getActivity()).setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(v).navigateUp();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> Navigation.findNavController(v).navigateUp());
 
         mText = mRoot.findViewById(R.id.text);
     }

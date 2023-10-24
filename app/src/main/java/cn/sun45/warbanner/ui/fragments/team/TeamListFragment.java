@@ -45,6 +45,7 @@ import cn.sun45.warbanner.ui.views.listselectbar.ListSelectItem;
 import cn.sun45.warbanner.ui.views.selectgroup.SelectGroup;
 import cn.sun45.warbanner.ui.views.teamlist.TeamList;
 import cn.sun45.warbanner.ui.views.teamlist.TeamListListener;
+import cn.sun45.warbanner.ui.views.teamlist.TeamListReCalucateModel;
 import cn.sun45.warbanner.util.Utils;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
@@ -199,6 +200,11 @@ public class TeamListFragment extends BaseFragment implements TeamListListener, 
         Bundle bundle = new Bundle();
         bundle.putSerializable("teamModel", teamModel);
         controller.navigate(R.id.action_nav_main_to_nav_teamdetail, bundle);
+    }
+
+    @Override
+    public void reCalucate(TeamListReCalucateModel teamListReCalucateModel) {
+
     }
 
     @Override

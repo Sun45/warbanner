@@ -97,10 +97,10 @@ public class TeamDetailScroll extends ScrollView {
             TextView titleText = new TextView(getContext());
             titleText.setLayoutParams(new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             titleText.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
-            if (returnTime == 0) {
+            if (teamModel.isFinish() || returnTime == 0) {
                 titleText.setText(title);
             } else {
-                SpannableStringBuilder builder = new SpannableStringBuilder(title + " " + returnTime);
+                SpannableStringBuilder builder = new SpannableStringBuilder(title + " 返" + returnTime + "s");
                 builder.setSpan(new ForegroundColorSpan(Utils.getAttrColor(getContext(), R.attr.colorSecondary)), title.length() + 1, builder.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                 titleText.setText(builder);
             }

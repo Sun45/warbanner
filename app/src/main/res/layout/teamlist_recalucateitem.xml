@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="75dp"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="5dp"
+    app:cardBackgroundColor="@color/theme_dark"
+    app:cardCornerRadius="10dp">
+
+    <TextView
+        android:id="@+id/recalucate"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="5dp"
+        android:singleLine="true"
+        android:textColor="?attr/colorSecondary"
+        android:textSize="40sp" />
+</com.google.android.material.card.MaterialCardView>

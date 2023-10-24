@@ -76,12 +76,7 @@ public class TeamGroupScreenFragment extends BaseFragment {
     protected void initView() {
         MaterialToolbar toolbar = mRoot.findViewById(R.id.drop_toolbar);
         ((BaseActivity) getActivity()).setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(v).navigateUp();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> Navigation.findNavController(v).navigateUp());
 
         mTeamOne = new TeamHolder(1, mRoot.findViewById(R.id.teamone));
         mTeamTwo = new TeamHolder(2, mRoot.findViewById(R.id.teamtwo));

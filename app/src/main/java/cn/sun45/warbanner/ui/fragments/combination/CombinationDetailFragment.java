@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
@@ -28,6 +27,7 @@ import cn.sun45.warbanner.ui.views.combinationlist.CombinationListModel;
 import cn.sun45.warbanner.ui.views.listselectbar.ListSelectItem;
 import cn.sun45.warbanner.ui.views.teamlist.TeamList;
 import cn.sun45.warbanner.ui.views.teamlist.TeamListListener;
+import cn.sun45.warbanner.ui.views.teamlist.TeamListReCalucateModel;
 import cn.sun45.warbanner.util.Utils;
 
 /**
@@ -58,12 +58,7 @@ public class CombinationDetailFragment extends BaseFragment implements TeamListL
     protected void initView() {
         MaterialToolbar toolbar = mRoot.findViewById(R.id.drop_toolbar);
         ((BaseActivity) getActivity()).setSupportActionBar(toolbar);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Navigation.findNavController(v).navigateUp();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> Navigation.findNavController(v).navigateUp());
         mTeamList = mRoot.findViewById(R.id.teamlist);
 
         mTeamList.setListener(this);
@@ -111,7 +106,11 @@ public class CombinationDetailFragment extends BaseFragment implements TeamListL
                 sb.append("     ");
                 sb.append(combinationListModel.getTeamfive().getBoss());
                 sb.append("+");
-                sb.append(combinationListModel.getTeamsix().getBoss());
+                if (combinationListModel.getTeamsix() != null) {
+                    sb.append(combinationListModel.getTeamsix().getBoss());
+                } else {
+                    sb.append("?");
+                }
                 sb.append("\n\n");
                 sb.append(combinationListModel.getTeamone().getShare(sharedSource.characterList.getValue()));
                 sb.append("\n\n");
@@ -122,8 +121,10 @@ public class CombinationDetailFragment extends BaseFragment implements TeamListL
                 sb.append(combinationListModel.getTeamfour().getShare(sharedSource.characterList.getValue()));
                 sb.append("\n\n------------------------------\n\n");
                 sb.append(combinationListModel.getTeamfive().getShare(sharedSource.characterList.getValue()));
-                sb.append("\n\n");
-                sb.append(combinationListModel.getTeamsix().getShare(sharedSource.characterList.getValue()));
+                if (combinationListModel.getTeamsix() != null) {
+                    sb.append("\n\n");
+                    sb.append(combinationListModel.getTeamsix().getShare(sharedSource.characterList.getValue()));
+                }
                 Intent intent = new Intent();
                 intent.setAction(Intent.ACTION_SEND);
                 intent.putExtra(Intent.EXTRA_TEXT, sb.toString());
@@ -150,6 +151,14 @@ public class CombinationDetailFragment extends BaseFragment implements TeamListL
         Bundle bundle = new Bundle();
         bundle.putSerializable("teamModel", teamModel);
         controller.navigate(R.id.action_nav_combinationdetail_to_nav_teamdetail, bundle);
+    }
+
+    @Override
+    public void reCalucate(TeamListReCalucateModel teamListReCalucateModel) {
+        NavController controller = Navigation.findNavController(getView());
+        Bundle bundle = new Bundle();
+        bundle.putIntegerArrayList("usedCharacterList", combinationListModel.getUsedCharacterList());
+        controller.navigate(R.id.action_nav_combinationdetail_to_nav_recalucate, bundle);
     }
 
     @Override
