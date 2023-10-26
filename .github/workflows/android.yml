@@ -28,11 +28,3 @@ jobs:
           files: apk/warbanner-release.apk
           tag_name: ${{ env.RELEASE_APK_VERSION }}
           name: warbanner v${{ env.RELEASE_APK_VERSION }}
-
-      - name: Bump version
-        run: |
-          git config user.name github-actions
-          git config user.email anonymous@e.mail
-          git add .
-          git commit -m "chore: bump to v${{ env.RELEASE_APK_VERSION }}"
-          git push
