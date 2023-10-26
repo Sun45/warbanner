@@ -15,4 +15,5 @@
 local.properties
 /hs_err_pid4840.log
 
+# release draft cache files
 releaselog_cache.txt
