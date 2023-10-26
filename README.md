@@ -17,16 +17,15 @@ Android端BCR会战作业查询记录工具
 ## 需求动态权限
 * 无
 
-## 连点需求权限
-* 系统弹框权限，无障碍权限
-
 ## 系统版本需求
 * Android7.0及以上
 
 ## 使用教程及反馈
 [使用教程wiki](https://github.com/Sun45/warbanner/wiki) [问题反馈和建议](https://github.com/Sun45/warbanner/issues/new)
 
-## 导入分刀算法
+## 第三方库提供
+1.分刀算法
+
 PCRTeamAnalyser [![](https://jitpack.io/v/Sun45/warbanner.svg)](https://jitpack.io/#Sun45/warbanner)
 ```gradle
 dependencies {
@@ -34,11 +33,11 @@ dependencies {
   implementation 'com.github.Sun45:warbanner:4.3.1'
 }
 ```
+2.BOSS数据监听
 
-## BOSS数据监听
-界面导入方式见炽旗源码
+[库文件](app/libs/bcrloglib-release.aar)
 
-有什么问题或者建议可以加群 <a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=qwMoxYsp8DRSlDQ2XdHA_UwoyTlJY78b&jump_from=webapi&authKey=Io/jiDCVJIz3y6e3qKtFbPlnuEiW42QE8HvKQmQCzYGo8kSIbsddrAAFUoBU5Z7G"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="bcrlog交流&amp;问题反馈群" title="bcrlog交流&amp;问题反馈群"></a>
+使用方式见炽旗源码，有什么问题或者建议可以加群 <a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=qwMoxYsp8DRSlDQ2XdHA_UwoyTlJY78b&jump_from=webapi&authKey=Io/jiDCVJIz3y6e3qKtFbPlnuEiW42QE8HvKQmQCzYGo8kSIbsddrAAFUoBU5Z7G"><img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="bcrlog交流&amp;问题反馈群" title="bcrlog交流&amp;问题反馈群"></a>
 
 本群的密码是？ 公主连结国服版号
 
