@@ -24,7 +24,7 @@ Android端BCR会战作业查询记录工具
 [使用教程wiki](https://github.com/Sun45/warbanner/wiki) [问题反馈和建议](https://github.com/Sun45/warbanner/issues/new)
 
 ## 第三方库提供
-1.分刀算法
+### 1.分刀算法
 
 PCRTeamAnalyser [![](https://jitpack.io/v/Sun45/warbanner.svg)](https://jitpack.io/#Sun45/warbanner)
 ```gradle
@@ -33,7 +33,7 @@ dependencies {
   implementation 'com.github.Sun45:warbanner:4.3.1'
 }
 ```
-2.BOSS数据监听
+### 2.BOSS数据监听
 
 [库文件](app/libs/bcrloglib-release.aar)
 
