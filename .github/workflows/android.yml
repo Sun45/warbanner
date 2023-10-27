@@ -1,5 +1,5 @@
 name: Release Drafter
-
+run-name: update triggers release create
 on:
   push:
     paths:
