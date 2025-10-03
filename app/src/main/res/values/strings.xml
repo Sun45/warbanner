@@ -65,7 +65,6 @@
     <string name="menu_setting">设置</string>
     <string name="menu_user">本地用户</string>
     <string name="menu_character_screen">角色筛选</string>
-    <string name="menu_character_screen_enable">角色筛选生效</string>
     <string name="menu_link_open_type">链接打开方式</string>
     <string-array name="menu_link_open_type_dialog_options">
         <item>用浏览器打开</item>
@@ -144,6 +143,7 @@
     <string name="character_screen_empty_hint">角色数据为空\n请更新数据库</string>
     <string name="character_screen_lack">表示角色缺失但可以借</string>
     <string name="character_screen_skip">表示角色不会参与分刀</string>
+    <string name="character_screen_enable">角色筛选生效</string>
 
     <string name="record_title">日志</string>
     <string name="record_clean_dialog_title">日志</string>

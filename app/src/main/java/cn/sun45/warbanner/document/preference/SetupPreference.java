@@ -16,7 +16,7 @@ public class SetupPreference extends BasePreference {
     private boolean autoclick = false;
 
     //角色筛选生效
-    private boolean characterscreenenable = false;
+    private boolean characterscreenenable = true;
 
     //服务器
     private int server;

@@ -28,34 +28,48 @@
         app:layout_constraintBottom_toTopOf="@id/hint_lay"
         app:layout_constraintTop_toBottomOf="@id/appbar" />
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/hint_lay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/toolbarPrimary"
-        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:drawableLeft="@drawable/ic_character_screen_type_yellow_hint"
-            android:drawablePadding="8dp"
-            android:gravity="center_vertical"
-            android:paddingHorizontal="15dp"
-            android:text="@string/character_screen_lack"
-            android:textColor="@color/white_50"
-            android:textSize="14sp" />
+            android:layout_height="wrap_content"
+            android:background="@color/toolbarPrimary"
+            android:orientation="vertical">
 
-        <TextView
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:drawableLeft="@drawable/ic_character_screen_type_yellow_hint"
+                android:drawablePadding="8dp"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="15dp"
+                android:text="@string/character_screen_lack"
+                android:textColor="@color/white_50"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:drawableLeft="@drawable/ic_character_screen_type_red_hint"
+                android:drawablePadding="8dp"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="15dp"
+                android:text="@string/character_screen_skip"
+                android:textColor="@color/white_50"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <Switch
+            android:id="@+id/character_screen_enable"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:drawableLeft="@drawable/ic_character_screen_type_red_hint"
-            android:drawablePadding="8dp"
-            android:gravity="center_vertical"
-            android:paddingHorizontal="15dp"
-            android:text="@string/character_screen_skip"
-            android:textColor="@color/white_50"
-            android:textSize="14sp" />
-    </LinearLayout>
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:gravity="right|center_vertical"
+            android:paddingLeft="15dp"
+            android:text="@string/character_screen_enable" />
+    </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

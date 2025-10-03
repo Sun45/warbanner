@@ -2,13 +2,14 @@ plugins {
     id 'com.android.application'
 }
 apply from: rootProject.file("dependencies.gradle")
+apply from: 'E:\\AndroidStudioWorkspace\\config.gradle'
 android {
     compileSdkVersion 30
 
     defaultConfig {
         applicationId "cn.sun45.warbanner"
         minSdkVersion versions.min_sdk
-        targetSdkVersion versions.compile_sdk
+        targetSdkVersion versions.target_sdk
         versionCode versions.publish_version_code
         versionName versions.publish_version
 
@@ -21,27 +22,15 @@ android {
             }
         }
     }
-
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
-    }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    android.applicationVariants.all { variant ->
-        variant.outputs.all {
-            outputFileName = "warbanner-release.apk"
-        }
-    }
-
     aaptOptions {
         cruncherEnabled = false
         useNewCruncher = false
     }
+    namespace 'cn.sun45.warbanner'
 }
 
 dependencies {

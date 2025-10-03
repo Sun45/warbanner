@@ -42,7 +42,6 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
     //设置
     private Preference user;
     private Preference characterScreen;
-    private SwitchPreferenceCompat characterScreenEnable;
     private Preference link;
 
     //系统
@@ -92,13 +91,6 @@ public class MenuPreferecefragment extends PreferenceFragmentCompat {
         characterScreen.setOnPreferenceClickListener(preference -> {
             NavController controller = Navigation.findNavController(getView());
             controller.navigate(R.id.action_nav_main_to_nav_characterscreen);
-            return true;
-        });
-
-        characterScreenEnable = findPreference("character_screen_enable");
-        characterScreenEnable.setChecked(new SetupPreference().isCharacterscreenenable());
-        characterScreenEnable.setOnPreferenceChangeListener((preference, newValue) -> {
-            new SetupPreference().setCharacterscreenenable((boolean) newValue);
             return true;
         });
 

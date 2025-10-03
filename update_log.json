@@ -1,6 +1,6 @@
 {
-  "versionCode": "53",
-  "versionName": "4.4.1",
+  "versionCode": "54",
+  "versionName": "2025.10.3",
   "fource": "false",
-  "content": "1.bcrlog版本更新\n2.优化套餐生成逻辑\n3.添加再生成功能"
+  "content": "1.将角色筛选按钮放入角色筛选界面并加强提示2.默认打开角色筛选3.处理解析BOSS数据崩溃问题"
 }

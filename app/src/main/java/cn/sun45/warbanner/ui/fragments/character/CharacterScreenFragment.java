@@ -1,6 +1,6 @@
 package cn.sun45.warbanner.ui.fragments.character;
 
-import android.view.View;
+import android.widget.Switch;
 
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -15,6 +15,7 @@ import cn.sun45.warbanner.R;
 import cn.sun45.warbanner.character.CharacterHelper;
 import cn.sun45.warbanner.document.database.setup.models.ScreenCharacterModel;
 import cn.sun45.warbanner.document.database.source.models.CharacterModel;
+import cn.sun45.warbanner.document.preference.SetupPreference;
 import cn.sun45.warbanner.document.statics.charactertype.CharacterScreenType;
 import cn.sun45.warbanner.framework.ui.BaseFragment;
 import cn.sun45.warbanner.ui.shared.SharedViewModelSource;
@@ -29,6 +30,8 @@ public class CharacterScreenFragment extends BaseFragment implements CharacterLi
     private SharedViewModelSource sharedSource;
 
     private CharacterListLay mCharacterListLay;
+
+    private Switch mCharacterScreenEnable;
 
     @Override
     protected int getContentViewId() {
@@ -45,7 +48,23 @@ public class CharacterScreenFragment extends BaseFragment implements CharacterLi
         toolbar.setNavigationOnClickListener(v -> Navigation.findNavController(v).navigateUp());
 
         mCharacterListLay = mRoot.findViewById(R.id.characterlistlay);
+        mCharacterScreenEnable = mRoot.findViewById(R.id.character_screen_enable);
+
         mCharacterListLay.setCharacterListLayListener(this);
+        mCharacterScreenEnable.setChecked(new SetupPreference().isCharacterscreenenable());
+        showCharacterScreenState(new SetupPreference().isCharacterscreenenable());
+        mCharacterScreenEnable.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            new SetupPreference().setCharacterscreenenable(isChecked);
+            showCharacterScreenState(isChecked);
+        });
+    }
+
+    private void showCharacterScreenState(boolean enable) {
+        if (enable) {
+            mCharacterScreenEnable.setBackgroundColor(0x00000000);
+        } else {
+            mCharacterScreenEnable.setBackgroundColor(0xaa000000);
+        }
     }
 
     @Override

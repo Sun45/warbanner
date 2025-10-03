@@ -22,11 +22,6 @@
             app:icon="@drawable/ic_baseline_view_comfy_24"
             app:key="character_screen"
             app:title="@string/menu_character_screen" />
-        <SwitchPreferenceCompat
-            app:defaultValue="false"
-            app:icon="@drawable/ic_baseline_view_comfy_24"
-            app:key="character_screen_enable"
-            app:title="@string/menu_character_screen_enable" />
         <Preference
             app:icon="@drawable/ic_baseline_link_24"
             app:key="link_open_type"
